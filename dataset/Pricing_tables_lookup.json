@@ -1,0 +1,31 @@
+{
+	"name": "Pricing_tables_lookup",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Oracle Pricing data test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Tables",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Pricing data.xlsx",
+				"container": "pricing-test"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "SheetName",
+				"type": "String"
+			},
+			{
+				"name": "TableName",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

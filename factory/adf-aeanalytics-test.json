@@ -1,0 +1,9 @@
+{
+	"name": "adf-aeanalytics-test",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "139d515b-5160-4879-b6a5-d074c65def9d",
+		"tenantId": "723124e0-74e9-482b-a731-4f534e16e043"
+	}
+}
