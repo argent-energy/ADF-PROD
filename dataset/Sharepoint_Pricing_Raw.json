@@ -1,0 +1,30 @@
+{
+	"name": "Sharepoint_Pricing_Raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sharepoint_Pricing_Data",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ItemName": {
+				"type": "string",
+				"defaultValue": "Pricing dataset.xlsx"
+			}
+		},
+		"folder": {
+			"name": "Trade/Pricing"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Pricing%20dataset.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,69 @@
+{
+	"name": "OneFilepush",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Finance Reference Tables",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Dailyload",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Argent_Database",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "O.XLA_TRANSACTION_ENTITIES"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-10-13T12:23:42Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

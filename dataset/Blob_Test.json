@@ -1,0 +1,78 @@
+{
+	"name": "Blob_Test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "09082022 PurchaseContracts",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "09082022 PurchaseContracts.xlsx",
+				"container": "sharepoint-files"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Level9",
+				"type": "String"
+			},
+			{
+				"name": "Level8",
+				"type": "String"
+			},
+			{
+				"name": "Level7",
+				"type": "String"
+			},
+			{
+				"name": "Level6",
+				"type": "String"
+			},
+			{
+				"name": "Level5",
+				"type": "String"
+			},
+			{
+				"name": "Level4",
+				"type": "String"
+			},
+			{
+				"name": "Level3",
+				"type": "String"
+			},
+			{
+				"name": "Level2",
+				"type": "String"
+			},
+			{
+				"name": "Level1",
+				"type": "String"
+			},
+			{
+				"name": "Child",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "Account Type",
+				"type": "String"
+			},
+			{
+				"name": "Financial Category",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

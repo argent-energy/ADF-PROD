@@ -1,0 +1,17 @@
+{
+	"name": "DestinationDataset_5nk",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerArgent",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "GIT_Adjustments_Template"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

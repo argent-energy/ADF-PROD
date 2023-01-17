@@ -1,0 +1,86 @@
+{
+	"name": "Pricing_Data_Trade_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute BLOB To SQL For Pricing Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy_Pricing_Sharepoint_To_BLOB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_Pricing_Blob_to_SQL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Data Marks Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute BLOB To SQL For Pricing Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Pricing_Data_Marks_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute SQL To BLOB For Trade Tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Data Marks Script",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Trade-Tables_To_BLOB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Copy_Pricing_Sharepoint_To_BLOB",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_Pricing_Sharepoint_To_BLOB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Trade/Pricing"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-14T10:20:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

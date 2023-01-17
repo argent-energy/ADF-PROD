@@ -1,0 +1,146 @@
+{
+	"name": "Oracle_Data_Trade_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Oracle To BLOB",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Drop RAW GL Tables Script",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_Oracle_To_BLOB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute BLOB To SQL For Oracle Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Oracle To BLOB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "BLOB_To_SQL_Oracle_Data_Pipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Core Tables Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute BLOB To SQL For Oracle Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Exp_And_Pos_Core_Tables_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Data Marks Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Core Tables Script",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Exp_And_Pos_Data_Marks_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute SQL To Blob For Trade Tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Drop RAW Tables Script",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Trade-Tables_To_BLOB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Drop RAW Tables Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute Data Marks Script",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Exp_And_Pos_Drop_RAW_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Execute Drop RAW GL Tables Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_GL_Drop_RAW_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Trade"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-12-10T11:15:02Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

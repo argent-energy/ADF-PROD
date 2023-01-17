@@ -1,0 +1,9 @@
+{
+	"name": "adf-aeanalytics-prod",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "288e32ef-1a93-4f95-b7dd-cb46b8d9bcd2",
+		"tenantId": "723124e0-74e9-482b-a731-4f534e16e043"
+	}
+}

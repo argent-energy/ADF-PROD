@@ -1,0 +1,35 @@
+{
+	"name": "Blob_Finance_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SheetName": {
+				"type": "string",
+				"defaultValue": "Value"
+			}
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().SheetName",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Finance DWH Excel data.xlsx",
+				"container": "sharepoint-files"
+			},
+			"range": "A1",
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

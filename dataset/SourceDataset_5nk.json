@@ -1,0 +1,52 @@
+{
+	"name": "SourceDataset_5nk",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "GIT_Adjustments_Template.xlsx",
+				"folderPath": "test",
+				"container": "testdeloitte"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Entity",
+				"type": "String"
+			},
+			{
+				"name": "Company Name",
+				"type": "String"
+			},
+			{
+				"name": "Financial Year",
+				"type": "String"
+			},
+			{
+				"name": "Financial Period",
+				"type": "String"
+			},
+			{
+				"name": "Entity Currency (EC)",
+				"type": "String"
+			},
+			{
+				"name": "Adjustment",
+				"type": "String"
+			},
+			{
+				"name": "Adjustment Currency",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
