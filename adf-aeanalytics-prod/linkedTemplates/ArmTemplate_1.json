@@ -1,0 +1,782 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-aeanalytics-prod"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Margin_DataMarts')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Trade].[SQL_MarginDataMarts_1]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Stored procedure2",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Stored procedure1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Trade].[SQL_MarginDataMarts_2]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade/Margin"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-21T16:18:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Margin_Data_Marks_Script')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Margin Data Marks Script",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "/*==============================================================================================================================*\r\n * Project:\t\tArgent\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Purpose:\t\tCreate the data marts that will feed into the Margin report.\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Description:\t1) Create Orders And Invoices data marts\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n * Prerequisites: Run tracability loop script.\t\t\t \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Outputs: Tables \"Trade.PurchaseOrdersAndInvoices\", \"Trade.SalesOrdersAndInvoices\", \"Trade.TraceabilityAndOrders\"\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * SQL ATR - Basic joins, LAG funtion used on Line 77, Simple maths used throughout\t\t\t\t\t\t\t\t\t\t\t\t* \r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date:       29/07/2022\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Version:     1.0\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n *==============================================================================================================================*\r\n * Updates:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date\t\t| Version | Author\t\t| Change made\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * -----------------------------------------------------------------------------------------------------------------------------*\r\n * --/--/-- |  1.-\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t|\t\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *==============================================================================================================================*/\r\n\r\n/********************************************************************************************************\r\n\tStep 3.1\tJoin invoices on to purchase orders to create [Trade].[PurchaseOrdersAndInvoice] table.\r\n\r\n\t\t\t\tIf order number = previous row's order number then Invoice Amount = Invoice Line Amount\r\n\t\t\t\tIf invoiced quantity > 0 then Invoice Amount = Invoice Line Amount\r\n\t\t\t\tElse Invoice Amount = Primary Quantity * Unit Price = Order Amount\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[PurchaseOrdersAndInvoices]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[PurchaseOrdersAndInvoices]\r\n\r\n\tSELECT\t\tpo.[Purchase Order Number]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Order Number]\r\n\t,\t\t\tCASE\r\n\t\t\t\t\tWHEN RIGHT(REPLACE(po.[Purchase Order Number],'T',''),2) IN ('O1','O2')\r\n\t\t\t\t\t\tTHEN LEFT(REPLACE(po.[Purchase Order Number],'T',''),LEN(REPLACE(po.[Purchase Order Number],'T',''))-2)\r\n\t\t\t\t\tELSE REPLACE(po.[Purchase Order Number],'T','')\r\n\t\t\t\tEND\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Parent Order]\r\n\t,\t\t\tsn.[Supplier Name]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Supplier/Customer]\r\n\t,\t\t\ts.[Supplier ID]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Supplier/Customer Number]\r\n\t,\t\t\tISNULL(pc.[Blanket Purchase Agreement Number],'')\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Agreement Number/Sales Contract Number]\r\n\t,\t\t\tISNULL(i.[Item Code],po.[Item Description])\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Item Code]\r\n\t,\t\t\tpo.[Item Description]\r\n\t,\t\t\ti.[Category Code]\r\n\t,\t\t\tpo.[Unit Price]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Agreement Price]\r\n\t,\t\t\trt.[Primary Quantity]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Quantity]\r\n\t,\t\t\tap.[Unit Price]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoice Price]\r\n\t,\t\t\tap.[Quantity Invoiced]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoiced Quantity]\r\n\t,\t\t\tap.[Invoice Line Amount]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoice Line Amount]\r\n\t,\t\t\tpo.[Purchase Document Currency]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Currency]\r\n\t,\t\t\to.[Business Unit Name]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Business Unit]\r\n\t,\t\t\trt.[Inventory Organization Code]\r\n\t,\t\t\trt.[Inventory Organization Name] \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t,\t\t\tpo.[Ordered Quantity]\t\t\r\n\t,\t\t\tap.[Approval Status]\t\r\n\t,\t\t\tp.[Mode of Transport]\t\r\n\t,\t\t\tpo.[Incoterm]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Freight Terms]\t\t\t\t\t\t\t\r\n\t,\t\t\tap.[Invoice Number]\t\t\t\r\n\t,\t\t\tpo.[Purchase Document Status]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Order Status]\r\n\t,\t\t\tCAST(LEFT(rt.[Transaction Date],10) AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Transaction Date]\r\n\t,\t\t\tCASE\r\n\t\t\t\t\tWHEN po.[Purchase Order Number] = LAG(po.[Purchase Order Number])OVER(ORDER BY po.[Purchase Order Number],ap.[Invoice Line Amount] DESC)\r\n\t\t\t\t\t\tTHEN\tCASE\r\n\t\t\t\t\t\t\t\t\tWHEN ap.[Approval Status] IN ('NEEDS REAPPROVAL','NEVER APPROVED')\r\n\t\t\t\t\t\t\t\t\t\tTHEN CAST(ap.[Unit Price] AS NUMERIC(28,2)) * CAST(ap.[Quantity Invoiced] AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t\t\tELSE (-1) * CAST(ap.[Invoice Line Amount] AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t\tEND\r\n\t\t\t\t\tWHEN CAST(ap.[Quantity Invoiced] AS NUMERIC(28,8)) > 0\r\n\t\t\t\t\t\tTHEN\tCASE\r\n\t\t\t\t\t\t\t\t\tWHEN ap.[Approval Status] IN ('NEEDS REAPPROVAL','NEVER APPROVED')\r\n\t\t\t\t\t\t\t\t\t\tTHEN CAST(ap.[Unit Price] AS NUMERIC(28,2)) * CAST(ap.[Quantity Invoiced] AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t\t\tELSE (-1) * CAST(ap.[Invoice Line Amount] AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t\tEND\r\n\t\t\t\t\tELSE (-1) * CAST(rt.[Primary Quantity] AS NUMERIC(28,2)) * CAST(po.[Unit Price] AS NUMERIC(28,2))\r\n\t\t\t\tEND\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoice Amount]\r\n\t,\t\t\tfx.[EUR USD]\r\n\t,\t\t\tfx.[EUR GBP]\r\n\t,\t\t\ty.[Actual Yield]\r\n\t,\t\t\tln.[Lot Numbers]\r\n\t,\t\t\tCAST(GETDATE() AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [DateStamp]\r\n\tINTO\t\t[Trade].[PurchaseOrdersAndinvoices]\r\n\tFROM\t\t[Core].[PurchaseOrders] po\r\n\tLEFT JOIN\t[Core].[Suppliers] s\r\n\tON\t\t\tpo.[Supplier] = s.[Vendor ID]\r\n\tAND\t\t\tpo.[Supplier Site] = s.[Vendor Site ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Party ID]\r\n\t\t\t\t\t,\t\t\tMIN([Party Name])\tAS [Supplier Name]\r\n\t\t\t\t\tFROM\t\t[Core].[Parties]\r\n\t\t\t\t\tGROUP BY\t[Party ID]\r\n\t\t\t\t) sn\r\n\tON\t\t\ts.[Party ID] = sn.[Party ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[PO Header ID]\r\n\t\t\t\t\t,\t\t\t[Blanket Purchase Agreement Number]\r\n\t\t\t\t\tFROM\t\t[Core].[PurchaseContracts]\r\n\t\t\t\t\tGROUP BY\t[PO Header ID]\r\n\t\t\t\t\t,\t\t\t[Blanket Purchase Agreement Number]\r\n\t\t\t\t) pc\r\n\tON\t\t\tpc.[PO Header ID] = po.[From Header ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Item Code]\r\n\t\t\t\t\t,\t\t\t[Inventory Item ID]\r\n\t\t\t\t\t,\t\t\t[Category Code]\r\n\t\t\t\t\tFROM\t\t[Core].[Items]\r\n\t\t\t\t\tGROUP BY\t[Item Code]\r\n\t\t\t\t\t,\t\t\t[Inventory Item ID]\r\n\t\t\t\t\t,\t\t\t[Category Code]\r\n\t\t\t\t) i \r\n\tON\t\t\ti.[Inventory Item ID] = po.[Item ID]\t\r\n\tLEFT JOIN\t[Core].[APInvoices] ap\r\n\tON\t\t\tpo.[PO Line ID] = ap.[PO Line ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit ID]\r\n\t\t\t\t\t,\t\t\t[Business Unit Name]\r\n\t\t\t\t\tFROM\t\t[Core].[Organizations]\r\n\t\t\t\t\tGROUP BY\t[Business Unit ID]\r\n\t\t\t\t\t,\t\t\t[Business Unit Name]\r\n\t\t\t\t) o\r\n\tON\t\t\tpo.[Procurement BU ID] = o.[Business Unit ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Party ID]\r\n\t\t\t\t\t,\t\t\tMIN([Party Name])\tAS [Mode of Transport]\r\n\t\t\t\t\tFROM\t\t[Core].[Parties]\r\n\t\t\t\t\tGROUP BY\t[Party ID]\r\n\t\t\t\t) p\r\n\tON\t\t\tpo.[Carrier ID] = p.[Party ID]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\ta.*\r\n\t\t\t\t\t,\t\t\tb.[Inventory Organization Name]\r\n\t\t\t\t\t,\t\t\tb.[Inventory Organization Code]\t\r\n\t\t\t\t\tFROM\t\t[Core].[ReceivingTransactions] a\r\n\t\t\t\t\tLEFT JOIN\t[Core].[Organizations] b\r\n\t\t\t\t\tON\t\t\ta.[Organization ID] = b.[Organization ID]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'RECEIVE'\r\n\t\t\t\t\tAND\t\t\tb.[Business Unit Name] IN ('BDA BU','Motherwell','Stanlow')\r\n\t\t\t\t) rt\r\n\tON\t\t\tpo.[PO Line ID] = rt.[PO Line ID]\r\n\tAND\t\t\tpo.[PO Header ID] = rt.[PO Header ID]\r\n\tAND\t\t\t(ap.[Receiving Transaction ID] = rt.[Transaction ID] OR ap.[Receiving Transaction ID] IS NULL)\r\n\tLEFT JOIN\t[Core].[FXRates] fx\r\n\tON\t\t\tCAST([CONVERSION_DATE] AS DATE) = CAST(LEFT(rt.[Transaction Date],10) AS DATE)\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t\t,\t\t\tAVG(CAST([Expected yield] AS DECIMAL(28,8))) AS [Actual Yield]\r\n\t\t\t\t\tFROM\t\t[Trade].[Yield]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t) y\r\n\tON\t\t\to.[Business Unit Name] = y.[Business Unit]\r\n\tAND\t\t\tCAST(LEFT(rt.[Transaction Date],10) AS DATE) BETWEEN CAST(y.[Start date] AS DATE) AND ISNULL(CAST(y.[End date] AS DATE),GETDATE())\t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Document Number]\r\n\t\t\t\t\t,\t\t\t[Lot Numbers]\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Purchase Order Receipt'\r\n\t\t\t\t) ln\r\n\tON\t\t\tln.[Document Number] =  CASE\r\n\t\t\t\t\t\t\t\t\t\t\tWHEN RIGHT(REPLACE(po.[Purchase Order Number],'T',''),2) IN ('O1','O2')\r\n\t\t\t\t\t\t\t\t\t\t\t\tTHEN LEFT(REPLACE(po.[Purchase Order Number],'T',''),LEN(REPLACE(po.[Purchase Order Number],'T',''))-2)\r\n\t\t\t\t\t\t\t\t\t\t\tELSE REPLACE(po.[Purchase Order Number],'T','')\r\n\t\t\t\t\t\t\t\t\t\tEND\r\n\tWHERE\t\t[Purchase Order Number] NOT LIKE '%PU-%'\r\n\tAND\t\t\ti.[Item Code] IS NOT NULL\r\n\tAND\t\t\t[Purchase Document Status] NOT IN ('CANCELED','INCOMPLETE','OPEN')\r\n\tAND\t\t\to.[Business Unit Name] IN ('BDA BU','Motherwell','Stanlow')\r\n\tAND\t\t\tCAST(LEFT(rt.[Transaction Date],10) AS DATE) >= '2021-01-01'\r\n\r\n/********************************************************************************************************\r\n\tStep 3.2\tJoin invoices on to sales orders to create [Trade].[SalesOrdersAndInvoices] table.\r\n\r\n\t\t\t\tInvoice Amount = [UNIT_SELLING_PRICE] * ([Line Quantity Invoiced] - [Quantity Credited])\r\n********************************************************************************************************/\r\n\t\r\n\tIF OBJECT_ID('[Trade].[SalesOrdersAndInvoices]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrdersAndInvoices]\r\n\r\n\tSELECT\t\tso.[Order Number]\r\n\t,\t\t\tLEFT(so.[Order Number],5)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Parent Order]\r\n\t,\t\t\tso.[Item Code]\r\n\t,\t\t\tso.[Item Name]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Item Description]\r\n\t,\t\t\tso.[Category Code]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n\t,\t\t\tCAST(CASE WHEN ar.[UNIT_SELLING_PRICE] IS NULL THEN '0' ELSE ar.[UNIT_SELLING_PRICE] END AS NUMERIC(28,2))\t\t\t\t\tAS [Invoice Price]\r\n\t,\t\t\tCAST(CASE WHEN ar.[Line Quantity Invoiced] IS NULL THEN '0' ELSE ar.[Line Quantity Invoiced] END AS NUMERIC(28,2))\r\n\t\t\t\t\t- ABS(ISNULL(CAST(CASE WHEN ar.[Quantity Credited] IS NULL THEN '0' ELSE ar.[Quantity Credited] END AS NUMERIC(28,2)),0))\tAS [Invoiced Quantity]\r\n\t,\t\t\tso.[Unit of Measure]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Unit of Measure]\r\n\t,\t\t\tCASE \r\n\t\t\t\t\tWHEN so.[Unit of Measure]\t = 'LTR' \r\n\t\t\t\t\t\tTHEN (CAST(CASE WHEN ar.[Line Quantity Invoiced] IS NULL THEN '0' ELSE ar.[Line Quantity Invoiced] END AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t- ABS(ISNULL(CAST(CASE WHEN ar.[Quantity Credited] IS NULL THEN '0' ELSE ar.[Quantity Credited] END AS NUMERIC(28,2)),0))) * 0.0008745 \r\n\t\t\t\t\t\tELSE CAST(CASE WHEN ar.[Line Quantity Invoiced] IS NULL THEN '0' ELSE ar.[Line Quantity Invoiced] END AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t- ABS(ISNULL(CAST(CASE WHEN ar.[Quantity Credited] IS NULL THEN '0' ELSE ar.[Quantity Credited] END AS NUMERIC(28,2)),0))\r\n\t\t\t\tEND\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoiced Quantity (TN)]\t\r\n\t,\t\t\tso.[Transactional Currency Code]\r\n\t,\t\t\to.[Business Unit Name]\r\n\t,\t\t\tCAST(LEFT(ar.[TRX_DATE],10) AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Transaction Date]\r\n\t,\t\t\tIIF(CAST(CASE WHEN ar.[UNIT_SELLING_PRICE] IS NULL THEN '0' ELSE ar.[UNIT_SELLING_PRICE] END AS NUMERIC(28,2)) < 0\r\n\t\t\t\t\t,(-1) * CAST(CASE WHEN ar.[UNIT_SELLING_PRICE] IS NULL THEN '0' ELSE ar.[UNIT_SELLING_PRICE] END AS NUMERIC(28,2)) \r\n\t\t\t\t\t\t\t* (CAST(CASE WHEN ar.[Line Quantity Invoiced] IS NULL THEN '0' ELSE ar.[Line Quantity Invoiced] END AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t\t- ABS(ISNULL(CAST(CASE WHEN ar.[Quantity Credited] IS NULL THEN '0' ELSE ar.[Quantity Credited] END AS NUMERIC(28,2)),0)))\r\n\t\t\t\t\t,CAST(CASE WHEN ar.[UNIT_SELLING_PRICE] IS NULL THEN '0' ELSE ar.[UNIT_SELLING_PRICE] END AS NUMERIC(28,2)) \r\n\t\t\t\t\t\t* (CAST(CASE WHEN ar.[Line Quantity Invoiced] IS NULL THEN '0' ELSE ar.[Line Quantity Invoiced] END AS NUMERIC(28,2))\r\n\t\t\t\t\t\t\t- ABS(ISNULL(CAST(CASE WHEN ar.[Quantity Credited] IS NULL THEN '0' ELSE ar.[Quantity Credited] END AS NUMERIC(28,2)),0)))\r\n\t\t\t\t\t)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Invoice Amount]\r\n\t,\t\t\t[EUR GBP]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [EUR:GBP]\r\n\t,\t\t\t[EUR USD]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [EUR:USD]\r\n\t,\t\t\tCAST(GETDATE() AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [DateStamp]\r\n\tINTO\t\t[Trade].[SalesOrdersAndInvoices]\r\n\tFROM\t\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Order Number]\r\n\t\t\t\t\t,\t\t\t[Transactional Currency Code]\r\n\t\t\t\t\t,\t\t\t[Org ID]\r\n\t\t\t\t\t,\t\t\tso.[Inventory Item ID]\r\n\t\t\t\t\t,\t\t\t[Inventory Organization ID]\r\n\t\t\t\t\t,\t\t\ti.[Unit of Measure]\r\n\t\t\t\t\t,\t\t\ti.[Item Code]\r\n\t\t\t\t\t,\t\t\ti.[Item Name]\t\t\r\n\t\t\t\t\t,\t\t\ti.[Category Code]\r\n\t\t\t\t\tFROM\t\t[Core].[SalesOrders] so\r\n\t\t\t\t\tLEFT JOIN\t[Core].[Items] i\r\n\t\t\t\t\tON\t\t\ti.[Inventory Item ID] = so.[Inventory Item ID]\r\n\t\t\t\t\tAND\t\t\ti.[Organization ID] = so.[Inventory Organization ID]\r\n\t\t\t\t\tWHERE\t\ti.[Category Code] NOT LIKE '%Services%'\r\n\t\t\t\t) so\r\n\tLEFT JOIN\t[Core].[ARInvoices] ar\r\n\tON\t\t\tso.[Order Number] = ar.[SALES_ORDER]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit ID]\r\n\t\t\t\t\t,\t\t\t[Business Unit Name]\r\n\t\t\t\t\tFROM\t\t[Core].[Organizations]\r\n\t\t\t\t\tGROUP BY\t[Business Unit ID]\r\n\t\t\t\t\t,\t\t\t[Business Unit Name]\r\n\t\t\t\t) o\r\n\tON\t\t\tso.[Org ID] = o.[Business Unit ID]\r\n\tLEFT JOIN\t[Core].[FXRates] fx\r\n\tON\t\t\tCAST([CONVERSION_DATE] AS DATE) = CAST(LEFT(ar.[TRX_DATE],10) AS DATE)\r\n\tWHERE\t\to.[Business Unit Name] IN ('BDA BU','Motherwell','Stanlow')\r\n\tAND\t\t\tCAST(LEFT(ar.[TRX_DATE],10) AS DATE) >= '2021-01-01'\r\n\tORDER BY\tso.[Order Number]\r\n\r\n/********************************************************************************************************\r\n\tStep 3.3\tJoin [Trade].[PurchaseOrdersAndInvoices] on to [Trade].[TraceabilityLooped] to obtain the original\r\n\t\t\t\tPO value of each feedstock item that feeds into each biodiesel sale.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[TraceabilityAndOrders]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[TraceabilityAndOrders]\r\n\r\n\tSELECT\t\tt.*\r\n\t,\t\t\to.[Parent Order]\r\n\t,\t\t\tpoi.[PO Item Code]\r\n\t,\t\t\tpoi.[PO Item Description]\r\n\t,\t\t\tpoi.[PO Item Category]\r\n\t,\t\t\to.[Invoice Amount]\r\n\t,\t\t\to.[PO Quantity]\r\n\t,\t\t\to.[Invoice Amount]/NULLIF(o.[PO Quantity],0) AS [Price per MT]\r\n\t,\t\t\to.[Lot Numbers] AS [Lot Numbers Orders Table]\r\n\t,\t\t\to.[PO Transaction Date]\r\n\t,\t\t\to.[Business Unit] AS [PO Business Unit]\r\n\t,\t\t\tISNULL(sodr.[Returned Flag],'0') AS [Returned Flag]\r\n\tINTO\t\t[Trade].[TraceabilityAndOrders]\r\n\tFROM\t\t[Trade].[TraceabilityLooped] t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Parent Order]\r\n\t\t\t\t\t,\t\t\tSUM(CASE WHEN [Currency] = 'USD' THEN [Invoice Amount]/[EUR USD]\r\n\t\t\t\t\t\t\t\t\t\t WHEN [Currency] = 'GBP' THEN [Invoice Amount]/[EUR GBP]\r\n\t\t\t\t\t\t\t\t\t\t ELSE [Invoice Amount]\r\n\t\t\t\t\t\t\t\t\tEND) AS [Invoice Amount]\r\n\t\t\t\t\t,\t\t\tSUM(CAST(CASE\r\n\t\t\t\t\t\t\t\t\t\t\tWHEN [Category Code] LIKE '%Feedstock%' OR [Category Code] LIKE '%Biodiesel%'\r\n\t\t\t\t\t\t\t\t\t\t\t\tTHEN IIF(CAST([Invoiced Quantity] AS DECIMAL(28,8)) = 0,[Invoiced Quantity],[Quantity])\r\n\t\t\t\t\t\t\t\t\t\t\tELSE '0'\r\n\t\t\t\t\t\t\t\t\t\t END AS DECIMAL(28,8))) AS [PO Quantity]\r\n\t\t\t\t\t,\t\t\tMAX([Transaction Date]) AS [PO Transaction Date]\r\n\t\t\t\t\t,\t\t\t[Lot Numbers]\r\n\t\t\t\t\tFROM\t\t[Trade].[PurchaseOrdersAndInvoices]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Parent Order]\r\n\t\t\t\t\t,\t\t\t[Lot Numbers]\r\n\t\t\t\t) o\r\n\tON\t\t\tCOALESCE(t.[Lot Numbers_21]\r\n\t\t\t\t\t\t,t.[Lot Numbers_20]\r\n\t\t\t\t\t\t,t.[Lot Numbers_19]\r\n\t\t\t\t\t\t,t.[Lot Numbers_18]\r\n\t\t\t\t\t\t,t.[Lot Numbers_17]\r\n\t\t\t\t\t\t,t.[Lot Numbers_16]\r\n\t\t\t\t\t\t,t.[Lot Numbers_15]\r\n\t\t\t\t\t\t,t.[Lot Numbers_14]\r\n\t\t\t\t\t\t,t.[Lot Numbers_13]\r\n\t\t\t\t\t\t,t.[Lot Numbers_12]\r\n\t\t\t\t\t\t,t.[Lot Numbers_11]\r\n\t\t\t\t\t\t,t.[Lot Numbers_10]\r\n\t\t\t\t\t\t,t.[Lot Numbers_9]\r\n\t\t\t\t\t\t,t.[Lot Numbers_8]\r\n\t\t\t\t\t\t,t.[Lot Numbers_7]\r\n\t\t\t\t\t\t,t.[Lot Numbers_6]\r\n\t\t\t\t\t\t,t.[Lot Numbers_5]\r\n\t\t\t\t\t\t,t.[Lot Numbers_4]\r\n\t\t\t\t\t\t,t.[Lot Numbers_3]\r\n\t\t\t\t\t\t,t.[Lot Numbers_2]\r\n\t\t\t\t\t\t,t.[Lot Numbers]) = o.[Lot Numbers]\t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Parent Order]\r\n\t\t\t\t\t,\t\t\t[Item Code]\t\t\tAS [PO Item Code]\r\n\t\t\t\t\t,\t\t\t[Item Description]\tAS [PO Item Description]\r\n\t\t\t\t\t,\t\t\t[Category Code]\t\tAS [PO Item Category]\r\n\t\t\t\t\tFROM\t\t[Trade].[PurchaseOrdersAndInvoices]\t\t--20,098\r\n\t\t\t\t\tWHERE\t\t[Category Code] <> 'Services.Services'\r\n\t\t\t\t\tGROUP BY\t[Parent Order]\r\n\t\t\t\t\t,\t\t\t[Item Code]\r\n\t\t\t\t\t,\t\t\t[Item Description]\r\n\t\t\t\t\t,\t\t\t[Category Code]\r\n\t\t\t\t) poi\r\n\tON\t\t\to.[Parent Order] = poi.[Parent Order]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Order Number]\t\r\n\t\t\t\t\t,\t\t\t[Line Number]\r\n\t\t\t\t\t,\t\t\t'1' AS [Returned Flag]\r\n\t\t\t\t\tFROM\t\t[Core].[SalesOrderDocumentReferences] sodr\r\n\t\t\t\t\tLEFT JOIN\t[Core].[SalesOrders] so\r\n\t\t\t\t\tON\t\t\tsodr.[DOC_LINE_ID] = so.[Line ID]\r\n\t\t\t\t\tWHERE\t\t[Line ID] IS NOT NULL\r\n\t\t\t\t) sodr\r\n\tON\t\t\tt.[SOURCE_HEADER_NUMBER] = sodr.[Order Number]\t\r\n\tAND\t\t\tt.[SOURCE_LINE_NUMBER] = sodr.[Line Number]\r\n\tORDER BY\tt.[CREATION_DATE]"
+								}
+							]
+						}
+					},
+					{
+						"name": "Margin Data Marks Script_copy1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Margin Data Marks Script",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "/*==============================================================================================================================*\r\n * Project:\t\tArgent\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Purpose:\t\tCreate the data marts that will feed into the Margin report.\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Description:\t1) Create sales order feedstock value data marts\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n * Prerequisites: Run tracability loop script.\t\t\t \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Key Outputs: Tables \"[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity]\"\t\t\t\t\t\t\t\t\t\t\t*\r\n\t\t\t\t\t, \"[Trade].[SalesOrderFeedstockValues_Summarised]\"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date:       29/07/2022\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Version:     1.0\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n *==============================================================================================================================*\r\n * Updates:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date\t\t| Version | Author\t\t| Change made\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * -----------------------------------------------------------------------------------------------------------------------------*\r\n * --/--/-- |  1.-\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t|\t\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *==============================================================================================================================*/\r\n/********************************************************************************************************\r\n\tStep 4.1\tCalculate the original value of feedstock used from the original PO. [Trade].[TraceabilityAndOrders]\r\n\t\t\t\tis not filtered for Returned Flag = 1 so that cost of sales for all order numbers can be calculated.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[POValues_RMA]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[POValues_RMA]\r\n\r\n\tSELECT\t\t* \r\n\t,\t\t\tCOALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]) * [Price per MT] AS [PO Value]\r\n\tINTO\t\t[Trade].[POValues_RMA]\r\n\tFROM\t\t[Trade].[TraceabilityAndOrders]\r\n\r\n/********************************************************************************************************\r\n\tStep 4.2\tUse the quantities produced in each batch to calculate the value of feedstock from the original PO\r\n\t\t\t\tthat is used to create the biodiesel batch.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_POLevel_RMA]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_POLevel_RMA]\r\n\r\n\tSELECT\t\t[Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Document Number] AS [Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name]\r\n\t,\t\t\tSUM(DISTINCT ABS([Quantity])) AS [Total Biodiesel Quantity in MT]\r\n\t,\t\t\tSUM(DISTINCT ABS(CASE WHEN [Returned Flag] = '1' THEN 0 ELSE [Quantity] END)) AS [Total Biodiesel Quantity Not Returned]\r\n\t,\t\t\t[Lot Numbers]\r\n\t,\t\t\t[Parent Order] AS [Purchase Order]\r\n\t,\t\t\t[PO Item Code]\r\n\t,\t\t\t[PO Item Description]\r\n\t,\t\t\t[PO Item Category]\r\n\t,\t\t\t[PO Transaction Date]\r\n\t,\t\t\t[PO Business Unit]\r\n\t,\t\t\tSUM(COALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]))\tAS [PO Quantity Used]\r\n\t,\t\t\tSUM([PO Value]) AS [PO Value Used]\r\n\t,\t\t\tSUM(ABS(ISNULL(([Quantity]/[Quantity_2]),1) * ISNULL(([Quantity_3]/[Quantity_4]),1) * ISNULL(([Quantity_5]/[Quantity_6]),1) * ISNULL(([Quantity_7]/[Quantity_8]),1) * ISNULL(([Quantity_9]/[Quantity_10]),1) \r\n\t\t\t\t\t\t* ISNULL(([Quantity_11]/[Quantity_12]),1) * ISNULL(([Quantity_13]/[Quantity_14]),1) * ISNULL(([Quantity_15]/[Quantity_16]),1) * ISNULL(([Quantity_17]/[Quantity_18]),1) * ISNULL(([Quantity_19]/[Quantity_20]),1) \r\n\t\t\t\t\t\t\t* COALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]))) AS [Feedstock Quantity]\r\n\t,\t\t\tSUM(ABS(ISNULL(([Quantity]/[Quantity_2]),1) * ISNULL(([Quantity_3]/[Quantity_4]),1) * ISNULL(([Quantity_5]/[Quantity_6]),1) * ISNULL(([Quantity_7]/[Quantity_8]),1) * ISNULL(([Quantity_9]/[Quantity_10]),1) \r\n\t\t\t\t\t\t* ISNULL(([Quantity_11]/[Quantity_12]),1) * ISNULL(([Quantity_13]/[Quantity_14]),1) * ISNULL(([Quantity_15]/[Quantity_16]),1) * ISNULL(([Quantity_17]/[Quantity_18]),1) * ISNULL(([Quantity_19]/[Quantity_20]),1) \r\n\t\t\t\t\t\t\t* [PO Value])) AS [Feedstock Value]\r\n\t,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\t,\t\t\t[Returned Flag]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_POLevel_RMA]\r\n\tFROM\t\t[Trade].[POValues_RMA]\r\n\tGROUP BY\t[Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Document Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name]\r\n\t,\t\t\t[Lot Numbers]\r\n\t,\t\t\t[Parent Order]\r\n\t,\t\t\t[PO Item Code]\r\n\t,\t\t\t[PO Item Description]\r\n\t,\t\t\t[PO Item Category]\r\n\t,\t\t\t[PO Transaction Date]\r\n\t,\t\t\t[PO Business Unit]\r\n\t,\t\t\t[Returned Flag]\r\n\r\n/********************************************************************************************************\r\n\tStep 4.3\tCalculate the biodiesel quantity that each PO has contributed to and also include yields.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity_RMA]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity_RMA]\r\n\r\n\tSELECT\t\tpo.*\r\n\t,\t\t\tABS(MAX([Total Biodiesel Quantity in MT])OVER(PARTITION BY [Sales Order Number], [Lot Numbers], [Total Biodiesel Quantity in MT])/NULLIF(SUM([Feedstock Quantity])OVER(PARTITION BY [Sales Order Number], [Lot Numbers], [Total Biodiesel Quantity in MT]),0)\r\n\t\t\t\t\t* [Feedstock Quantity]) AS [Biodiesel Quantity Row Level]\r\n\t,\t\t\ty.[Actual Yield]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity_RMA]\r\n\tFROM\t\t[Trade].[SalesOrderFeedstockValues_POLevel_RMA] po\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t\t,\t\t\tAVG(CAST([Expected yield] AS DECIMAL(28,8))) AS [Actual Yield]\r\n\t\t\t\t\tFROM\t\t[Trade].[Yield]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t) y\r\n\tON\t\t\tpo.[Business Unit Name] = y.[Business Unit]\r\n\tAND\t\t\tCAST(LEFT([Physical Date],10) AS DATE) BETWEEN CAST(y.[Start date] AS DATE) AND ISNULL(CAST(y.[End date] AS DATE),GETDATE())\r\n\r\n/********************************************************************************************************\r\n\tStep 4.4\tSummarise results at the SO level.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_Summarised_RMA]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_Summarised_RMA]\r\n\r\n\tSELECT\t\tCAST(LEFT([Physical Date],10) AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name] \r\n\t,\t\t\tso.[Sales Invoice Amount]\r\n\t,\t\t\tSUM(ABS([Biodiesel Quantity Row Level]))\t\t\t\t\t\t\t\t\t\t\t\tAS [Biodiesel Quantity in MT] \r\n\t,\t\t\tMAX(so.[Sales Invoice Amount])/SUM(ABS([Biodiesel Quantity Row Level]))\t\t\t\t\tAS [Biodiesel Price]\r\n\t,\t\t\tSUM(ABS([Feedstock Value]))\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Value]\r\n\t,\t\t\tSUM(CASE\r\n\t\t\t\t\t\tWHEN [Purchase Order] IS NULL\r\n\t\t\t\t\t\t\tTHEN 0\r\n\t\t\t\t\t\tELSE [Feedstock Quantity]\r\n\t\t\t\t\tEND)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Quantity in MT]\r\n\t,\t\t\tSUM(ABS([Feedstock Value]))/SUM(CASE\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tWHEN [Purchase Order] IS NULL\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 0\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tELSE [Feedstock Quantity]\r\n\t\t\t\t\t\t\t\t\t\t\t\tEND)\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Price]\r\n\t,\t\t\ty.[Actual Yield]\r\n\t,\t\t\tIIF(so.[Sales Invoice Amount] IS NULL,'1','0') AS [Not Invoiced Flag]\r\n\t,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_Summarised_RMA]\r\n\tFROM\t\t[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity_RMA] t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Parent Order]\r\n\t\t\t\t\t,\t\t\tSUM(CASE\r\n\t\t\t\t\t\t\t\t\t\tWHEN [Transactional Currency Code] = 'GBP' THEN [Invoice Amount]/[EUR:GBP]\r\n\t\t\t\t\t\t\t\t\t\tWHEN [Transactional Currency Code] = 'USD' THEN [Invoice Amount]/[EUR:USD]\r\n\t\t\t\t\t\t\t\t\t\tELSE [Invoice Amount] \r\n\t\t\t\t\t\t\t\t\tEND) AS [Sales Invoice Amount]\r\n\t\t\t\t\tFROM\t\t[Trade].[SalesOrdersAndInvoices]\r\n\t\t\t\t\tGROUP BY\t[Parent Order]\r\n\t\t\t\t) so\t\t\r\n\tON\t\t\tt.[Sales Order Number] = so.[Parent Order]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t\t,\t\t\tAVG(CAST([Expected yield] AS DECIMAL(28,8))) AS [Actual Yield]\r\n\t\t\t\t\tFROM\t\t[Trade].[Yield]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t) y\r\n\tON\t\t\tt.[Business Unit Name] = y.[Business Unit]\r\n\tAND\t\t\tCAST(LEFT([Physical Date],10) AS DATE) BETWEEN CAST(y.[Start date] AS DATE) AND ISNULL(CAST(y.[End date] AS DATE),GETDATE())\r\n\tGROUP BY\tCAST(LEFT([Physical Date],10) AS DATE)\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name] \r\n\t,\t\t\tso.[Sales Invoice Amount]\r\n\t,\t\t\ty.[Actual Yield]\r\n\t,\t\t\tIIF(so.[Sales Invoice Amount] IS NULL,'1','0')\r\n\r\n\r\n\r\n/********************************************************************************************************\r\n\tStep 4.5\tRerun Step 4.1 but with returned orders removed.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[POValues]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[POValues]\r\n\r\n\tSELECT\t\t* \r\n\t,\t\t\tCOALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]) * [Price per MT] AS [PO Value]\r\n\tINTO\t\t[Trade].[POValues]\r\n\tFROM\t\t[Trade].[TraceabilityAndOrders]\r\n\tWHERE\t\t[Returned Flag] <> '1'\r\n\r\n/********************************************************************************************************\r\n\tStep 4.6\tRerun Step 4.2 but with returned orders removed.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_POLevel]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_POLevel]\r\n\r\n\tSELECT\t\t[Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Document Number] AS [Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name]\r\n\t,\t\t\tSUM(DISTINCT ABS([Quantity])) AS [Total Biodiesel Quantity in MT]\r\n\t,\t\t\t[Lot Numbers]\r\n\t,\t\t\t[Parent Order] AS [Purchase Order]\r\n\t,\t\t\t[PO Item Code]\r\n\t,\t\t\t[PO Item Description]\r\n\t,\t\t\t[PO Item Category]\r\n\t,\t\t\t[PO Transaction Date]\r\n\t,\t\t\t[PO Business Unit]\r\n\t,\t\t\tSUM(COALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]))\tAS [PO Quantity Used]\r\n\t,\t\t\tSUM([PO Value]) AS [PO Value Used]\r\n\t,\t\t\tSUM(ABS(ISNULL(([Quantity]/[Quantity_2]),1) * ISNULL(([Quantity_3]/[Quantity_4]),1) * ISNULL(([Quantity_5]/[Quantity_6]),1) * ISNULL(([Quantity_7]/[Quantity_8]),1) * ISNULL(([Quantity_9]/[Quantity_10]),1) \r\n\t\t\t\t\t\t* ISNULL(([Quantity_11]/[Quantity_12]),1) * ISNULL(([Quantity_13]/[Quantity_14]),1) * ISNULL(([Quantity_15]/[Quantity_16]),1) * ISNULL(([Quantity_17]/[Quantity_18]),1) * ISNULL(([Quantity_19]/[Quantity_20]),1) \r\n\t\t\t\t\t\t\t* COALESCE([Quantity_21],[Quantity_19],[Quantity_17],[Quantity_15],[Quantity_13],[Quantity_11],[Quantity_9],[Quantity_7],[Quantity_5],[Quantity_3],[Quantity]))) AS [Feedstock Quantity]\r\n\t,\t\t\tSUM(ABS(ISNULL(([Quantity]/[Quantity_2]),1) * ISNULL(([Quantity_3]/[Quantity_4]),1) * ISNULL(([Quantity_5]/[Quantity_6]),1) * ISNULL(([Quantity_7]/[Quantity_8]),1) * ISNULL(([Quantity_9]/[Quantity_10]),1) \r\n\t\t\t\t\t\t* ISNULL(([Quantity_11]/[Quantity_12]),1) * ISNULL(([Quantity_13]/[Quantity_14]),1) * ISNULL(([Quantity_15]/[Quantity_16]),1) * ISNULL(([Quantity_17]/[Quantity_18]),1) * ISNULL(([Quantity_19]/[Quantity_20]),1) \r\n\t\t\t\t\t\t\t* [PO Value])) AS [Feedstock Value]\r\n\t,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_POLevel]\r\n\tFROM\t\t[Trade].[POValues]\r\n\tGROUP BY\t[Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Document Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name]\r\n\t,\t\t\t[Lot Numbers]\r\n\t,\t\t\t[Parent Order]\r\n\t,\t\t\t[PO Item Code]\r\n\t,\t\t\t[PO Item Description]\r\n\t,\t\t\t[PO Item Category]\r\n\t,\t\t\t[PO Transaction Date]\r\n\t,\t\t\t[PO Business Unit]\r\n\r\n/********************************************************************************************************\r\n\tStep 4.7\tRerun Step 4.3 but with returned orders removed.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity]\r\n\r\n\tSELECT\t\tpo.*\r\n\t,\t\t\tABS(MAX([Total Biodiesel Quantity in MT])OVER(PARTITION BY [Sales Order Number], [Lot Numbers], [Total Biodiesel Quantity in MT])/NULLIF(SUM([Feedstock Quantity])OVER(PARTITION BY [Sales Order Number], [Lot Numbers], [Total Biodiesel Quantity in MT]),0)\r\n\t\t\t\t\t* [Feedstock Quantity]) AS [Biodiesel Quantity Row Level]\r\n\t,\t\t\ty.[Actual Yield]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity]\r\n\tFROM\t\t[Trade].[SalesOrderFeedstockValues_POLevel] po\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t\t,\t\t\tAVG(CAST([Expected yield] AS DECIMAL(28,8))) AS [Actual Yield]\r\n\t\t\t\t\tFROM\t\t[Trade].[Yield]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t) y\r\n\tON\t\t\tpo.[Business Unit Name] = y.[Business Unit]\r\n\tAND\t\t\tCAST(LEFT([Physical Date],10) AS DATE) BETWEEN CAST(y.[Start date] AS DATE) AND ISNULL(CAST(y.[End date] AS DATE),GETDATE())\r\n\r\n/********************************************************************************************************\r\n\tStep 4.8\tRerun Step 4.4 but with returned orders removed.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_Summarised_PreRMAAdjustment]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_Summarised_PreRMAAdjustment]\r\n\r\n\tSELECT\t\tCAST(LEFT([Physical Date],10) AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name] \r\n\t,\t\t\tso.[Sales Invoice Amount]\r\n\t,\t\t\tSUM(ABS([Biodiesel Quantity Row Level]))\t\t\t\t\t\t\t\t\t\t\t\tAS [Biodiesel Quantity in MT] \r\n\t,\t\t\tMAX(so.[Sales Invoice Amount])/SUM(ABS([Biodiesel Quantity Row Level]))\t\t\t\t\tAS [Biodiesel Price]\r\n\t,\t\t\tSUM(ABS([Feedstock Value]))\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Value]\r\n\t,\t\t\tSUM(CASE\r\n\t\t\t\t\t\tWHEN [Purchase Order] IS NULL\r\n\t\t\t\t\t\t\tTHEN 0\r\n\t\t\t\t\t\tELSE [Feedstock Quantity]\r\n\t\t\t\t\tEND)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Quantity in MT]\r\n\t,\t\t\tSUM(ABS([Feedstock Value]))/SUM(CASE\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tWHEN [Purchase Order] IS NULL\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 0\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tELSE [Feedstock Quantity]\r\n\t\t\t\t\t\t\t\t\t\t\t\tEND)\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Feedstock Price]\r\n\t,\t\t\ty.[Actual Yield]\r\n\t,\t\t\tIIF(so.[Sales Invoice Amount] IS NULL,'1','0') AS [Not Invoiced Flag]\r\n\t,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_Summarised_PreRMAAdjustment]\r\n\tFROM\t\t[Trade].[SalesOrderFeedstockValues_POLevel_BiodieselQuantity] t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Parent Order]\r\n\t\t\t\t\t,\t\t\tSUM(CASE\r\n\t\t\t\t\t\t\t\t\t\tWHEN [Transactional Currency Code] = 'GBP' THEN [Invoice Amount]/[EUR:GBP]\r\n\t\t\t\t\t\t\t\t\t\tWHEN [Transactional Currency Code] = 'USD' THEN [Invoice Amount]/[EUR:USD]\r\n\t\t\t\t\t\t\t\t\t\tELSE [Invoice Amount] \r\n\t\t\t\t\t\t\t\t\tEND) AS [Sales Invoice Amount]\r\n\t\t\t\t\tFROM\t\t[Trade].[SalesOrdersAndInvoices]\r\n\t\t\t\t\tGROUP BY\t[Parent Order]\r\n\t\t\t\t) so\t\t\r\n\tON\t\t\tt.[Sales Order Number] = so.[Parent Order]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t\t,\t\t\tAVG(CAST([Expected yield] AS DECIMAL(28,8))) AS [Actual Yield]\r\n\t\t\t\t\tFROM\t\t[Trade].[Yield]\r\n\t\t\t\t\tGROUP BY\t[Business Unit]\r\n\t\t\t\t\t,\t\t\t[Start date]\r\n\t\t\t\t\t,\t\t\t[End date]\r\n\t\t\t\t) y\r\n\tON\t\t\tt.[Business Unit Name] = y.[Business Unit]\r\n\tAND\t\t\tCAST(LEFT([Physical Date],10) AS DATE) BETWEEN CAST(y.[Start date] AS DATE) AND ISNULL(CAST(y.[End date] AS DATE),GETDATE())\r\n\tGROUP BY\tCAST(LEFT([Physical Date],10) AS DATE)\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\t[Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name] \r\n\t,\t\t\tso.[Sales Invoice Amount]\r\n\t,\t\t\ty.[Actual Yield]\r\n\t,\t\t\tIIF(so.[Sales Invoice Amount] IS NULL,'1','0')\r\n\r\n/********************************************************************************************************\r\n\tStep 4.9\tReturned and resold biodiesel batches are linked using an RMA receipt number. This section calculates the \r\n\t\t\t\tfeedstock value on the original order for biodiesel that has returned and been resold.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[RMA_Adjustments]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[RMA_Adjustments]\r\n\r\n\tSELECT\t\t* \r\n\tINTO\t\t[Trade].[RMA_Adjustments] \r\n\tFROM\t\t(\r\n\t\t\t\t\tSELECT\t\tt.[Document Number] AS [Sales Order Number]\r\n\t\t\t\t\t,\t\t\tSUM(DISTINCT (t.[Quantity]/oq.[Quantity]) * [Feedstock Value]) AS [RMA Feedstock Value]\r\n\t\t\t\t\t,\t\t\tSUM(DISTINCT (t.[Quantity]/oq.[Quantity]) * [Feedstock Quantity in MT]) AS [RMA Feedstock Quantity]\r\n\t\t\t\t\tFROM\t\t[Trade].[TraceabilityAndOrders] t\r\n\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\t\t\t\t\tWHERE\t\t[Transaction Type] = 'RMA Receipt'\r\n\t\t\t\t\t\t\t\t) rmar\r\n\t\t\t\t\tON\t\t\tCOALESCE(t.[Lot Numbers_19],t.[Lot Numbers_18],t.[Lot Numbers_17],t.[Lot Numbers_16],t.[Lot Numbers_15],t.[Lot Numbers_14],t.[Lot Numbers_13],t.[Lot Numbers_12],t.[Lot Numbers_11],t.[Lot Numbers_10]\r\n\t\t\t\t\t\t\t\t\t\t,t.[Lot Numbers_9],t.[Lot Numbers_8],t.[Lot Numbers_7],t.[Lot Numbers_6],t.[Lot Numbers_5],t.[Lot Numbers_4],t.[Lot Numbers_3],t.[Lot Numbers_2],t.[Lot Numbers]) = rmar.[Lot Numbers]\r\n\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\t\t\t\t\tFROM\t\t[Core].[SalesOrders]\r\n\t\t\t\t\t\t\t\t) so\r\n\t\t\t\t\tON\t\t\tso.[Order Number] = rmar.[Document Number]\r\n\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\t\t\t\t\tFROM\t\t[Core].[SalesOrderDocumentReferences]\r\n\t\t\t\t\t\t\t\t) ddr\r\n\t\t\t\t\tON\t\t\tso.[Header ID] = ddr.[HEADER_ID]\r\n\t\t\t\t\tAND\t\t\tddr.[DOC_REF_TYPE] = 'ORIGINAL_SALES_ORDER'\r\n\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\tSELECT\t\t[Sales Order Number]\r\n\t\t\t\t\t\t\t\t\t,\t\t\t[Feedstock Value]\r\n\t\t\t\t\t\t\t\t\t,\t\t\t[Feedstock Quantity in MT]\r\n\t\t\t\t\t\t\t\t\t,\t\t\t[Biodiesel Quantity in MT]\r\n\t\t\t\t\t\t\t\t\tFROM\t\t[Trade].[SalesOrderFeedstockValues_Summarised_RMA]\r\n\t\t\t\t\t\t\t\t) ocos\r\n\t\t\t\t\tON\t\t\tddr.[DOC_USER_KEY] = ocos.[Sales Order Number]\r\n\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\tSELECT\t\t[Document Number]\r\n\t\t\t\t\t\t\t\t\t,\t\t\tSUM([Quantity]) AS [Quantity]\r\n\t\t\t\t\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Sales Order Issue'\r\n\t\t\t\t\t\t\t\t\tGROUP BY\t[Document Number]\r\n\t\t\t\t\t\t\t\t) oq\r\n\t\t\t\t\tON\t\t\tddr.[DOC_USER_KEY] = oq.[Document Number]\r\n\t\t\t\t\tWHERE\t\tt.[Parent Order] IS NULL\r\n\t\t\t\t\tGROUP BY\tt.[Document Number]\r\n\t\t\t\t) x\r\n\tWHERE\t\t[RMA Feedstock Value] IS NOT NULL\r\n\r\n/********************************************************************************************************\r\n\tStep 4.10\tSummarise [Trade].[SalesOrderFeedstockValues_Summarised_PreRMAAdjustment] at the SO level\r\n\t\t\t\tand include the RMA adjustments so that resold biodiesel has the correct cost of sales value.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[Trade].[SalesOrderFeedstockValues_Summarised]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[SalesOrderFeedstockValues_Summarised]\r\n\r\n\tSELECT\t\t[Physical Date]\r\n\t,\t\t\t[Business Unit Name]\r\n\t,\t\t\tsofv.[Sales Order Number]\r\n\t,\t\t\t[Item Code]\r\n\t,\t\t\t[Item Name]\r\n\t,\t\t\t[Sales Invoice Amount]\r\n\t,\t\t\t[Biodiesel Quantity in MT]\r\n\t,\t\t\t[Biodiesel Price]\r\n\t,\t\t\tISNULL([Feedstock Value],0) + ISNULL([RMA Feedstock Value],0) AS [Feedstock Value]\r\n\t,\t\t\tISNULL([Feedstock Quantity in MT],0) + ISNULL([RMA Feedstock Quantity],0) AS [Feedstock Quantity in MT]\r\n\t,\t\t\tISNULL((ISNULL([Feedstock Value],0) + ISNULL([RMA Feedstock Value],0))/NULLIF((ISNULL([Feedstock Quantity in MT],0) + ISNULL([RMA Feedstock Quantity],0)),0),0) AS [Feedstock Price]\r\n\t,\t\t\t[Actual Yield]\r\n\t,\t\t\t[Not Invoiced Flag]\r\n\t,\t\t\t[DateStamp]\r\n\tINTO\t\t[Trade].[SalesOrderFeedstockValues_Summarised]\r\n\tFROM\t\t[Trade].[SalesOrderFeedstockValues_Summarised_PreRMAAdjustment] sofv\r\n\tLEFT JOIN\t[Trade].[RMA_Adjustments]  rma\r\n\tON\t\t\tsofv.[Sales Order Number] = rma.[Sales Order Number]"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade/Margin"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-21T20:07:57Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Margin_Traceability_Loop')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Stored procedure1",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Trade].[SQL_MarginTraceabilityLoop]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade/Margin"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-21T16:18:47Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Margin_Traceability_Report_Script')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Margin Traceability Report Script",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "/*==============================================================================================================================*\r\n * Project:\t\tArgent\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Purpose:\t\tFind the feedstock items that have been used to create each biodiesel sale\t\t\t\t\t\t\t\t\t\t*\r\n * Description:\t1) Create the traceability table which contains all movements of feedstock/biodiesel and the quantities involved*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n *\t\t\t\t2) Self join the traceability table multiple times to trace each biodiesel sale back to the feedstock items\t    *\r\n *\t\t\t\t   that have been purchased.\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Prerequisites: Run Core tables script.\t\t\t \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Outputs: Tables \"Trade.Traceability\", \"Trade.TraceabilityLooped\"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date:       29/07/2022\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Version:     1.0\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * SQL ATR - Complicated process but made up of basic joins.\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t* \r\n *\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\r\n *==============================================================================================================================*\r\n * Updates:\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * Date\t\t| Version | Author\t\t| Change made\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n * -----------------------------------------------------------------------------------------------------------------------------*\r\n * --/--/-- |  1.-\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *\t\t\t|\t\t  |\t\t\t\t|\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t*\r\n *==============================================================================================================================*/\r\n/********************************************************************************************************\r\n\tStep 2.1\tCreate traceability table.\r\n\r\n\t\t\t\tThis table is built using [Core].[InventoryTransactions], [Core].[ShippingDetails],\r\n\t\t\t\t[Core].[SalesOrders], [Core].[SalesOrders_Fulfilled], [Core].[Organizations], [Core].[ReceivingTransactions],\r\n\t\t\t\t[Core].[PurchaseOrders], [Core].[InventoryLotNumberTransactions] and [Core].[InventoryLotNumbers].\r\n\r\n\t\t\t\tThe table contains details all movements of inventory items throughout the business. This includes all feedstock items\r\n\t\t\t\tthat have been purchased, the quantity of every feedstock/biodiesel batch that gets created as well as the quantities of\r\n\t\t\t\tthe items used to produce them and also the details of the biodiesel sold.\r\n********************************************************************************************************/\r\n\tIF OBJECT_ID('[Trade].[Traceability]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[Traceability]\r\n\r\n\tSELECT\t\to.[Business Unit Name]\r\n\t,\t\t\tit.[SUBINVENTORY_CODE]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Subinventory]\r\n\t,\t\t\tCOALESCE(\r\n\t\t\t\t\t\t\tLEFT(it.[ATTRIBUTE_TIMESTAMP1],10)\r\n\t\t\t\t\t\t,\tLEFT(rt.[ATTRIBUTE_TIMESTAMP2],10)\r\n\t\t\t\t\t\t,\tCASE\r\n\t\t\t\t\t\t\t\tWHEN so.[Comments] LIKE '%Time Off Site%'\r\n\t\t\t\t\t\t\t\t\tTHEN \r\n\t\t\t\t\t\t\t\t\t\tCONCAT(\r\n\t\t\t\t\t\t\t\t\t\t\tRIGHT(SUBSTRING(so.[Comments],CHARINDEX('Time Off Site',so.[Comments])+14,10),4)\r\n\t\t\t\t\t\t\t\t\t\t,\tSUBSTRING(SUBSTRING(so.[Comments],CHARINDEX('Time Off Site',so.[Comments])+14,10),3,4)\r\n\t\t\t\t\t\t\t\t\t\t,\tLEFT(SUBSTRING(so.[Comments],CHARINDEX('Time Off Site',so.[Comments])+14,10),2)\r\n\t\t\t\t\t\t\t\t\t\t)\r\n\t\t\t\t\t\t\t\tELSE so.[Schedule Ship Date]\r\n\t\t\t\t\t\t\tEND\r\n\t\t\t\t\t\t,\tLEFT(sof.[REQUEST_SHIP_DATE],10)\r\n\t\t\t\t\t\t,\tLEFT(it.[TRANSACTION_DATE],10)\r\n\t\t\t\t\t\t)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Physical Date]\r\n\t,\t\t\tCOALESCE(\r\n\t\t\t\t\t\t\tpo.[Purchase Order Number]\r\n\t\t\t\t\t\t,\tso.[Order Number]\r\n\t\t\t\t\t\t,\tit.[TRANSACTION_SOURCE_NAME]\r\n\t\t\t\t\t\t,\tit.[TRANSACTION_REFERENCE]\t\r\n\t\t\t\t\t\t,\trsh.[RA_DOCUMENT_NUMBER]\r\n\t\t\t\t\t\t)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Document Number]\r\n\t,\t\t\tit.[TRANSACTION_TYPE_NAME]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Transaction Type]\r\n\t,\t\t\ti.[Item Code]\r\n\t,\t\t\ti.[Item Name]\r\n\t,\t\t\ti.[Unit of Measure]\t\t\t\t\t\t\t\t\t\t\t\r\n\t,\t\t\tCAST(ilnt.[PRIMARY_QUANTITY] AS NUMERIC(28,8))\t\t\t\t\t\t\t\t\t\t\tAS [Quantity]\r\n\t,\t\t\tit.[TRANSFER_SUBINVENTORY]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Transfer Subinventory]\r\n\t,\t\t\tilnt.[LOT_NUMBER]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Lot Numbers]\r\n\t,\t\t\tit.[TRANSACTION_ID]\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Transaction ID]\r\n\t,\t\t\tit.[CREATION_DATE]\r\n\t,\t\t\tit.[TRANSACTION_DATE]\r\n\t,\t\t\tsd.[SOURCE_HEADER_NUMBER]\r\n\t,\t\t\tsd.[SOURCE_LINE_NUMBER]\r\n\t,\t\t\tCAST(GETDATE() AS DATE)\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [DateStamp]\r\n\tINTO\t\t[Trade].[Traceability]\r\n\tFROM\t\t[Core].[InventoryTransactions] it\r\n\tLEFT JOIN\t[Core].[ShippingDetails] sd\r\n\tON\t\t\tit.[TRX_SOURCE_LINE_ID] = sd.[DELIVERY_DETAIL_ID]\r\n\tAND\t\t\tit.[TRANSACTION_SOURCE_TYPE_ID] = '2'\t\t\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t[Header ID]\r\n\t\t\t\t\t,\t\t\t[Order Number]\r\n\t\t\t\t\t,\t\t\t[Comments]\r\n\t\t\t\t\t,\t\t\tMAX([Schedule Ship Date]) AS [Schedule Ship Date]\r\n\t\t\t\t\t,\t\t\t[Submitted Flag]\r\n\t\t\t\t\tFROM\t\t[Core].[SalesOrders]\r\n\t\t\t\t\tGROUP BY\t[Header ID]\r\n\t\t\t\t\t,\t\t\t[Order Number]\r\n\t\t\t\t\t,\t\t\t[Comments]\r\n\t\t\t\t\t,\t\t\t[Submitted Flag]\r\n\t\t\t\t) so\r\n\tON\t\t\tso.[Order Number] = sd.[SOURCE_HEADER_NUMBER]\r\n\tAND\t\t\tso.[Submitted Flag] = 'Y'\t\r\n\tLEFT JOIN\t[Core].[SalesOrders_Fulfilled] sof\r\n\tON\t\t\tso.[Header ID] = sof.[HEADER_ID]\r\n\tAND\t\t\tsof.[FULFILL_LINE_ID] = sd.[SOURCE_SHIPMENT_ID]\r\n\tLEFT JOIN\t[Core].[Organizations] o\r\n\tON\t\t\to.[Organization ID] = it.[ORGANIZATION_ID]\r\n\tLEFT JOIN\t[Core].[Items] i\r\n\tON\t\t\ti.[Inventory Item ID] = it.[INVENTORY_ITEM_ID]\r\n\tAND\t\t\ti.[Organization ID] = it.[ORGANIZATION_ID]\r\n\tLEFT JOIN\t[Core].[ReceivingTransactions] rt\r\n\tON\t\t\trt.[Transaction ID] = it.[RCV_TRANSACTION_ID]\r\n\tLEFT JOIN\t[Core].[ReceivingShipmentHeaders] rsh\r\n\tON\t\t\trt.[Receipt Advice Header ID] = rsh.[SHIPMENT_HEADER_ID]\r\n    AND\t\t\trt.[Source Document Code] = 'RMA'\r\n    AND\t\t\trt.[Transaction Type] = 'DELIVER'\r\n\tLEFT JOIN\t[Core].[PurchaseOrders] po\r\n\tON\t\t\tpo.[PO Header ID] = rt.[PO Header ID]\r\n\tAND\t\t\tpo.[PO Line ID] = rt.[PO Line ID]\r\n\tLEFT JOIN\t[Core].[InventoryLotNumberTransactions] ilnt\r\n\tON\t\t\tilnt.[TRANSACTION_ID] = it.[TRANSACTION_ID]\r\n\tLEFT JOIN\t[Core].[InventoryLotNumbers] iln\r\n\tON\t\t\tiln.[LOT_NUMBER] = ilnt.[LOT_NUMBER]\r\n\tAND\t\t\tiln.[ORGANIZATION_ID] = o.[Organization ID]\r\n\tAND\t\t\tiln.[LOT_ATTRIBUTE_CATEGORY] IN ('Biodiesel','AENL Weigh Bridge')\r\n\tWHERE\t\to.[Business Unit Name] IN ('BDA BU','Motherwell','Stanlow')\r\n\tAND\t\t\to.[Inventory Organization Code] IN ('BDA','MBDR','MBLD''MCOM','MPTP','SBDR','SBLD','SCOM','SPOP','SPTP')\r\n\tAND\t\t\tLEFT(it.[TRANSACTION_DATE],10) >= '2021-01-01'\r\n\r\n/********************************************************************************************************\r\n\tStep 2.2\tFind the feedstock items that feed into each biodiesel batch.\r\n\r\n\t\t\t\tThis table is built by left joining [Trade].[Traceability] onto itself multiple times.\r\n********************************************************************************************************/\r\n\r\n\r\n\tIF OBJECT_ID('[Trade].[TraceabilityLooped]','U') IS NOT NULL\r\n\t\tDROP TABLE [Trade].[TraceabilityLooped]\r\n\r\n\tSELECT\t\tt1.[Physical Date]\r\n\t,\t\t\tt1.[CREATION_DATE]\r\n\t,\t\t\tt1.[Business Unit Name]\r\n\t,\t\t\tt1.[Document Number]\r\n\t,\t\t\tt1.[Transaction Type]\r\n\t,\t\t\tt1.[Item Code]\r\n\t,\t\t\tt1.[Item Name]\r\n\t,\t\t\tt1.[Unit of Measure]\r\n\t,\t\t\tCASE WHEN t1.[Unit of Measure] = 'LTR' THEN t1.[Quantity] * 0.0008745 ELSE t1.[Quantity] END AS [Quantity]\r\n\t,\t\t\tt1.[SOURCE_HEADER_NUMBER]\t\t\r\n\t,\t\t\tt1.[SOURCE_LINE_NUMBER]\r\n\t,\t\t\tt1.[Lot Numbers]\r\n\t,\t\t\tt2.[Document Number]\t\t\t\tAS [Document Number_2]\t\t\t\r\n\t,\t\t\tt2.[Transaction Type]\t\t\t\tAS [Transaction Type_2]\t\t\t\r\n\t,\t\t\tt2.[Item Code]\t\t\t\t\t\tAS [Item Code_2]\t\t\t\t\r\n\t,\t\t\tt2.[Item Name]\t\t\t\t\t\tAS [Item Name_2]\t\r\n\t,\t\t\tt2.[Unit of Measure]\t\t\t\tAS [Unit of Measure_2]\t\t\r\n\t,\t\t\tCASE WHEN t2.[Unit of Measure] = 'LTR' THEN t2.[Quantity] * 0.0008745 ELSE t2.[Quantity] END\t\t\t\t\t\tAS [Quantity_2]\t\t\t\t\t\r\n\t,\t\t\tt2.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_2]\t\t\t\r\n\t,\t\t\tt3.[Document Number] \t\t\t\tAS [Document Number_3] \t\t\t\r\n\t,\t\t\tt3.[Transaction Type]\t\t\t\tAS [Transaction Type_3]\t\t\t\r\n\t,\t\t\tt3.[Item Code]\t\t\t\t\t\tAS [Item Code_3]\t\t\t\t\r\n\t,\t\t\tt3.[Item Name]\t\t\t\t\t\tAS [Item Name_3]\t\r\n\t,\t\t\tt3.[Unit of Measure]\t\t\t\tAS [Unit of Measure_3]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t3.[Unit of Measure] = 'LTR' THEN t3.[Quantity] * 0.0008745 ELSE t3.[Quantity] END\t\t\t\t\t\tAS [Quantity_3]\t\t\t\t\t\r\n\t,\t\t\tt3.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_3]\t\t\t\t\r\n\t,\t\t\tt4.[Document Number] \t\t\t\tAS [Document Number_4] \t\t\t\r\n\t,\t\t\tt4.[Transaction Type]\t\t\t\tAS [Transaction Type_4]\t\t\t\r\n\t,\t\t\tt4.[Item Code]\t\t\t\t\t\tAS [Item Code_4]\t\t\t\t\r\n\t,\t\t\tt4.[Item Name]\t\t\t\t\t\tAS [Item Name_4]\t\t\r\n\t,\t\t\tt4.[Unit of Measure]\t\t\t\tAS [Unit of Measure_4]\t\t\r\n\t,\t\t\tCASE WHEN t4.[Unit of Measure] = 'LTR' THEN t4.[Quantity] * 0.0008745 ELSE t4.[Quantity] END\t\t\t\t\t\tAS [Quantity_4]\t\t\t\t\t\r\n\t,\t\t\tt4.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_4]\t\t\t\t\r\n\t,\t\t\tt5.[Document Number] \t\t\t\tAS [Document Number_5] \t\t\t\r\n\t,\t\t\tt5.[Transaction Type]\t\t\t\tAS [Transaction Type_5]\t\t\t\r\n\t,\t\t\tt5.[Item Code]\t\t\t\t\t\tAS [Item Code_5]\t\t\t\t\r\n\t,\t\t\tt5.[Item Name]\t\t\t\t\t\tAS [Item Name_5]\r\n\t,\t\t\tt5.[Unit of Measure]\t\t\t\tAS [Unit of Measure_5]\t\t\t\t\t\r\n\t,\t\t\tCASE WHEN t5.[Unit of Measure] = 'LTR' THEN t5.[Quantity] * 0.0008745 ELSE t5.[Quantity] END\t\t\t\t\t\tAS [Quantity_5]\t\t\t\t\t\r\n\t,\t\t\tt5.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_5]\t\t\t\r\n\t,\t\t\tt6.[Document Number] \t\t\t\tAS [Document Number_6] \t\t\t\r\n\t,\t\t\tt6.[Transaction Type]\t\t\t\tAS [Transaction Type_6]\t\t\t\r\n\t,\t\t\tt6.[Item Code]\t\t\t\t\t\tAS [Item Code_6]\t\t\t\t\r\n\t,\t\t\tt6.[Item Name]\t\t\t\t\t\tAS [Item Name_6]\t\r\n\t,\t\t\tt6.[Unit of Measure]\t\t\t\tAS [Unit of Measure_6]\t\t\t\r\n\t,\t\t\tCASE WHEN t6.[Unit of Measure] = 'LTR' THEN t6.[Quantity] * 0.0008745 ELSE t6.[Quantity] END\t\t\t\t\t\tAS [Quantity_6]\t\t\t\t\t\r\n\t,\t\t\tt6.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_6]\t\r\n\t,\t\t\tt7.[Document Number] \t\t\t\tAS [Document Number_7] \t\t\t\r\n\t,\t\t\tt7.[Transaction Type]\t\t\t\tAS [Transaction Type_7]\t\t\t\r\n\t,\t\t\tt7.[Item Code]\t\t\t\t\t\tAS [Item Code_7]\t\t\t\t\r\n\t,\t\t\tt7.[Item Name]\t\t\t\t\t\tAS [Item Name_7]\t\r\n\t,\t\t\tt7.[Unit of Measure]\t\t\t\tAS [Unit of Measure_7]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t7.[Unit of Measure] = 'LTR' THEN t7.[Quantity] * 0.0008745 ELSE t7.[Quantity] END\t\t\t\t\t\tAS [Quantity_7]\t\t\t\t\t\r\n\t,\t\t\tt7.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_7]\r\n\t,\t\t\tt8.[Document Number] \t\t\t\tAS [Document Number_8] \t\t\t\r\n\t,\t\t\tt8.[Transaction Type]\t\t\t\tAS [Transaction Type_8]\t\t\t\r\n\t,\t\t\tt8.[Item Code]\t\t\t\t\t\tAS [Item Code_8]\t\t\t\t\r\n\t,\t\t\tt8.[Item Name]\t\t\t\t\t\tAS [Item Name_8]\t\r\n\t,\t\t\tt8.[Unit of Measure]\t\t\t\tAS [Unit of Measure_8]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t8.[Unit of Measure] = 'LTR' THEN t8.[Quantity] * 0.0008745 ELSE t8.[Quantity] END\t\t\t\t\tAS [Quantity_8]\t\t\t\t\t\r\n\t,\t\t\tt8.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_8]\t\t\t\r\n\t,\t\t\tt9.[Document Number] \t\t\t\tAS [Document Number_9] \t\t\t\r\n\t,\t\t\tt9.[Transaction Type]\t\t\t\tAS [Transaction Type_9]\t\t\t\r\n\t,\t\t\tt9.[Item Code]\t\t\t\t\t\tAS [Item Code_9]\t\t\t\t\r\n\t,\t\t\tt9.[Item Name]\t\t\t\t\t\tAS [Item Name_9]\t\r\n\t,\t\t\tt9.[Unit of Measure]\t\t\t\tAS [Unit of Measure_9]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t9.[Unit of Measure] = 'LTR' THEN t9.[Quantity] * 0.0008745 ELSE t9.[Quantity] END\t\t\t\t\tAS [Quantity_9]\t\t\t\t\t\r\n\t,\t\t\tt9.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_9]\t\t\t\r\n\t,\t\t\tt10.[Document Number] \t\t\t\tAS [Document Number_10] \t\t\t\r\n\t,\t\t\tt10.[Transaction Type]\t\t\t\tAS [Transaction Type_10]\t\t\t\r\n\t,\t\t\tt10.[Item Code]\t\t\t\t\t\tAS [Item Code_10]\t\t\t\t\r\n\t,\t\t\tt10.[Item Name]\t\t\t\t\t\tAS [Item Name_10]\t\r\n\t,\t\t\tt10.[Unit of Measure]\t\t\t\tAS [Unit of Measure_10]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t10.[Unit of Measure] = 'LTR' THEN t10.[Quantity] * 0.0008745 ELSE t10.[Quantity] END\t\t\t\t\tAS [Quantity_10]\t\t\t\t\t\r\n\t,\t\t\tt10.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_10]\t\r\n\t,\t\t\tt11.[Document Number]\t\t\t\tAS [Document Number_11] \t\r\n\t,\t\t\tt11.[Transaction Type]\t\t\t\tAS [Transaction Type_11]\t\r\n\t,\t\t\tt11.[Item Code]\t\t\t\t\t\tAS [Item Code_11]\t\t\t\r\n\t,\t\t\tt11.[Item Name]\t\t\t\t\t\tAS [Item Name_11]\t\t\r\n\t,\t\t\tt11.[Unit of Measure]\t\t\t\tAS [Unit of Measure_11]\t\t\r\n\t,\t\t\tCASE WHEN t11.[Unit of Measure] = 'LTR' THEN t11.[Quantity] * 0.0008745 ELSE t11.[Quantity] END\t\t\t\t\tAS [Quantity_11]\t\t\t\r\n\t,\t\t\tt11.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_11]\t\t\r\n\t,\t\t\tt12.[Document Number]\t\t\t\tAS [Document Number_12]\t\t\t\r\n\t,\t\t\tt12.[Transaction Type]\t\t\t\tAS [Transaction Type_12]\t\t\t\r\n\t,\t\t\tt12.[Item Code]\t\t\t\t\t\tAS [Item Code_12]\t\t\t\t\r\n\t,\t\t\tt12.[Item Name]\t\t\t\t\t\tAS [Item Name_12]\t\t\r\n\t,\t\t\tt12.[Unit of Measure]\t\t\t\tAS [Unit of Measure_12]\t\t\t\r\n\t,\t\t\tCASE WHEN t12.[Unit of Measure] = 'LTR' THEN t12.[Quantity] * 0.0008745 ELSE t12.[Quantity] END\t\t\t\t\tAS [Quantity_12]\t\t\t\t\t\r\n\t,\t\t\tt12.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_12]\t\t\t\r\n\t,\t\t\tt13.[Document Number] \t\t\t\tAS [Document Number_13] \t\t\t\r\n\t,\t\t\tt13.[Transaction Type]\t\t\t\tAS [Transaction Type_13]\t\t\t\r\n\t,\t\t\tt13.[Item Code]\t\t\t\t\t\tAS [Item Code_13]\t\t\t\t\r\n\t,\t\t\tt13.[Item Name]\t\t\t\t\t\tAS [Item Name_13]\t\t\r\n\t,\t\t\tt13.[Unit of Measure]\t\t\t\tAS [Unit of Measure_13]\t\t\t\r\n\t,\t\t\tCASE WHEN t13.[Unit of Measure] = 'LTR' THEN t13.[Quantity] * 0.0008745 ELSE t13.[Quantity] END\t\t\t\t\tAS [Quantity_13]\t\t\t\t\t\r\n\t,\t\t\tt13.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_13]\t\t\t\t\r\n\t,\t\t\tt14.[Document Number] \t\t\t\tAS [Document Number_14] \t\t\t\r\n\t,\t\t\tt14.[Transaction Type]\t\t\t\tAS [Transaction Type_14]\t\t\t\r\n\t,\t\t\tt14.[Item Code]\t\t\t\t\t\tAS [Item Code_14]\t\t\t\t\r\n\t,\t\t\tt14.[Item Name]\t\t\t\t\t\tAS [Item Name_14]\t\t\r\n\t,\t\t\tt14.[Unit of Measure]\t\t\t\tAS [Unit of Measure_14]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t14.[Unit of Measure] = 'LTR' THEN t14.[Quantity] * 0.0008745 ELSE t14.[Quantity] END\t\t\t\t\tAS [Quantity_14]\t\t\t\t\t\r\n\t,\t\t\tt14.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_14]\t\t\t\t\r\n\t,\t\t\tt15.[Document Number] \t\t\t\tAS [Document Number_15] \t\t\t\r\n\t,\t\t\tt15.[Transaction Type]\t\t\t\tAS [Transaction Type_15]\t\t\t\r\n\t,\t\t\tt15.[Item Code]\t\t\t\t\t\tAS [Item Code_15]\t\t\t\t\r\n\t,\t\t\tt15.[Item Name]\t\t\t\t\t\tAS [Item Name_15]\t\t\r\n\t,\t\t\tt15.[Unit of Measure]\t\t\t\tAS [Unit of Measure_15]\t\t\t\r\n\t,\t\t\tCASE WHEN t15.[Unit of Measure] = 'LTR' THEN t15.[Quantity] * 0.0008745 ELSE t15.[Quantity] END\t\t\t\t\tAS [Quantity_15]\t\t\t\t\t\r\n\t,\t\t\tt15.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_15]\t\t\t\r\n\t,\t\t\tt16.[Document Number] \t\t\t\tAS [Document Number_16] \t\t\t\r\n\t,\t\t\tt16.[Transaction Type]\t\t\t\tAS [Transaction Type_16]\t\t\t\r\n\t,\t\t\tt16.[Item Code]\t\t\t\t\t\tAS [Item Code_16]\t\t\t\t\r\n\t,\t\t\tt16.[Item Name]\t\t\t\t\t\tAS [Item Name_16]\t\r\n\t,\t\t\tt16.[Unit of Measure]\t\t\t\tAS [Unit of Measure_16]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t16.[Unit of Measure] = 'LTR' THEN t16.[Quantity] * 0.0008745 ELSE t16.[Quantity] END\t\t\t\t\tAS [Quantity_16]\t\t\t\t\t\r\n\t,\t\t\tt16.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_16]\t\r\n\t,\t\t\tt17.[Document Number] \t\t\t\tAS [Document Number_17] \t\t\t\r\n\t,\t\t\tt17.[Transaction Type]\t\t\t\tAS [Transaction Type_17]\t\t\t\r\n\t,\t\t\tt17.[Item Code]\t\t\t\t\t\tAS [Item Code_17]\t\t\t\t\r\n\t,\t\t\tt17.[Item Name]\t\t\t\t\t\tAS [Item Name_17]\t\t\r\n\t,\t\t\tt17.[Unit of Measure]\t\t\t\tAS [Unit of Measure_17]\t\t\t\r\n\t,\t\t\tCASE WHEN t17.[Unit of Measure] = 'LTR' THEN t17.[Quantity] * 0.0008745 ELSE t17.[Quantity] END\t\t\t\t\tAS [Quantity_17]\t\t\t\t\t\r\n\t,\t\t\tt17.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_17]\t\r\n\t,\t\t\tt18.[Document Number] \t\t\t\tAS [Document Number_18] \t\t\t\r\n\t,\t\t\tt18.[Transaction Type]\t\t\t\tAS [Transaction Type_18]\t\t\t\r\n\t,\t\t\tt18.[Item Code]\t\t\t\t\t\tAS [Item Code_18]\t\t\t\t\r\n\t,\t\t\tt18.[Item Name]\t\t\t\t\t\tAS [Item Name_18]\t\r\n\t,\t\t\tt18.[Unit of Measure]\t\t\t\tAS [Unit of Measure_18]\t\t\t\t\t\r\n\t,\t\t\tCASE WHEN t18.[Unit of Measure] = 'LTR' THEN t18.[Quantity] * 0.0008745 ELSE t18.[Quantity] END\t\t\t\t\tAS [Quantity_18]\t\t\t\t\t\r\n\t,\t\t\tt18.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_18]\t\t\r\n\t,\t\t\tt19.[Document Number] \t\t\t\tAS [Document Number_19] \t\t\t\r\n\t,\t\t\tt19.[Transaction Type]\t\t\t\tAS [Transaction Type_19]\t\t\t\r\n\t,\t\t\tt19.[Item Code]\t\t\t\t\t\tAS [Item Code_19]\t\t\t\t\r\n\t,\t\t\tt19.[Item Name]\t\t\t\t\t\tAS [Item Name_19]\t\t\r\n\t,\t\t\tt19.[Unit of Measure]\t\t\t\tAS [Unit of Measure_19]\t\t\t\r\n\t,\t\t\tCASE WHEN t19.[Unit of Measure] = 'LTR' THEN t19.[Quantity] * 0.0008745 ELSE t19.[Quantity] END\t\t\t\t\t\tAS [Quantity_19]\t\t\t\t\t\r\n\t,\t\t\tt19.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_19]\t\t\r\n\t,\t\t\tt20.[Document Number] \t\t\t\tAS [Document Number_20] \t\t\t\r\n\t,\t\t\tt20.[Transaction Type]\t\t\t\tAS [Transaction Type_20]\t\t\t\r\n\t,\t\t\tt20.[Item Code]\t\t\t\t\t\tAS [Item Code_20]\t\t\t\t\r\n\t,\t\t\tt20.[Item Name]\t\t\t\t\t\tAS [Item Name_20]\t\r\n\t,\t\t\tt20.[Unit of Measure]\t\t\t\tAS [Unit of Measure_20]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t20.[Unit of Measure] = 'LTR' THEN t20.[Quantity] * 0.0008745 ELSE t20.[Quantity] END\t\t\t\t\t\tAS [Quantity_20]\t\t\t\t\t\r\n\t,\t\t\tt20.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_20]\t\r\n\t,\t\t\tt21.[Document Number] \t\t\t\tAS [Document Number_21] \t\t\t\r\n\t,\t\t\tt21.[Transaction Type]\t\t\t\tAS [Transaction Type_21]\t\t\t\r\n\t,\t\t\tt21.[Item Code]\t\t\t\t\t\tAS [Item Code_21]\t\t\t\t\r\n\t,\t\t\tt21.[Item Name]\t\t\t\t\t\tAS [Item Name_21]\t\r\n\t,\t\t\tt21.[Unit of Measure]\t\t\t\tAS [Unit of Measure_21]\t\t\t\t\r\n\t,\t\t\tCASE WHEN t21.[Unit of Measure] = 'LTR' THEN t21.[Quantity] * 0.0008745 ELSE t21.[Quantity] END\t\t\t\t\t\tAS [Quantity_21]\t\t\t\t\t\r\n\t,\t\t\tt21.[Lot Numbers]\t\t\t\t\tAS [Lot Numbers_21]\t\r\n\t,\t\t\tCAST(GETDATE() AS DATE)\t\t\t\tAS [DateStamp]\r\n\tINTO\t\t[Trade].[TraceabilityLooped]\r\n\tFROM\t\t[Trade].[Traceability] t1\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t[Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t) t2\r\n\tON\t\t\tt1.[Lot Numbers] = t2.[Lot Numbers]\r\n\tAND\t\t\tt1.[Item Code] = t2.[Item Code]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t3\r\n\tON\t\t\tt2.[Document Number] = t3.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t4\r\n\tON\t\t\tt3.[Lot Numbers] = t4.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t5\r\n\tON\t\t\tt4.[Document Number] = t5.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t6\r\n\tON\t\t\tt5.[Lot Numbers] = t6.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t7\r\n\tON\t\t\tt6.[Document Number] = t7.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t8\r\n\tON\t\t\tt7.[Lot Numbers] = t8.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t9\r\n\tON\t\t\tt8.[Document Number] = t9.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t10\r\n\tON\t\t\tt9.[Lot Numbers] = t10.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t11\r\n\tON\t\t\tt10.[Document Number] = t11.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t12\r\n\tON\t\t\tt11.[Lot Numbers] = t12.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t13\r\n\tON\t\t\tt12.[Document Number] = t13.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t14\r\n\tON\t\t\tt13.[Lot Numbers] = t14.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t15\r\n\tON\t\t\tt14.[Document Number] = t15.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t16\r\n\tON\t\t\tt15.[Lot Numbers] = t16.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t17\r\n\tON\t\t\tt16.[Document Number] = t17.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t18\r\n\tON\t\t\tt17.[Lot Numbers] = t18.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t19\r\n\tON\t\t\tt18.[Document Number] = t19.[Document Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Product Completion'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t20\r\n\tON\t\t\tt19.[Lot Numbers] = t20.[Lot Numbers]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\t*\r\n\t\t\t\t\tFROM\t\t[Trade].[Traceability]\r\n\t\t\t\t\tWHERE\t\t[Transaction Type] = 'Work in Process Material Issue'\r\n\t\t\t\t\tAND\t\t\t([Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')\r\n\t\t\t\t\tOR\t\t\t[Item Code] LIKE 'FS%')\r\n\t\t\t\t) t21\r\n\tON\t\t\tt20.[Document Number] = t21.[Document Number]\r\n\tWHERE\t\tt1.[Transaction Type] = 'Sales Order Issue'\r\n\tAND\t\t\tt1.[Item Code] IN ('PR00900','PR00220','PR00150','PR00102','PR00100')"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade/Margin"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-21T20:07:57Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Pricing_Data_Marks_Script')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Pricing Data Marks Script",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "/********************************************************************************************************\r\n\t1.1 Update the raw tables with the current day's data, pulled from the data warehouse.\r\n********************************************************************************************************/\r\n\r\n\tDECLARE @DeleteTableStatement NVARCHAR(MAX)\r\n\tDECLARE Cur2 CURSOR READ_ONLY\r\n\tFOR\r\n\t\t\tSELECT  'Delete from [RAW].[' + TABLE_NAME + ']  where stamp <> (select distinct max(stamp) from [RAW].[' + TABLE_NAME + '])'\r\n\t\t\tFROM    INFORMATION_SCHEMA.TABLES\r\n\t\t\tWHERE   TABLE_SCHEMA = 'RAW'\r\n\t\t\t\t\tAND TABLE_TYPE = 'BASE TABLE' and TABLE_NAME like 'RAW.P.%'\r\n\r\n\r\n\tOPEN Cur2\r\n\tFETCH NEXT FROM Cur2 INTO @DeleteTableStatement\r\n\tWHILE @@FETCH_STATUS = 0\r\n\t\t  BEGIN\r\n\t\t\t\tPRINT 'Executing ' + @DeleteTableStatement\r\n\t\t\t\tEXECUTE sp_executesql @DeleteTableStatement\r\n\t\t\t\tFETCH NEXT FROM Cur2 INTO @DeleteTableStatement\r\n\t\t  END\r\n\tCLOSE Cur2\r\n\tDEALLOCATE Cur2\r\n\r\n/***************************************************\r\nDrop list of dates*/\r\n\r\nIF OBJECT_ID('[RAW].[DateList]','U') IS NOT NULL \r\n\t\tDROP TABLE [RAW].[DateList]\r\n\r\n/***************************************************\r\nDeclare variables to produce list of dates*/\r\n\r\n-- prevent set or regional settings from interfering with \r\n-- interpretation of dates / literals\r\nSET DATEFIRST  1, -- 1 = Monday, 7 = Sunday\r\n    DATEFORMAT mdy, \r\n    LANGUAGE   BRITISH;\r\n-- assume the above is here in all subsequent code blocks.\r\n\r\n--DECLARE @StartDate  date = '20190101';\r\n\r\n--DECLARE @CutoffDate date = DATEADD(DAY, -1, DATEADD(YEAR, 4, @StartDate));\r\n\r\nDECLARE @StartDate  date = '20181211';\r\n\r\nDECLARE @CutoffDate date =\t(\r\n\t\t\t\t\t\t\t\tSELECT\tMAX([Date])\r\n\t\t\t\t\t\t\t\tFROM\t(\r\n\t\t\t\t\t\t\t\t\t\t\tSELECT CAST([Date] AS DATE) AS [Date] FROM [RAW].[RAW.P.Argus Pricing]\r\n\t\t\t\t\t\t\t\t\t\t\tUNION ALL\r\n\t\t\t\t\t\t\t\t\t\t\tSELECT CAST([Date] AS DATE) AS [Date] FROM [RAW].[RAW.P.Reuters MGO Pricing]\r\n\t\t\t\t\t\t\t\t\t\t\tUNION ALL\r\n\t\t\t\t\t\t\t\t\t\t\tSELECT CAST([Date] AS DATE) AS [Date] FROM [RAW].[RAW.P.Reuters Pricing]\r\n\t\t\t\t\t\t\t\t\t\t)d\r\n\t\t\t\t\t\t\t);\r\n\r\n/***************************************************\r\nCreate list of dates and insert into table*/\r\n\r\n;WITH seq(n) AS \r\n(\r\n  SELECT 0 UNION ALL SELECT n + 1 FROM seq\r\n  WHERE n < DATEDIFF(DAY, @StartDate, @CutoffDate)\r\n),\r\nd([Date]) AS \r\n(\r\n  SELECT DATEADD(DAY, n, @StartDate) FROM seq\r\n)\r\nSELECT [Date] \r\nINTO [RAW].[DateList]\r\nFROM d\r\nORDER BY [Date]\r\nOPTION (MAXRECURSION 0);\r\n\r\n--1461\r\n\r\n/***************************************************\r\nJoin Pricing table to DateList on a 1=1 basis*/\r\n\r\nIF OBJECT_ID('[Core].[PreJoinArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[PreJoinArgusPricing]\r\n\r\nSELECT * \r\nINTO [Core].[PreJoinArgusPricing]\r\nFROM [RAW].[DateList]\r\nLEFT JOIN  (SELECT DISTINCT\tCAST([Description] AS NVARCHAR(250)) AS [Description]\r\n\t\t\t\t\t\t\t,[Contract/Delivery]\r\n\t\t\t\t\t\t\t,[Time Stamp]\r\n\t\t\t\t\t\t\t,[Price Type]\r\n\t\t\t\t\t\t\t,[Currency/Unit]\r\n\t\t\t\t\t\t\t,[Delivery Mode]\r\n\t\t\t\t\t\t\t,[Fill Type]\t\r\n\t\t\t\t\t\t\t, 'Argus' AS [Source]\t\t\r\n\t\t\tFROM [RAW].[RAW.P.Argus Pricing]) REF\r\nON 1=1\r\n\r\nUNION ALL\r\n\r\nSELECT\t\tdl.[Date] AS [Date]\r\n,\t\t\t[Description] AS [Description]\r\n,\t\t\t'' AS [Contract/Delivery]\r\n,\t\t\t'' AS [Time Stamp]\r\n,\t\t\t[Price Type] \r\n,\t\t\t'' AS [Currency/Unit]\r\n,\t\t\t'' AS [Delivery Mode]\r\n,\t\t\t'' AS [Fill Type]\r\n,\t\t\t'Reuters' AS [Source]\r\nFROM\t\t[RAW].[DateList] dl\r\nLEFT JOIN\t(\r\n\t\t\t\tSELECT\t\tDISTINCT CAST([Description] AS NVARCHAR(250)) AS [Description]\r\n\t\t\t\t,\t\t\t[Price Type]\r\n\t\t\t\tFROM\t\t[RAW].[RAW.P.Reuters MGO Pricing]\r\n\t\t\t) mgo\r\nON\t\t\t1=1\r\n\r\nUNION ALL\r\n\r\nSELECT\t\tdl.[Date] AS [Date]\r\n,\t\t\t[Description] AS [Description]\r\n,\t\t\t'' AS [Contract/Delivery]\r\n,\t\t\t'' AS [Time Stamp]\r\n,\t\t\t[Price Type] \r\n,\t\t\t'' AS [Currency/Unit]\r\n,\t\t\t'' AS [Delivery Mode]\r\n,\t\t\t'' AS [Fill Type]\r\n,\t\t\t'Reuters' AS [Source]\r\nFROM\t\t[RAW].[DateList] dl\r\nLEFT JOIN\t(\r\n\t\t\t\tSELECT\t\tDISTINCT CAST([Description] AS NVARCHAR(250)) AS [Description]\r\n\t\t\t\t,\t\t\t[Price Type]\r\n\t\t\t\tFROM\t\t[RAW].[RAW.P.Reuters Pricing]\r\n\t\t\t\tWHERE\t\t[Description] NOT LIKE 'EUR%'\r\n\t\t\t\tAND\t\t\t[Date] IS NOT NULL\r\n\t\t\t) rp\r\nON\t\t\t1=1\r\n\r\n--33603\r\n\r\n/***************************************************\r\nSimplify fuel price descriptions*/\r\n\r\nIF OBJECT_ID('[Core].[DescIDArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[DescIDArgusPricing]\r\n\r\nSELECT DISTINCT \r\n\t\tPJ.*,\r\n--\t\tPJ.[Description] + '_' + PJ.[Price Type] AS [DescPT],\r\n--\t\tCASE \r\n--\t\tWHEN PJ.[Description] = 'Biodiesel Palm OME RED ARA range barge fob'\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price1'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel FAME 0C CFPP RED ARA range barge fob'\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price2'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel palm oil mill effluent RED Malaysia/Indonesia fob'\t\t\t\t\t\tTHEN 'Argus_Fuel_Price3'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel Rapeseed OME RED ARA range barge fob'\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price4'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel tallow OME RED ARA range barge fob'\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price5'\r\n--\t\tWHEN PJ.[Description] = 'UCO (used cooking oil) cif ARA USD/t'\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price6'\r\n--\t\tWHEN PJ.[Description] = 'UCO (used cooking oil) fob China'\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price7'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel UCOME (used cooking oil) RED ARA range barge fob'\t\t\t\t\t\tTHEN 'Argus_Fuel_Price8'\r\n--\t\tWHEN PJ.[Description] = 'HVO (hydrotreated vegetable oil) fob ARA range (Class I) USD/t'\t\t\t\t\tTHEN 'Argus_Fuel_Price9'\r\n--\t\tWHEN PJ.[Description] = 'HVO (hydrotreated vegetable oil) fob ARA range (Class II) USD/t'\t\t\t\t\tTHEN 'Argus_Fuel_Price10'\r\n--\t\tWHEN PJ.[Description] = 'HVO (hydrotreated vegetable oil) fob ARA range (Class III) USD/t'\t\t\t\t\tTHEN 'Argus_Fuel_Price11'\r\n--\t\tWHEN PJ.[Description] = 'Palm oil futures Bursa Malaysia month'\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price12'\r\n--\t\tWHEN PJ.[Description] = 'Rapeseed oil fob Dutch Mill RSO'\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price13'\r\n--\t\tWHEN PJ.[Description] = 'SAF (sustainable aviation fuel) fob ARA range (Class II) USD/t'\t\t\t\t\tTHEN 'Argus_Fuel_Price14'\r\n--\t\tWHEN PJ.[Description] = 'Tallow (categories 1 & 2) fca northwest Europe EUR/t'\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price15'\r\n--\t\tWHEN PJ.[Description] = 'Freight PME Malaysia - ARA 3-5kt'\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price16'\r\n--\t\tWHEN PJ.[Description] = 'UCO (used cooking oil) RED bulk China fob'\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price17'\r\n--\t\tWHEN PJ.[Description] = 'Gasoil NWE 7-28 day swaps'\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price18'\r\n--\t\tWHEN PJ.[Description] = 'Soybean oil Argentina waterborne fob upriver USD/t month'\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price19'\r\n--\t\tWHEN PJ.[Description] = 'Biofuel soybean oil Argentina vs CBOT waterborne fob San Lorenzo'--high\t\t\t\tTHEN 'Argus_Fuel_Price20'\r\n--\t\tWHEN PJ.[Description] = 'Biofuel soybean oil Argentina vs CBOT waterborne fob San Lorenzo'--low\t\t\t\t\tTHEN 'Argus_Fuel_Price21'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel SME Argentina waterborne fob upriver'\t\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price22'\r\n--\t\tWHEN PJ.[Description] = 'Biodiesel UCOME (used cooking oil) RED bulk China fob'\t\t\t\t\t\t\t\tTHEN 'Argus_Fuel_Price23'\r\n--\t\tELSE 'ERROR' END AS [Description ID],\r\n\t\tAP.[Value]\r\n--\t\tISNULL(AP.[value],LAG(AP.[value],33602,-999) OVER(ORDER BY PJ.[description], PJ.[Date] ASC))  AS [Filled Value]\r\n--\t\tLAST_VALUE(AP.[value]) OVER( ORDER BY PJ.[description],  pj.[date] ASC) AS [LASTVALUE]\r\nINTO [Core].[DescIDArgusPricing]\r\nFROM [Core].[PreJoinArgusPricing] PJ\r\nLEFT JOIN\t(\r\n\t\t\t\tSELECT\t\tDISTINCT [Date]\r\n\t\t\t\t,\t\t\t[Description]\r\n\t\t\t\t,\t\t\t[Contract/Delivery]\r\n\t\t\t\t,\t\t\t[Time Stamp]\r\n\t\t\t\t,\t\t\t[Price Type] \r\n\t\t\t\t,\t\t\t[Currency/Unit]\r\n\t\t\t\t,\t\t\t[Delivery Mode]\r\n\t\t\t\t,\t\t\t[Fill Type]\r\n\t\t\t\t,\t\t\t[Value]\r\n\t\t\t\tFROM\t\t[RAW].[RAW.P.Argus Pricing]\r\n\r\n\t\t\t\tUNION ALL\r\n\r\n\t\t\t\tSELECT\t\tDISTINCT [Date] AS [Date]\r\n\t\t\t\t,\t\t\t[Description] AS [Description]\r\n\t\t\t\t,\t\t\t'' AS [Contract/Delivery]\r\n\t\t\t\t,\t\t\t'' AS [Time Stamp]\r\n\t\t\t\t,\t\t\t[Price Type] \r\n\t\t\t\t,\t\t\t'' AS [Currency/Unit]\r\n\t\t\t\t,\t\t\t'' AS [Delivery Mode]\r\n\t\t\t\t,\t\t\t'' AS [Fill Type]\r\n\t\t\t\t,\t\t\t[Value] AS [Value]\r\n\t\t\t\tFROM\t\t[RAW].[RAW.P.Reuters MGO Pricing]\r\n\r\n\t\t\t\tUNION ALL\t\r\n\r\n\t\t\t\tSELECT\t\tDISTINCT [Date] --AS [Date]\r\n\t\t\t\t,\t\t\t[Description] --AS [Description]\r\n\t\t\t\t,\t\t\t'' AS [Contract/Delivery]\r\n\t\t\t\t,\t\t\t'' AS [Time Stamp]\r\n\t\t\t\t,\t\t\t[Price Type] \r\n\t\t\t\t,\t\t\t'' AS [Currency/Unit]\r\n\t\t\t\t,\t\t\t'' AS [Delivery Mode]\r\n\t\t\t\t,\t\t\t'' AS [Fill Type]\r\n\t\t\t\t,\t\t\t[Value] AS [Value]\r\n\t\t\t\tFROM\t\t[RAW].[RAW.P.Reuters Pricing]\r\n\t\t\t\tWHERE\t\t[Description] NOT LIKE 'EUR%'\r\n\t\t\t\tAND\t\t\t[Date] IS NOT NULL\r\n\t\t\t) AP\r\nON\tPJ.[Date]\t\t\t\t= AP.[Date]\r\nAND\tPJ.[description]\t\t= AP.[Description]\r\nAND\tPJ.[Contract/Delivery]\t= AP.[Contract/Delivery]\r\nAND\tPJ.[Time Stamp]\t\t\t= AP.[Time Stamp]\r\nAND\tPJ.[Price Type]\t\t\t= AP.[Price Type]\r\nAND\tPJ.[Currency/Unit]\t\t= AP.[Currency/Unit]\r\nAND\tPJ.[Delivery Mode]\t\t= AP.[Delivery Mode]\r\nAND\tPJ.[Fill Type]\t\t\t= AP.[Fill Type]\r\n\r\n--36126\r\n\r\n/***************************************************\r\nAverage Price Table Calculation*/\r\n\r\nIF OBJECT_ID('[Core].[BiofuelArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[BiofuelArgusPricing]\r\n\r\nSELECT * \r\nINTO [Core].[BiofuelArgusPricing] \r\nFROM [Core].[DescIDArgusPricing]\r\nWHERE [Description] = 'Biofuel soybean oil Argentina vs CBOT waterborne fob San Lorenzo'\r\n\r\n--2922\r\n\r\nIF OBJECT_ID('[Core].[BiofuelAvgArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[BiofuelAvgArgusPricing]\r\n\r\nSELECT\r\n\t\t[Date],\r\n\t\tAVG(CAST([Value] AS FLOAT)) AS [AVG_Value]\r\nINTO [Core].[BiofuelAvgArgusPricing]\r\nFROM [Core].[BiofuelArgusPricing]\r\nGROUP BY [Date]\r\nORDER BY [Date]\r\n\r\n--1461\r\n\r\nIF OBJECT_ID('[Core].[BiofuelArgusPricingDone]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[BiofuelArgusPricingDone]\r\n\r\nSELECT DISTINCT\r\n\t\tAP.[Date],\r\n\t\tAP.[Description],\r\n\t\tAP.[Contract/Delivery],\r\n\t\tAP.[Time Stamp],\r\n\t\t'high low avg' AS [Price Type],\r\n\t\tAP.[Currency/Unit],\r\n\t\tAP.[Delivery Mode],\r\n\t\tAP.[Fill Type],\r\n\t\tAP.[Source],\r\n\t\tAV.[AVG_Value] AS [Value]\r\nINTO [Core].[BiofuelArgusPricingDone]\r\nFROM [Core].[BiofuelArgusPricing] AP\r\nLEFT JOIN [Core].[BiofuelAvgArgusPricing] AV\r\nON AV.[Date] = AP.[Date]\r\n\r\n--1461\r\n\r\n/***************************************************\r\nAddition Price Table Calculation*/\r\n\r\nIF OBJECT_ID('[Core].[SoybeanArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[SoybeanArgusPricing]\r\n\r\nSELECT * \r\nINTO [Core].[SoybeanArgusPricing] \r\nFROM [Core].[DescIDArgusPricing]\r\nWHERE [Description] = 'Biofuel soybean oil Argentina vs CBOT waterborne fob San Lorenzo' \r\nOR [Description] = 'Soybean oil Argentina waterborne fob upriver USD/t month'\r\n\r\n--4014\r\n\r\n\r\nIF OBJECT_ID('[Core].[SoybeanAddArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[SoybeanAddArgusPricing]\r\n\r\nSELECT\t[Date]\r\n,\t\tCASE WHEN [Null Flag] > 0 THEN NULL\r\n\t\t\tELSE NULLIF((SUM(CAST(CASE WHEN [Description] LIKE 'Biofuel%' THEN '0' ELSE [Value] END AS FLOAT)) \r\n\t\t\t\t\t+ SUM(CAST(CASE WHEN [Description] LIKE 'Soybean%' THEN '0' ELSE [Value] END AS FLOAT))/2),0)\r\n\t\t\tEND AS [SUM_Value]\r\nINTO [Core].[SoybeanAddArgusPricing]\r\nFROM\t\t(\r\n\t\t\t\tSELECT\t*\r\n\t\t\t\t,\t\tSUM(CASE WHEN [Value] IS NULL THEN 1 ELSE 0 END) OVER (PARTITION BY [Date])\t AS [Null Flag]\t\t\t\t\t\t\t\t\r\n\t\t\t\tFROM [Core].[SoybeanArgusPricing]\r\n\t\t\t) sap\r\nGROUP BY [Date]\r\n,\t\t[Null Flag]\r\nORDER BY [Date]\r\n\t\t\r\n--1461\r\n\r\nIF OBJECT_ID('[Core].[SoybeanArgusPricingDone]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[SoybeanArgusPricingDone]\r\n\r\nSELECT DISTINCT\r\n\t\tAP.[Date],\r\n\t\t'Soybean oil Argentina waterborne fob upriver USD/t month' AS [Description],\r\n\t\t'' AS [Contract/Delivery],\r\n\t\tAP.[Time Stamp],\r\n\t\t'midpoint_calc' AS [Price Type],\r\n\t\tAP.[Currency/Unit],\r\n\t\tAP.[Delivery Mode],\r\n\t\tAP.[Fill Type],\r\n\t\tAP.[Source],\r\n\t\tAD.[SUM_Value] AS [Value]\r\nINTO [Core].[SoybeanArgusPricingDone]\r\nFROM [Core].[SoybeanArgusPricing] AP\r\nLEFT JOIN [Core].[SoybeanAddArgusPricing] AD\r\nON AD.[Date] = AP.[Date]\r\n\r\n\r\n/***************************************************\r\nJoin all pre partition*/\r\n\r\nIF OBJECT_ID('[Core].[ArgusPricingPrePrePartition]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[ArgusPricingPrePrePartition]\r\n\r\nSELECT *\r\nINTO [Core].[ArgusPricingPrePrePartition]\r\nFROM [Core].[DescIDArgusPricing]\r\nUNION ALL\r\nSELECT *\r\nFROM [Core].[BiofuelArgusPricingDone]\r\nUNION ALL\r\nSELECT *\r\nFROM [Core].[SoybeanArgusPricingDone]\r\n\r\n\r\n--36525\r\n\r\nIF OBJECT_ID('[Core].[ArgusPricingPrePartition]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[ArgusPricingPrePartition]\r\n\r\nSELECT\r\n\t\t*,\r\n\t\tCASE WHEN [Source] = 'Argus' THEN [Description]+'_'+[Price Type] ELSE [Description] END AS [Full Description]\r\nINTO [Core].[ArgusPricingPrePartition]\r\nFROM [Core].[ArgusPricingPrePrePartition]\r\n\r\n--36525\r\n\r\n\r\n/***************************************************\r\nLoop to create description ID's*/\r\n\r\nIF OBJECT_ID('[Core].[DescID]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[DescID]\r\n\r\nCREATE TABLE [Core].[DescID]\r\n([Description] NVARCHAR(128), [ID] NVARCHAR(32))\r\n\r\nDECLARE @counter INT\r\nDECLARE @maxcount INT\r\nDECLARE @description NVARCHAR(128)\r\nSET @maxcount = (SELECT COUNT(DISTINCT [Full Description]) FROM [Core].[ArgusPricingPrePartition])\r\nSET @counter = 1\r\nDECLARE clicker CURSOR FOR\r\n\r\nSELECT DISTINCT [Full Description] FROM [Core].[ArgusPricingPrePartition]\r\n\r\nOPEN clicker\r\nFETCH NEXT FROM clicker INTO @description\r\n\r\nWHILE @@FETCH_STATUS = 0 AND @maxcount >= @counter\r\nBEGIN\r\n\t\tINSERT INTO [Core].[DescID]\r\n\t\tVALUES (@description,@counter)\r\n\t\tSET @counter = @counter + 1\r\n\t\tFETCH NEXT FROM clicker INTO @description\r\nEND\r\n\r\nCLOSE clicker\r\nDEALLOCATE clicker\r\n\r\n\r\n/***************************************************\r\nJoin ID's to main table*/\r\n\r\nIF OBJECT_ID('[Core].[FixedArgusPricingPrePartition]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[FixedArgusPricingPrePartition]\r\n\r\nSELECT\tPP.*,\r\n\t\tID.[ID]\r\nINTO [Core].[FixedArgusPricingPrePartition]\r\nFROM [Core].[ArgusPricingPrePartition] PP\r\nLEFT JOIN [Core].[DescID] ID\r\nON ID.[Description] = PP.[Full Description]\r\nORDER BY [Full Description],[Date]\r\n\r\n--36525\r\n\r\n\r\n/***************************************************\r\nFills down any missing prices using first value*/\r\n\r\nIF OBJECT_ID('[Core].[FixedArgusPricing]','U') IS NOT NULL \r\n\t\tDROP TABLE [Core].[FixedArgusPricing]\r\n\r\nSELECT DISTINCT\r\n\t\t*, \r\n\t\tFIRST_VALUE([Value]) OVER (PARTITION BY ID.ID, ID.[Value_Partition] ORDER BY ID.[ID], [Date]) AS [NewValue]\r\nINTO [Core].[FixedArgusPricing]\r\nFROM   (SELECT\r\n\t\t\t*,\r\n\t\t\tSUM(CASE WHEN [Value] IS NOT NULL THEN 1 ELSE 0 END) OVER (ORDER BY [ID], [Date]) AS [Value_Partition]\r\n\t\tFROM [Core].[FixedArgusPricingPrePartition]\r\n\t\t) AS ID\r\nORDER BY [ID], [Date] ASC\r\n\r\n--38,802\r\n\r\n--the bottom of the script aligns to point 2.6 in tom stews data marks script all be it with some neatening up to do most likely.\r\n\r\n\r\n/***************************************************\r\nJoin fuel lookup data and FX rates*/\r\n\r\n\t\tIF OBJECT_ID('[Trade].[Pricing]','U') IS NOT NULL\r\n\t\t\tDROP TABLE [Trade].[Pricing]\r\n\r\n\t\tSELECT\t\tfap.[Date]\r\n\t\t,\t\t\tIIF(fap.[Value] IS NULL,1,0)\t\tAS [Filled Down Flag]\r\n\t\t,\t\t\tfap.[Full Description]\t\t\t\tAS [Attribute]\r\n\t\t,\t\t\tfap.[NewValue]\t\t\t\t\t\tAS [Original Value] \r\n\t\t,\t\t\tfl.[Category]\r\n\t\t,\t\t\tfl.[Name]\r\n\t\t,\t\t\tfl.[UOM]\t\t\t\t\t\t\tAS [Original UOM]\r\n\t\t,\t\t\tfl.[Transport Cost]\r\n\t\t,\t\t\tfl.[Transport UOM]\r\n\t\t,\t\t\tfl.[Yield Assumption]\r\n\t\t,\t\t\tfx.[EUR:USD] as [FX Rates.Eur:USD] \r\n\t\t,\t\t\tCASE WHEN fl.[UOM] = 'USD/t'\t\t\tTHEN fap.[NewValue]/fx.[EUR:USD]\tELSE fap.[NewValue] END AS [Value EUR]\r\n\t\t,\t\t\tCASE WHEN fl.[Transport UOM] = 'USD'\tTHEN fl.[Transport Cost]/fx.[EUR:USD]\tELSE CASE WHEN fl.[Transport Cost] IS NULL THEN 0 ELSE fl.[Transport Cost] END END AS [Transport Cost EUR]\r\n\t\t,\t\t\t'€/mt' AS [UOM]\r\n\t\tINTO\t\t[Trade].[Pricing]\r\n\t\tFROM\t\t[Core].[FixedArgusPricing] fap\r\n\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\tSELECT\t\tDISTINCT *\r\n\t\t\t\t\t\tFROM\t\t[RAW].[RAW.P.Fuel Lookup]\r\n\t\t\t\t\t) fl\r\n\t\tON\t\t\tfap.[Description] = fl.[Description]\r\n\t\tAND\t\t\tfap.[Price Type] = CASE WHEN fl.[Name] = 'SBO fob Argentina' THEN 'midpoint_calc' ELSE fl.[Price Type] END\r\n\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\tSELECT\t\t[Date]\tAS [Date]\r\n\t\t\t\t\t\t,\t\t\tCASE WHEN [EUR:USD] IS NOT NULL THEN [EUR:USD] ELSE MAX([EUR:USD]) OVER (PARTITION BY [RowGroup] ORDER BY [Date]) END AS [EUR:USD]\r\n\t\t\t\t\t\tFROM\t\t(\r\n\t\t\t\t\t\t\t\t\t\tSELECT\t\tdl.[Date]\r\n\t\t\t\t\t\t\t\t\t\t,\t\t\tCAST(rp.[Date] AS DATE) AS [RP Date]\r\n\t\t\t\t\t\t\t\t\t\t,\t\t\tCAST([Value] AS DECIMAL(28,8)) AS [EUR:USD]\r\n\t\t\t\t\t\t\t\t\t\t,\t\t\tCOUNT(rp.[Date]) OVER (ORDER BY dl.[Date]) AS [RowGroup]\r\n\t\t\t\t\t\t\t\t\t\tFROM\t\t[RAW].[DateList] dl\r\n\t\t\t\t\t\t\t\t\t\tLEFT JOIN\t(\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT *\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\t[RAW].[RAW.P.Reuters Pricing]\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\tWHERE\t\t[Description] LIKE 'EUR=%'\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t) rp\r\n\t\t\t\t\t\t\t\t\t\tON\t\t\tdl.[Date] = CAST(rp.[Date] AS DATE)\r\n\t\t\t\t\t\t\t\t\t) rg\r\n\t\t\t\t\t) fx\r\n\t\tON\t\t\tfx.[Date] = fap.[Date]\r\n\t\tWHERE\t\tfap.[NewValue] IS NOT NULL\r\n"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-02T10:43:10Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_SubledgerSuppliersCustomers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_SubledgerSuppliersCustomers",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_SubledgerSuppliersCustomers]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-11T15:32:40Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Subledger_TransactionsList_Blend_CoreTables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_Subledger_TL_Blend_CoreTables",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_Subledger_TL_Blend_CoreTables]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-11T20:19:19Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_TransactionsList')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_TransactionsList",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_TransactionsList]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-11T15:32:40Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/audit_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "audit_tables_rowcounts",
+						"description": "This job gets details of row count and puts them in an audit table by calling a stored procedure ",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.01:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[prc_audit_table_rowcount]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Audit"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-08-31T12:30:58Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binary_Destination_Oracle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection to your data destination store.  ",
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "oracle-data"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binary_Source_Oracle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Connection to your data source store. ",
+				"linkedServiceName": {
+					"referenceName": "FTP Oracle",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FtpServerLocation",
+						"fileName": "*.CSV"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Finance_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Finance DWH Excel data.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Finance_Excel_Get_Metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Finance DWH Excel data.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Non_Oracle_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"container": "manual-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Non_Oracle_Get_Metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "manual-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Oracle_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"container": "oracle-data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\"",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Oracle_Get_Metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "oracle-data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Pricing dataset.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "B2",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Get_Metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Pricing dataset.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Sharepoint_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ItemName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ItemName",
+							"type": "Expression"
+						},
+						"container": "sharepoint-files"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
