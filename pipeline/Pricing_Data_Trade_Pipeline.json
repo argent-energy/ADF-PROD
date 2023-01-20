@@ -217,7 +217,7 @@
 				"type": "string",
 				"defaultValue": "sql.jobs@argentenergy.com"
 			},
-			"ticketID": {
+			"TicketID": {
 				"type": "string"
 			},
 			"JobMessage": {
