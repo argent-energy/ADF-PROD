@@ -74,8 +74,166 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Send Email Alert",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Get the Ticket Number",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://ae-adf-emailnotification.azurewebsites.net:443/api/email-notification/triggers/manual/invoke?api-version=2022-05-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3WbN6r1bocCpf-OUmblxJkYyJB3sFpernSP3zyhms-c",
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"receiver\":\"@{pipeline().parameters.receiver}\",\n    \"title\":\"Pipeline Run Failed\",\n    \"message\":\"Job failed, ticket raised @{variables('TicketNo')}\",\n    \"color\":\"Red\",\n    \"dataFactoryName\":\"@{pipeline().DataFactory}\",\n    \"pipelineName\":\"@{pipeline().Pipeline}\",\n    \"pipelineRunId\":\"@{pipeline().RunId}\",\n    \"time\":\"@{utcnow()}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Raise an Incident",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Copy_Pricing_Sharepoint_To_BLOB",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Execute BLOB To SQL For Pricing Data",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Execute Data Marks Script",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Execute SQL To BLOB For Trade Tables",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://eu2api.symphonysummit.com/Argent/REST/Summit_RESTWCF.svc/RESTService/CommonWS_JsonObjCall",
+					"method": "POST",
+					"body": {
+						"ServiceName": "IM_LogOrUpdateIncident",
+						"objCommonParameters": {
+							"_ProxyDetails": {
+								"AuthType": "APIKEY",
+								"APIKey": "tryDnK94yXfNHDFbDyiy6HltkdY2uvw0f5UtnFfGZiY=",
+								"ProxyID": 0,
+								"ReturnType": "JSON",
+								"OrgID": 1
+							},
+							"incidentParamsJSON": {
+								"IncidentContainerJsonObj": {
+									"Updater": "Executive",
+									"CI_Key": "hostname",
+									"CI_Value": "",
+									"Ticket": {
+										"IsFromWebService": true,
+										"Priority_Name": "P3 - Medium",
+										"Classification_Name": "Data or Process in system not working",
+										"Sup_Function": "IT",
+										"Caller_EmailID": "lyndon.johnson@argentenergy.com",
+										"Status": "New",
+										"Urgency_Name": "Stops Work",
+										"Assigned_WorkGroup_Name": "Argent Reporting Support Team",
+										"Medium": "Web",
+										"Impact_Name": "Multiple Users",
+										"Category_Name": "Argent Reporting",
+										"CI_ID": "",
+										"SLA_Name": "",
+										"OpenCategory_Name": "Argent Reporting",
+										"Source": "Person",
+										"Description": "@{pipeline().parameters.TicketMessage}",
+										"PageName": "TicketDetail"
+									},
+									"TicketInformation": {
+										"Information": "TEST Ticket",
+										"InternalLog": "#InternalLog#",
+										"UserLog": "",
+										"Solution": "#Solution#"
+									},
+									"CustomFields": []
+								}
+							},
+							"RequestType": "RemoteCall"
+						}
+					}
+				}
+			},
+			{
+				"name": "Get the Ticket Number",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Raise an Incident",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "TicketNo",
+					"value": {
+						"value": "@string(activity('Raise an Incident').output.TicketNo)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "sql.jobs@argentenergy.com"
+			},
+			"ticketID": {
+				"type": "string"
+			},
+			"JobMessage": {
+				"type": "string",
+				"defaultValue": "Azure Data Factory Error"
+			},
+			"TicketMessage": {
+				"type": "string",
+				"defaultValue": "Automated message: Data job has failedJob Failed"
+			}
+		},
+		"variables": {
+			"TicketNo": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "Trade/Pricing"
 		},
