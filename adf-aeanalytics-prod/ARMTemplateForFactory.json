@@ -1588,25 +1588,7 @@
 						"type": "WebActivity",
 						"dependsOn": [
 							{
-								"activity": "Copy_Pricing_Sharepoint_To_BLOB",
-								"dependencyConditions": [
-									"Failed"
-								]
-							},
-							{
-								"activity": "Execute BLOB To SQL For Pricing Data",
-								"dependencyConditions": [
-									"Failed"
-								]
-							},
-							{
 								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Failed"
-								]
-							},
-							{
-								"activity": "Execute SQL To BLOB For Trade Tables",
 								"dependencyConditions": [
 									"Failed"
 								]
