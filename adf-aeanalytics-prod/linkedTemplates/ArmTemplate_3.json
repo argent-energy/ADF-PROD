@@ -575,7 +575,7 @@
 				"parameters": {
 					"receiver": {
 						"type": "string",
-						"defaultValue": "sql.jobs@argentenergy.com"
+						"defaultValue": "data.mi@argentenergy.com"
 					},
 					"TicketID": {
 						"type": "string"
