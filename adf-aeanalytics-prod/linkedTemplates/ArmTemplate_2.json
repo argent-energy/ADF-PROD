@@ -13,6 +13,35 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Sharepoint_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ItemName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ItemName",
+							"type": "Expression"
+						},
+						"container": "sharepoint-files"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_Test')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1003,7 +1032,8 @@
 				"lastPublishTime": "2022-11-11T15:23:09Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sharepoint_Finance_DWH_Excel_Data_Raw')]"
+				"[concat(variables('factoryId'), '/datasets/Sharepoint_Finance_DWH_Excel_Data_Raw')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]"
 			]
 		},
 		{
@@ -1376,7 +1406,8 @@
 				"lastPublishTime": "2022-10-25T19:12:48Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sharepoint_Pricing_Raw')]"
+				"[concat(variables('factoryId'), '/datasets/Sharepoint_Pricing_Raw')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]"
 			]
 		},
 		{
@@ -1456,146 +1487,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Dailyload')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Trade-Tables_To_BLOB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Trade Tables",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT Table_schema, table_name from information_schema.tables\nwhere table_type = 'base table' and table_schema = 'Trade'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQL_Trade_Tables",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Trade Table For Each",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Trade Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Trade Tables').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Copy Trade Tables",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "DelimitedTextSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "DelimitedTextWriteSettings",
-												"quoteAllText": true,
-												"fileExtension": ".txt"
-											}
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "SQL_Dynamic_Trade_Table",
-											"type": "DatasetReference",
-											"parameters": {
-												"schema": {
-													"value": "@item().TABLE_SCHEMA",
-													"type": "Expression"
-												},
-												"table": {
-													"value": "@item().TABLE_NAME",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "Trade_Tables",
-											"type": "DatasetReference",
-											"parameters": {
-												"filename": {
-													"value": "@concat(item().TABLE_SCHEMA,'.',item().TABLE_NAME,'.csv')",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-02T10:47:57Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_Trade_Tables')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Dynamic_Trade_Table')]",
-				"[concat(variables('factoryId'), '/datasets/Trade_Tables')]"
 			]
 		}
 	]
