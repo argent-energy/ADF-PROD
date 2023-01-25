@@ -160,7 +160,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
+						"activity": "SQL_Margin_Core_Tables_Script",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -230,6 +230,26 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "SQL_SubledgerSuppliersCustomers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SQL_Margin_Core_Tables_Script",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Margin_Core_Tables_Script",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
