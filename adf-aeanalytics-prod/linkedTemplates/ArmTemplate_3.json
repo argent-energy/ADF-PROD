@@ -13,6 +13,82 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/OneFilepush')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Finance Reference Tables",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": true,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dailyload",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_Argent_Database",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "O.XLA_TRANSACTION_ENTITIES"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-10-13T12:23:42Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Trade-Tables_To_BLOB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -234,32 +310,11 @@
 						}
 					},
 					{
-						"name": "Execute Core Tables Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute BLOB To SQL For Oracle Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exp_And_Pos_Core_Tables_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "Execute Data Marks Script",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Execute Core Tables Script",
+								"activity": "SQL_Exp_And_Pos_Core_Tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -325,6 +380,27 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "SQL_GL_Drop_RAW_Script",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SQL_Exp_And_Pos_Core_Tables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Execute BLOB To SQL For Oracle Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_Exp_And_Pos_Core_Tables",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,

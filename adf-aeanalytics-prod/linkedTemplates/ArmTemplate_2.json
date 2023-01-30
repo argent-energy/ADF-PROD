@@ -13,6 +13,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Get_Metadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Pricing dataset.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_Sharepoint_Files')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1296,6 +1332,7 @@
 				"lastPublishTime": "2022-11-11T15:46:00Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Blob_Pricing_Get_Metadata')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]"
 			]
 		},
@@ -1408,85 +1445,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sharepoint_Pricing_Raw')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OneFilepush')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Finance Reference Tables",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": true,
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dailyload",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Argent_Database",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "O.XLA_TRANSACTION_ENTITIES"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-10-13T12:23:42Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dailyload')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]"
 			]
 		}
 	]

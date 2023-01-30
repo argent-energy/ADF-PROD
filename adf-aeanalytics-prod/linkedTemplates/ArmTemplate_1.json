@@ -13,6 +13,50 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_GL_Drop_RAW_Script')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Drop RAW GL Tables Script",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "/*==================================================================================================================*\r\n * Project:     Argent                                                                                              *\r\n * Purpose:     Drop RAW tables                                                                                     *\r\n * Description: Drop previously imported GL tables to prevent duplications in PK columns.                            *\r\n * Date:        22/08/2022                                                                                          *\r\n * Version:     1.0                                                                                                 *                                                                          \r\n *==================================================================================================================*\r\n\r\n * Updates:                                                                                                         *\r\n\r\n * Date     | Version | Author      | Change made                                                                   *\r\n\r\n * -----------------------------------------------------------------------------------------------------------------*\r\n\r\n * --/--/-- |  1.-    |             |                                                                               *\r\n\r\n *          |         |             |                                                                               *\r\n\r\n *==================================================================================================================*/\r\n\r\n/********************************************************************************************************\r\n    Step 1.1:   Drop tables\r\n********************************************************************************************************/\r\n\r\n\r\n    DECLARE @DropTableStatement NVARCHAR(MAX)\r\n\r\n    DECLARE Cur2 CURSOR READ_ONLY\r\n\r\n    FOR\r\n\r\n            SELECT  'DROP TABLE [RAW].[' + TABLE_NAME + ']'\r\n\r\n            FROM    INFORMATION_SCHEMA.TABLES\r\n\r\n            WHERE   TABLE_SCHEMA = 'RAW'\r\n\r\n            AND     TABLE_TYPE = 'BASE TABLE'\r\n\r\n           AND    ( TABLE_NAME LIKE 'O.GL%' or TABLE_NAME LIKE 'O.AP_%' or TABLE_NAME  LIKE 'O.RA_CUST_T%' or TABLE_NAME  LIKE 'O.FND%' or TABLE_NAME  LIKE 'O.XLA%' or TABLE_NAME LIKE '%DISTRIBUTION%' or TABLE_NAME LIKE '%HZ_CUST%'or TABLE_NAME LIKE '%RCV%' or TABLE_NAME LIKE '%CST_%' OR TABLE_NAME LIKE '%WSH_%' OR TABLE_NAME LIKE '%DOCUMENT_REFERENCES%')\r\n\r\n\r\n    OPEN Cur2\r\n    FETCH NEXT FROM Cur2 INTO @DropTableStatement\r\n    WHILE @@FETCH_STATUS = 0\r\n          BEGIN\r\n                PRINT 'Executing ' + @DropTableStatement\r\n                EXECUTE sp_executesql @DropTableStatement\r\n                FETCH NEXT FROM Cur2 INTO @DropTableStatement\r\n          END\r\n    CLOSE Cur2\r\n    DEALLOCATE Cur2\r\n"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-16T10:15:56Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Margin_Core_Tables_Script')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -754,42 +798,6 @@
 					"firstRowAsHeader": true
 				},
 				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Get_Metadata')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Trade/Pricing"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Tables",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Pricing dataset.xlsx",
-						"container": "sharepoint-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "SheetName",
-						"type": "String"
-					},
-					{
-						"name": "TableName",
-						"type": "String"
-					}
-				]
 			},
 			"dependsOn": []
 		}
