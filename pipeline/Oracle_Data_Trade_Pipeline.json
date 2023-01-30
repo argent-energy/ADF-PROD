@@ -43,31 +43,11 @@
 				}
 			},
 			{
-				"name": "Execute Core Tables Script",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Execute BLOB To SQL For Oracle Data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SQL_Exp_And_Pos_Core_Tables_Script",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "Execute Data Marks Script",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Execute Core Tables Script",
+						"activity": "SQL_Exp_And_Pos_Core_Tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -130,6 +110,26 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "SQL_GL_Drop_RAW_Script",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SQL_Exp_And_Pos_Core_Tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Execute BLOB To SQL For Oracle Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Exp_And_Pos_Core_Tables",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
