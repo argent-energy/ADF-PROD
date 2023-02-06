@@ -11,10 +11,10 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Tables",
+			"sheetName": "2023",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Finance DWH Excel data.xlsx",
+				"fileName": "Shipping planning Stanlow.xlsx",
 				"container": "sharepoint-files"
 			},
 			"firstRowAsHeader": true
