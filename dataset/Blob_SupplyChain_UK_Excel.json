@@ -17,7 +17,8 @@
 				"fileName": "Shipping planning Stanlow.xlsx",
 				"container": "sharepoint-files"
 			},
-			"firstRowAsHeader": true
+			"range": "",
+			"firstRowAsHeader": false
 		},
 		"schema": [
 			{
