@@ -45,7 +45,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "Finance%20DWH%20Excel%20data.xlsx')/$value"
+						"value": "Shipping%20planning%20Stanlow.xlsx')/$value"
 					},
 					{
 						"name": "Destination",
@@ -99,7 +99,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Finance DWH Excel data.xlsx"
+				"defaultValue": "Shipping planning Stanlow.xlsx"
 			}
 		},
 		"folder": {
