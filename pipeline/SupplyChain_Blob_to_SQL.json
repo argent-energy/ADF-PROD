@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Finance_Excel_tables_lookup",
+				"name": "SupplyChain_Excel_tables_lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -36,7 +36,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Finance_Excel_tables_lookup",
+						"activity": "SupplyChain_Excel_tables_lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
