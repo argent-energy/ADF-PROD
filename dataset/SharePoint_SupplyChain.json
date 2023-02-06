@@ -2,7 +2,7 @@
 	"name": "SharePoint_SupplyChain",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Sharepoint_Pricing_Data",
+			"referenceName": "SupplyChain_SharePoint",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -14,7 +14,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "Finance%20DWH%20Excel%20data.xlsx')/$value",
+					"value": "Shipping%20planning%20Stanlow.xlsx')/$value",
 					"type": "Expression"
 				}
 			}
