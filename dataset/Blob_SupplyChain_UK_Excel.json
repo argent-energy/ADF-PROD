@@ -18,7 +18,7 @@
 				"container": "sharepoint-files"
 			},
 			"range": "",
-			"firstRowAsHeader": false
+			"firstRowAsHeader": true
 		},
 		"schema": [
 			{
