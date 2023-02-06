@@ -1,5 +1,5 @@
 {
-	"name": "SupplyChain_Sharepoint_To_BLOB",
+	"name": "SupplyChain_Sharepoint_To_Blob",
 	"properties": {
 		"description": "Copies data from the Sharepoint site \"PowerBI data\" to the Azure Blob Storage",
 		"activities": [
@@ -25,7 +25,7 @@
 				}
 			},
 			{
-				"name": "Copy_Sharepoint_to_Blob",
+				"name": "Copy_SharePoint_to_Blob",
 				"type": "Copy",
 				"dependsOn": [
 					{

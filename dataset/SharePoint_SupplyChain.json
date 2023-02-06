@@ -1,0 +1,30 @@
+{
+	"name": "SharePoint_SupplyChain",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sharepoint_Pricing_Data",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ItemName": {
+				"type": "string",
+				"defaultValue": "BS and P&L FX Rates.xlsx"
+			}
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Finance%20DWH%20Excel%20data.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
