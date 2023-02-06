@@ -5,14 +5,8 @@
 			"referenceName": "Sharepoint_Pricing_Data",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"ItemName": {
-				"type": "string",
-				"defaultValue": "BS and P&L FX Rates.xlsx"
-			}
-		},
 		"folder": {
-			"name": "Finance"
+			"name": "Supply Chain"
 		},
 		"annotations": [],
 		"type": "Binary",

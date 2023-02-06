@@ -78,14 +78,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_Finance_DWH_Excel_Data_Raw",
-						"type": "DatasetReference",
-						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "SharePoint_SupplyChain",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
