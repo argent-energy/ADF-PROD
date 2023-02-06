@@ -1,11 +1,10 @@
 {
 	"name": "SupplyChain_SharePoint",
 	"properties": {
-		"description": "Link to SharePoint site \"Bulk Import and Export\".",
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://argentenergyltd.sharepoint.com/sites/BulkImportandExport/_api/web/GetFileByServerRelativeUrl('/sites/BulkImportandExport/Shared%20Documents/General/",
+			"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
