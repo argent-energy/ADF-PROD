@@ -1,0 +1,13 @@
+{
+	"name": "SupplyChain_SharePoint",
+	"properties": {
+		"description": "Link to SharePoint site \"Bulk Import and Export\".",
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://argentenergyltd.sharepoint.com/sites/Bulk Import and Export/_api/web/GetFileByServerRelativeUrl('/sites/Bulk Import and Export/Shared%20Documents/General",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
