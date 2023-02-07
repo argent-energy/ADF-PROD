@@ -33,8 +33,8 @@
 				}
 			},
 			{
-				"name": "Copy Supply Chain Excel sheet 1",
-				"description": "Copy Supply Chain UK Shipping Excel sheet to DWH",
+				"name": "Copy Shipping 2023 UK",
+				"description": "Copy Supply Chain UK Shipping 2023 Excel sheet to DWH",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -80,7 +80,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Blob_SupplyChain_UK_Excel",
+						"referenceName": "Blob_SC_Shipping_UK2023_Excel",
 						"type": "DatasetReference"
 					}
 				],
@@ -89,14 +89,14 @@
 						"referenceName": "SQL_Sharepoint_Data_Tables",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "SC.ShippingUK"
+							"TableName": "SC.Shipping2023UK"
 						}
 					}
 				]
 			},
 			{
-				"name": "Copy Supply Chain Excel sheet 2",
-				"description": "Copy Supply Chain NL Shipping Excel sheet to DWH",
+				"name": "Copy Shipping 2022 UK",
+				"description": "Copy Supply Chain UK Shipping 2022 Excel sheet to DWH",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -142,7 +142,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Blob_SupplyChain_NL_Excel",
+						"referenceName": "Blob_SC_Shipping_UK2022_Excel",
 						"type": "DatasetReference"
 					}
 				],
@@ -151,7 +151,7 @@
 						"referenceName": "SQL_Sharepoint_Data_Tables",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "SC.ShippingNL"
+							"TableName": "SC.Shipping2022UK"
 						}
 					}
 				]
