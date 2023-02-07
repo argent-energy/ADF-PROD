@@ -1,0 +1,35 @@
+{
+	"name": "Blob_SC_Shipping_UK2022_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "2022",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Shipping planning Stanlow.xlsx",
+				"container": "sharepoint-files"
+			},
+			"range": "",
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "SheetName",
+				"type": "String"
+			},
+			{
+				"name": "TableName",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
