@@ -24,7 +24,7 @@
 						{
 							"type": "NonQuery",
 							"text": {
-								"value": "DROP TABLE IF EXISTS [RAW].[SC.ShippingUK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
+								"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
 								"type": "Expression"
 							}
 						}
