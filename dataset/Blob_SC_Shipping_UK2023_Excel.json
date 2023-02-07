@@ -1,5 +1,5 @@
 {
-	"name": "Blob_SupplyChain_UK_Excel",
+	"name": "Blob_SC_Shipping_UK2023_Excel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "OracleBlob",
