@@ -1,5 +1,5 @@
 {
-	"name": "SharePoint_SupplyChain",
+	"name": "SharePoint_SC_UK",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SupplyChain_SharePoint",
