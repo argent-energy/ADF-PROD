@@ -49,7 +49,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelUK}"
 					}
 				],
 				"typeProperties": {
@@ -87,10 +87,7 @@
 						"referenceName": "Blob_Sharepoint_Files",
 						"type": "DatasetReference",
 						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
+							"ItemName": "@pipeline().parameters.ExcelUK"
 						}
 					}
 				]
@@ -116,11 +113,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "Shipping%20planning%20Stanlow.xlsx')/$value"
+						"value": "Tankopslag%20en%20Planning.xlsx')/$value"
 					},
 					{
 						"name": "Destination",
-						"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelNL}"
 					}
 				],
 				"typeProperties": {
@@ -158,19 +155,20 @@
 						"referenceName": "Blob_Sharepoint_Files",
 						"type": "DatasetReference",
 						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
+							"ItemName": "@pipeline().parameters.ExcelNL"
 						}
 					}
 				]
 			}
 		],
 		"parameters": {
-			"ExcelName": {
+			"ExcelUK": {
 				"type": "string",
 				"defaultValue": "Shipping planning Stanlow.xlsx"
+			},
+			"ExcelNL": {
+				"type": "string",
+				"defaultValue": "Tankopslag en Planning.xlsx"
 			}
 		},
 		"folder": {
