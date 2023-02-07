@@ -1,5 +1,5 @@
 {
-	"name": "Blob_SupplyChain_NL_Excel",
+	"name": "Blob_SC_Shipping_NL_Excel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "OracleBlob",
@@ -11,10 +11,10 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Tables",
+			"sheetName": "Schepenorders",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Finance DWH Excel data.xlsx",
+				"fileName": "Tankopslag en Planning.xlsx",
 				"container": "sharepoint-files"
 			},
 			"firstRowAsHeader": true
