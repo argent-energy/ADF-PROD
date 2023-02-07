@@ -25,7 +25,7 @@
 				}
 			},
 			{
-				"name": "Copy_SharePoint_to_Blob",
+				"name": "Copy_SharePoint_to_Blob_UK",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -78,7 +78,78 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SharePoint_SupplyChain",
+						"referenceName": "SharePoint_SC_UK",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Blob_Sharepoint_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"ItemName": {
+								"value": "@pipeline().parameters.ExcelName",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Copy_SharePoint_to_Blob_NL",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Sharepoint_token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": true
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "Shipping%20planning%20Stanlow.xlsx')/$value"
+					},
+					{
+						"name": "Destination",
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET",
+							"additionalHeaders": {
+								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+								"type": "Expression"
+							},
+							"requestTimeout": ""
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SharePoint_SC_NL",
 						"type": "DatasetReference"
 					}
 				],
