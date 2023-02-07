@@ -1,0 +1,24 @@
+{
+	"name": "SharePoint_SC_NL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SupplyChain_SharePoint",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Tankopslag%20en%20Planning.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
