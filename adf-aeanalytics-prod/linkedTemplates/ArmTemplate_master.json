@@ -47,6 +47,10 @@
 			"type": "string",
 			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
 		},
+		"SupplyChain_SharePoint_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -103,6 +107,9 @@
 					},
 					"Sharepoint_Pricing_Data_properties_typeProperties_url": {
 						"value": "[parameters('Sharepoint_Pricing_Data_properties_typeProperties_url')]"
+					},
+					"SupplyChain_SharePoint_properties_typeProperties_url": {
+						"value": "[parameters('SupplyChain_SharePoint_properties_typeProperties_url')]"
 					}
 				}
 			},
