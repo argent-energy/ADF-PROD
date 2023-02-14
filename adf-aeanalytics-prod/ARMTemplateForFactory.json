@@ -2491,6 +2491,51 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Inventory_OnHandBalance')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Supply Chain Inventory Table",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "\r\n\tINSERT INTO [SupplyChain].[InventoryOnHandBalance]\r\n\tSELECT\t\tohb.[Business Unit Name]\t\t\t\t\t\t\t\t\t\tAS [Business Unit Name]\r\n\t,\t\t\tohb.[Inventory Organization Name]\t\t\t\t\t\t\t\tAS [Inventory Organization Name]\t\t\r\n\t,\t\t\tohb.[Item ID]\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Item ID]\t\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Inventory Organization ID]\t\t\t\t\t\t\t\t\tAS [Inventory Organization ID]\t\t\t\r\n\t,\t\t\tohb.[Primary Transaction Quantity]\t\t\t\t\t\t\t\tAS [Primary Transaction Quantity]\t\r\n\t,\t\t\tCASE\r\n\t\t\t\t\tWHEN ohb.[Transaction UOM Code] IN ('LTR', 'MLT', 'SLT')\r\n\t\t\t\t\t\tTHEN ohb.[Primary Transaction Quantity] * 0.0008745\r\n\t\t\t\t\tELSE ohb.[Primary Transaction Quantity]\r\n\t\t\t\tEND\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Primary Transaction Quantity MT]\t\r\n\t,\t\t\tohb.[Subinventory]\t\t\t\t\t\t\t\t\t\t\t\tAS [Subinventory]\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Onhand Quantities ID]\t\t\t\t\t\t\t\t\t\tAS [Onhand Quantities ID]\t\t\t\t\r\n\t,\t\t\tohb.[Transaction UOM Code]\t\t\t\t\t\t\t\t\t\tAS [Transaction UOM Code]\t\t\t\t\r\n\t,\t\t\tohb.[Lot Number]\t\t\t\t\t\t\t\t\t\t\t\tAS [Lot Number]\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Item Code]\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Item Code]\t\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Item Name]\t\t\t\t\t\t\t\t\t\t\t\t\tAS [Item Name]\t\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Category Set Name]\t\t\t\t\t\t\t\t\t\t\tAS [Category Set Name]\t\t\t\t\t\r\n\t,\t\t\tohb.[Category Code]\t\t\t\t\t\t\t\t\t\t\t\tAS [Category Code]\t\t\t\t\t\t\r\n\t,\t\t\tohb.[Category Set Description]\t\t\t\t\t\t\t\t\tAS [Category Set Description]\t\t\t\r\n\t,\t\t\tCAST(GETDATE() AS DATE)\t\t\t\t\t\t\t\t\t\t\tAS [DateStamp]\r\n\tFROM\t\t[Core].[OnHandBalance] ohb\r\n\tWHERE\t\t[Business Unit Name] NOT IN ('ROTIE BU','Quatra BU')"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Margin_Core_Tables_Script')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
