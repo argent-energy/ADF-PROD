@@ -1,0 +1,44 @@
+{
+	"name": "SQL_SupplyChain_Main_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_PurchaseContracts_SalesContracts",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_PurchaseContracts_SalesContracts",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SQL_Inventory_OnHandBalance",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_PurchaseContracts_SalesContracts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_Inventory_OnHandBalance",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": []
+	}
+}

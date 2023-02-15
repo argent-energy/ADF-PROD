@@ -1,0 +1,24 @@
+{
+	"name": "ARGENT_SupplyChain_MainPipeline",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SQL_SupplyChain_Main_Pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2023-02-16T06:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
