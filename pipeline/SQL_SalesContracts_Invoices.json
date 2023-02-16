@@ -1,0 +1,37 @@
+{
+	"name": "SQL_SalesContracts_Invoices",
+	"properties": {
+		"activities": [
+			{
+				"name": "SalesContracts_To_Invoices",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "\tIF OBJECT_ID('[SupplyChain].[SalesInvoicesAndContractNumber]','U') IS NOT NULL\r\n\t\tDROP TABLE [SupplyChain].[SalesInvoicesAndContractNumber]\r\n\r\n\tSELECT\t\tsc.[Sales Contract Number]\r\n\t,\t\t\tsoi.*\r\n\tINTO\t\t[SupplyChain].[SalesInvoicesAndContractNumber]\r\n\tFROM\t\tFinance.SalesOrdersAndInvoices soi\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Agreement Header ID]\r\n\t\t\t\t\t,\t\t\t[Order Number]\r\n\t\t\t\t\tFROM\t\tCore.[SalesOrders]\r\n\t\t\t\t) so\r\n\tON\t\t\tsoi.[Order Number] = so.[Order Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Sales Contract Number]\r\n\t\t\t\t\t,\t\t\t[Contract Header ID]\r\n\t\t\t\t\tFROM\t\tCore.SalesContracts\r\n\t\t\t\t) sc\r\n\tON\t\t\tsc.[Contract Header ID] = so.[Agreement Header ID]\r\n\tORDER BY\t[Transaction Date]"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": []
+	}
+}
