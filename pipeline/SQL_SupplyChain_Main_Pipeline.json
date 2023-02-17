@@ -7,15 +7,15 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ShipmentLines_Blob_to_SQL",
+						"activity": "SupplyChain_Sharepoint_To_Blob",
 						"dependencyConditions": [
-							"Succeeded",
 							"Failed"
 						]
 					},
 					{
-						"activity": "SupplyChain_Sharepoint_To_Blob",
+						"activity": "SupplyChain_Blob_to_SQL",
 						"dependencyConditions": [
+							"Succeeded",
 							"Failed"
 						]
 					}
@@ -83,7 +83,7 @@
 				}
 			},
 			{
-				"name": "ShipmentLines_Blob_to_SQL",
+				"name": "SupplyChain_Blob_to_SQL",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -96,7 +96,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "ShipmentLines_Blob_to_SQL",
+						"referenceName": "SupplyChain_Blob_to_SQL",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
