@@ -9,7 +9,14 @@
 					{
 						"activity": "ShipmentLines_Blob_to_SQL",
 						"dependencyConditions": [
-							"Succeeded"
+							"Succeeded",
+							"Failed"
+						]
+					},
+					{
+						"activity": "SupplyChain_Sharepoint_To_Blob",
+						"dependencyConditions": [
+							"Failed"
 						]
 					}
 				],
