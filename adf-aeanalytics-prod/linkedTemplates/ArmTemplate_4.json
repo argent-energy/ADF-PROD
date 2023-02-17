@@ -13,17 +13,45 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Finance_MainPipeline')]",
+			"name": "[concat(parameters('factoryName'), '/SQL_SupplyChain_Main_Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Execute Pipeline1",
+						"name": "SQL_PurchaseContracts_SalesContracts",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Copy Blob to SQL DB",
+								"activity": "SupplyChain_Sharepoint_To_Blob",
+								"dependencyConditions": [
+									"Failed"
+								]
+							},
+							{
+								"activity": "SupplyChain_Blob_to_SQL",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_PurchaseContracts_SalesContracts",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SQL_Inventory_OnHandBalance",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_PurchaseContracts_SalesContracts",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -32,7 +60,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "CREATEGL_Script_1",
+								"referenceName": "SQL_Inventory_OnHandBalance",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -40,11 +68,11 @@
 						}
 					},
 					{
-						"name": "Execute Pipeline2",
+						"name": "SQL_SalesContracts_Invoices",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Execute Pipeline1",
+								"activity": "SQL_Inventory_OnHandBalance",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -53,7 +81,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "CREATEGL_Script_2",
+								"referenceName": "SQL_SalesContracts_Invoices",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -61,55 +89,13 @@
 						}
 					},
 					{
-						"name": "CREATE_TB_Rec",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_3",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATE_TB_Rec",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATEGL_Script_3",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_3",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Sharepoint to Blob",
+						"name": "SupplyChain_Sharepoint_To_Blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_To_BLOB",
+								"referenceName": "SupplyChain_Sharepoint_To_Blob",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -117,11 +103,11 @@
 						}
 					},
 					{
-						"name": "Copy Blob to SQL DB",
+						"name": "SupplyChain_Blob_to_SQL",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Copy Sharepoint to Blob",
+								"activity": "SupplyChain_Sharepoint_To_Blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -130,154 +116,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Exceptions",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_CurrencyExposure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exceptions",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATE_TB_Rec",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_BlendMarginAnalysis",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendAnalysisCoreScripts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_BlendMarginAnalysis",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_CurrencyExposure",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendMarginAnalysis",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_CurrencyExposure",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_TransactionsList",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendAnalysisCoreScripts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_TransactionsList",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_SubledgerSuppliersCustomers",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_TransactionsList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_SubledgerSuppliersCustomers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_BlendAnalysisCoreScripts",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_BlendAnalysisCoreScripts",
+								"referenceName": "SupplyChain_Blob_to_SQL",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -290,38 +129,9 @@
 					"cancelAfter": {}
 				},
 				"folder": {
-					"name": "Finance"
+					"name": "Supply Chain"
 				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-05T10:34:53Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ARGENT_SupplyChain_MainPipeline')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "SQL_SupplyChain_Main_Pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 24,
-						"startTime": "2023-02-16T06:00:00Z",
-						"timeZone": "UTC"
-					}
-				}
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -390,6 +200,36 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ARGENT_SupplyChain_MainPipeline')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SQL_SupplyChain_Main_Pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 24,
+						"startTime": "2023-02-16T06:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SQL_SupplyChain_Main_Pipeline')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/GL_TRIGGER')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -415,9 +255,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SQL_Finance_MainPipeline')]"
-			]
+			"dependsOn": []
 		}
 	]
 }

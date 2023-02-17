@@ -3042,7 +3042,21 @@
 					{
 						"name": "SQL_PurchaseContracts_SalesContracts",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "SupplyChain_Sharepoint_To_Blob",
+								"dependencyConditions": [
+									"Failed"
+								]
+							},
+							{
+								"activity": "SupplyChain_Blob_to_SQL",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -3094,6 +3108,41 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SupplyChain_Sharepoint_To_Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SupplyChain_Sharepoint_To_Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SupplyChain_Blob_to_SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SupplyChain_Sharepoint_To_Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SupplyChain_Blob_to_SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -3108,7 +3157,9 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SQL_PurchaseContracts_SalesContracts')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_Inventory_OnHandBalance')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_SalesContracts_Invoices')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_SalesContracts_Invoices')]",
+				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Sharepoint_To_Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Blob_to_SQL')]"
 			]
 		},
 		{
