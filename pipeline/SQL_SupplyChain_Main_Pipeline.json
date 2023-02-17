@@ -5,7 +5,14 @@
 			{
 				"name": "SQL_PurchaseContracts_SalesContracts",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "ShipmentLines_Blob_to_SQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -50,6 +57,39 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "SQL_SalesContracts_Invoices",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SupplyChain_Sharepoint_To_Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SupplyChain_Sharepoint_To_Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "ShipmentLines_Blob_to_SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SupplyChain_Sharepoint_To_Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "ShipmentLines_Blob_to_SQL",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
