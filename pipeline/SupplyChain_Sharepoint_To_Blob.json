@@ -159,6 +159,78 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Copy_SharePoint_to_Blob_Tables",
+				"description": "Copy Supply Chain's data wallet Excel file with multiple sheets/tables to the SharePoint Blob storage container.",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Sharepoint_token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": true
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "Supply%20Chain%20Excel%20Data%20for%20DWH.xlsx')/$value"
+					},
+					{
+						"name": "Destination",
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelTables}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET",
+							"additionalHeaders": {
+								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+								"type": "Expression"
+							},
+							"requestTimeout": ""
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SharePoint_SC_Tables",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Blob_Sharepoint_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"ItemName": {
+								"value": "@pipeline().parameters.ExcelTables",
+								"type": "Expression"
+							}
+						}
+					}
+				]
 			}
 		],
 		"parameters": {
@@ -169,6 +241,10 @@
 			"ExcelNL": {
 				"type": "string",
 				"defaultValue": "Tankopslag en Planning.xlsx"
+			},
+			"ExcelTables": {
+				"type": "string",
+				"defaultValue": "Supply Chain Excel Data for DWH.xlsx"
 			}
 		},
 		"folder": {
