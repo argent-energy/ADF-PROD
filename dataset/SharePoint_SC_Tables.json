@@ -1,0 +1,24 @@
+{
+	"name": "SharePoint_SC_Tables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SupplyChain_SharePoint",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Supply%20Chain%20Excel%20Data%20for%20DWH.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
