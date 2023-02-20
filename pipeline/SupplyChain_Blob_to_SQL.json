@@ -217,6 +217,121 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Lookup Supply Chain Tables",
+				"description": "Return the names of the sheets/tables in the Supply Chain data wallet.",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Drop Supply Chain Excel tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"dataset": {
+						"referenceName": "Blob_SC_DataWallet",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Each sheet",
+				"description": "Copies each sheet in the lookup sheet to a separate SQL table.",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Supply Chain Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Supply Chain Tables').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy Data Wallet",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "ExcelSource",
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Blob_SC_DataWallet_Sheets",
+									"type": "DatasetReference",
+									"parameters": {
+										"SheetName": "@item().SheetName"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Sharepoint_Data_Tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "@item().TableName"
+									}
+								}
+							]
+						}
+					]
+				}
 			}
 		],
 		"folder": {
