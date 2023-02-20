@@ -3449,7 +3449,7 @@
 								{
 									"type": "NonQuery",
 									"text": {
-										"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
+										"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]\nDROP TABLE IF EXISTS [RAW].[SC.ContractsReason]",
 										"type": "Expression"
 									}
 								}
@@ -3645,6 +3645,122 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Lookup Supply Chain Tables",
+						"description": "Return the names of the sheets/tables in the Supply Chain data wallet.",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Drop Supply Chain Excel tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"dataset": {
+								"referenceName": "Blob_SC_DataWallet",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Each sheet",
+						"description": "Copies each sheet in the lookup sheet to a separate SQL table.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Supply Chain Tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Supply Chain Tables').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy Data Wallet",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ExcelSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Blob_SC_DataWallet_Sheets",
+											"type": "DatasetReference",
+											"parameters": {
+												"SheetName": "@item().SheetName"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Sharepoint_Data_Tables",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "@item().TableName"
+											}
+										}
+									]
+								}
+							]
+						}
 					}
 				],
 				"policy": {
@@ -3662,7 +3778,9 @@
 				"[concat(variables('factoryId'), '/datasets/Blob_SC_Shipping_UK2023_Excel')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_SC_Shipping_UK2022_Excel')]",
-				"[concat(variables('factoryId'), '/datasets/Blob_SC_Shipping_NL_Excel')]"
+				"[concat(variables('factoryId'), '/datasets/Blob_SC_Shipping_NL_Excel')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_SC_DataWallet')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_SC_DataWallet_Sheets')]"
 			]
 		},
 		{
@@ -3830,6 +3948,79 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Copy_SharePoint_to_Blob_Tables",
+						"description": "Copy Supply Chain's data wallet Excel file with multiple sheets/tables to the SharePoint Blob storage container.",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Sharepoint_token",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Supply%20Chain%20Excel%20Data%20for%20DWH.xlsx')/$value"
+							},
+							{
+								"name": "Destination",
+								"value": "sharepoint-files//@{pipeline().parameters.ExcelTables}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET",
+									"additionalHeaders": {
+										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SharePoint_SC_Tables",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Blob_Sharepoint_Files",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": {
+										"value": "@pipeline().parameters.ExcelTables",
+										"type": "Expression"
+									}
+								}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -3844,6 +4035,10 @@
 					"ExcelNL": {
 						"type": "string",
 						"defaultValue": "Tankopslag en Planning.xlsx"
+					},
+					"ExcelTables": {
+						"type": "string",
+						"defaultValue": "Supply Chain Excel Data for DWH.xlsx"
 					}
 				},
 				"folder": {
@@ -3855,7 +4050,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_UK')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]",
-				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_NL')]"
+				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_NL')]",
+				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_Tables')]"
 			]
 		},
 		{
@@ -4386,6 +4582,83 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_SC_DataWallet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Supply Chain Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_SC_DataWallet_Sheets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Supply Chain Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_SC_Shipping_NL_Excel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4841,6 +5114,34 @@
 						"type": "HttpServerLocation",
 						"relativeUrl": {
 							"value": "Tankopslag%20en%20Planning.xlsx')/$value",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SupplyChain_SharePoint')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SharePoint_SC_Tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SupplyChain_SharePoint",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "Supply%20Chain%20Excel%20Data%20for%20DWH.xlsx')/$value",
 							"type": "Expression"
 						}
 					}
