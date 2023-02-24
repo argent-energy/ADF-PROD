@@ -3046,7 +3046,8 @@
 							{
 								"activity": "SupplyChain_Sharepoint_To_Blob",
 								"dependencyConditions": [
-									"Failed"
+									"Failed",
+									"Succeeded"
 								]
 							},
 							{
