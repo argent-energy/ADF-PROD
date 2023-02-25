@@ -3189,6 +3189,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_Inventory_QuantityTracker",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_SalesContracts_Invoices",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_Inventory_QuantityTracker",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -3205,7 +3226,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_Inventory_OnHandBalance')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_SalesContracts_Invoices')]",
 				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Sharepoint_To_Blob')]",
-				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Blob_to_SQL')]"
+				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Blob_to_SQL')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_Inventory_QuantityTracker')]"
 			]
 		},
 		{
