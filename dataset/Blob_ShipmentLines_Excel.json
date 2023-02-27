@@ -11,10 +11,10 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Sheet1",
+			"sheetName": "RCV_SHIPMENT_LINES_RTF",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "RCV_SHIPMENT_LINES_report.xlsx",
+				"fileName": "RCV_SHIPMENT_LINES report.xlsx",
 				"container": "sharepoint-files"
 			},
 			"firstRowAsHeader": true
