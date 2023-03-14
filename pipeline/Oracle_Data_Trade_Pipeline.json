@@ -105,7 +105,21 @@
 			{
 				"name": "Execute Drop RAW GL Tables Script",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Trade_SharePoint_To_Blob",
+						"dependencyConditions": [
+							"Failed"
+						]
+					},
+					{
+						"activity": "Trade_Blob_to_SQL",
+						"dependencyConditions": [
+							"Succeeded",
+							"Failed"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -130,6 +144,39 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "SQL_Exp_And_Pos_Core_Tables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Trade_SharePoint_To_Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Trade_SharePoint_To_Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Trade_Blob_to_SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Trade_SharePoint_To_Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Trade_Blob_to_SQL",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
