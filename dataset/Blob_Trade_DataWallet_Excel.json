@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Finance"
+			"name": "Supply Chain"
 		},
 		"annotations": [],
 		"type": "Excel",
