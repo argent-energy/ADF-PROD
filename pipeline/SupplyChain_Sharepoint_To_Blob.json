@@ -1,7 +1,7 @@
 {
 	"name": "SupplyChain_Sharepoint_To_Blob",
 	"properties": {
-		"description": "Copies the Supply Chain shipping planning Excel file to Azure blob storage container.",
+		"description": "Copies the Supply Chain Excel files to Azure blob storage container.",
 		"activities": [
 			{
 				"name": "Sharepoint_token",
@@ -26,6 +26,7 @@
 			},
 			{
 				"name": "Copy_SharePoint_to_Blob_UK",
+				"description": "Copies UK shipping planning Excel file to Azure blob.",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -94,6 +95,7 @@
 			},
 			{
 				"name": "Copy_SharePoint_to_Blob_NL",
+				"description": "Copies NL shipping planning Excel file to Azure blob.",
 				"type": "Copy",
 				"dependsOn": [
 					{
