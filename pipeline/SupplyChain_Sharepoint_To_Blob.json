@@ -1,7 +1,7 @@
 {
 	"name": "SupplyChain_Sharepoint_To_Blob",
 	"properties": {
-		"description": "Copies data from the Supply Chain SharePoint site \"Bulk Import and Export\" to the Azure Blob Storage",
+		"description": "Copies the Supply Chain shipping planning Excel file to Azure blob storage container.",
 		"activities": [
 			{
 				"name": "Sharepoint_token",
