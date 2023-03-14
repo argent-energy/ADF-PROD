@@ -1,5 +1,5 @@
 {
-	"name": "Trade_Sharepoint_To_Blob",
+	"name": "Trade_SharePoint_To_Blob",
 	"properties": {
 		"description": "Copies the Trade Excel file to Azure blob storage container",
 		"activities": [
