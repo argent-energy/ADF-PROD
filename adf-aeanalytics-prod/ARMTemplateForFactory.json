@@ -1422,7 +1422,21 @@
 					{
 						"name": "Execute Drop RAW GL Tables Script",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Trade_SharePoint_To_Blob",
+								"dependencyConditions": [
+									"Failed"
+								]
+							},
+							{
+								"activity": "Trade_Blob_to_SQL",
+								"dependencyConditions": [
+									"Succeeded",
+									"Failed"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1453,6 +1467,41 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "Trade_SharePoint_To_Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Trade_SharePoint_To_Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Trade_Blob_to_SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Trade_SharePoint_To_Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Trade_Blob_to_SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -1472,7 +1521,9 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_Trade-Tables_To_BLOB')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_Exp_And_Pos_Drop_RAW_Script')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_GL_Drop_RAW_Script')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_Exp_And_Pos_Core_Tables')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_Exp_And_Pos_Core_Tables')]",
+				"[concat(variables('factoryId'), '/pipelines/Trade_SharePoint_To_Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Trade_Blob_to_SQL')]"
 			]
 		},
 		{
@@ -4279,7 +4330,176 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Trade_Sharepoint_To_Blob')]",
+			"name": "[concat(parameters('factoryName'), '/Trade_Blob_to_SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Trade_Excel_tables_lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"dataset": {
+								"referenceName": "Blob_Trade_DataWallet_Excel",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Copy sheets to tables",
+						"description": "Copies each sheet in the lookup sheet to a separate SQL table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Trade_Excel_tables_lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Trade_Excel_tables_lookup').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy from Excel file",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Drop",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ExcelSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Blob_Trade_DataWallet_Sheets",
+											"type": "DatasetReference",
+											"parameters": {
+												"SheetName": "@item().SheetName"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Sharepoint_Data_Tables",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "@item().TableName"
+											}
+										}
+									]
+								},
+								{
+									"name": "Drop",
+									"description": "Drop existing Trade Excel tables",
+									"type": "Script",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "SqlServerArgent",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "NonQuery",
+												"text": {
+													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-14T16:24:18Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Blob_Trade_DataWallet_Excel')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_Trade_DataWallet_Sheets')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]",
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trade_SharePoint_To_Blob')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4387,7 +4607,7 @@
 					}
 				},
 				"folder": {
-					"name": "Supply Chain"
+					"name": "Trade"
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-11-11T15:23:09Z"
@@ -5161,6 +5381,83 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Trade Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Sheets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Trade Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dailyload')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5424,7 +5721,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Finance"
+					"name": "Trade"
 				},
 				"annotations": [],
 				"type": "Binary",

@@ -617,6 +617,79 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Trade Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Sheets')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Trade Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dailyload')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -661,69 +734,6 @@
 				"typeProperties": {
 					"schema": "RAW",
 					"table": "GIT_Adjustments_Template"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Argent_Database')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServerArgent",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "RAW",
-					"table": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Dynamic_Trade_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"schema": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().table",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
