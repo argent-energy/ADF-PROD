@@ -96,8 +96,11 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Trade_DataWallet_Excel",
-									"type": "DatasetReference"
+									"referenceName": "Blob_Trade_DataWallet_Sheets",
+									"type": "DatasetReference",
+									"parameters": {
+										"SheetName": "@item().SheetName"
+									}
 								}
 							],
 							"outputs": [
@@ -145,7 +148,7 @@
 			}
 		],
 		"folder": {
-			"name": "Finance"
+			"name": "Trade"
 		},
 		"annotations": [],
 		"lastPublishTime": "2022-11-14T16:24:18Z"
