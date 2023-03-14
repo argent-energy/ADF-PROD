@@ -45,11 +45,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "Shipping%20planning%20Stanlow.xlsx')/$value"
+						"value": "Trade%20Excel%20Data%20for%20DWH.xlsx')/$value"
 					},
 					{
 						"name": "Destination",
-						"value": "sharepoint-files//@{pipeline().parameters.ExcelUK}"
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
 					}
 				],
 				"typeProperties": {
