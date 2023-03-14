@@ -25,7 +25,7 @@
 				}
 			},
 			{
-				"name": "Copy_SharePoint_to_Blob_UK",
+				"name": "Copy_SharePoint_to_Blob",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -78,7 +78,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SharePoint_SC_UK",
+						"referenceName": "SharePoint_Trade_DataWallet",
 						"type": "DatasetReference"
 					}
 				],
@@ -87,24 +87,16 @@
 						"referenceName": "Blob_Sharepoint_Files",
 						"type": "DatasetReference",
 						"parameters": {
-							"ItemName": "@pipeline().parameters.ExcelUK"
+							"ItemName": "@pipeline().parameters.ExcelName"
 						}
 					}
 				]
 			}
 		],
 		"parameters": {
-			"ExcelUK": {
+			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Shipping planning Stanlow.xlsx"
-			},
-			"ExcelNL": {
-				"type": "string",
-				"defaultValue": "Tankopslag en Planning.xlsx"
-			},
-			"ExcelTables": {
-				"type": "string",
-				"defaultValue": "Supply Chain Excel Data for DWH.xlsx"
+				"defaultValue": "Trade Excel Data for DWH.xlsx"
 			}
 		},
 		"folder": {
