@@ -12,7 +12,7 @@
 			}
 		},
 		"folder": {
-			"name": "Supply Chain"
+			"name": "Trade"
 		},
 		"annotations": [],
 		"type": "Excel",
@@ -23,7 +23,7 @@
 			},
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Supply Chain Excel Data for DWH.xlsx",
+				"fileName": "Trade Excel Data for DWH.xlsx",
 				"container": "sharepoint-files"
 			},
 			"range": "A1",
