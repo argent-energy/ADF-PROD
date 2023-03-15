@@ -1278,16 +1278,9 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Trade_SharePoint_To_Blob",
-								"dependencyConditions": [
-									"Failed"
-								]
-							},
-							{
 								"activity": "Trade_Blob_to_SQL",
 								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
+									"Completed"
 								]
 							}
 						],
@@ -1343,7 +1336,7 @@
 							{
 								"activity": "Trade_SharePoint_To_Blob",
 								"dependencyConditions": [
-									"Succeeded"
+									"Completed"
 								]
 							}
 						],
