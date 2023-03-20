@@ -50,6 +50,10 @@
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
+		},
+		"VesselFinder_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.vesselfinder.com"
 		}
 	},
 	"variables": {
@@ -2495,7 +2499,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Shipping Data",
+						"name": "GIT Tables",
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
@@ -2514,7 +2518,7 @@
 							"scripts": [
 								{
 									"type": "NonQuery",
-									"text": " /********************************************************************************************************\r\n\tStep 6.1:\tCreate GIT Inventory table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_Inventory','U') IS NOT NULL DROP TABLE SupplyChain.GIT_Inventory\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_Inventory\r\n\tFROM\t\tSupplyChain.InventoryQuantityAndValue\r\n\tWHERE\t\t[Subinventory] = 'GIT'\r\n\r\n /********************************************************************************************************\r\n\tStep 6.2:\tCreate GIT purchase contract table \r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_PurchaseContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_PurchaseContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_PurchaseContracts\r\n\tFROM\t\tSupplyChain.PurchaseContracts\r\n\tWHERE\t\t[Blanket Purchase Agreement Number] IN (\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t)\r\n\r\n /********************************************************************************************************\r\n\tStep 6.3:\tCreate GIT sales contract table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_SalesContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_SalesContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_SalesContracts\r\n\tFROM\t\tSupplyChain.SalesContracts\r\n\tWHERE\t\t[Sales Contract Number] IN\t(\r\n\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t)"
+									"text": " /********************************************************************************************************\r\n\tStep 6.1:\tCreate GIT Inventory table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_Inventory','U') IS NOT NULL DROP TABLE SupplyChain.GIT_Inventory\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_Inventory\r\n\tFROM\t\tSupplyChain.InventoryQuantityAndValue\r\n\tWHERE\t\t[Subinventory] = 'GIT'\r\n\r\n /********************************************************************************************************\r\n\tStep 6.2:\tCreate GIT purchase contract table \r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_PurchaseContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_PurchaseContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_PurchaseContracts\r\n\tFROM\t\tSupplyChain.PurchaseContracts\r\n\tWHERE\t\t[Blanket Purchase Agreement Number] IN (\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t)\r\n\r\n /********************************************************************************************************\r\n\tStep 6.3:\tCreate GIT sales contract table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_SalesContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_SalesContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_SalesContracts\r\n\tFROM\t\tSupplyChain.SalesContracts\r\n\tWHERE\t\t[Sales Contract Number] IN\t(\r\n\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t)\r\n\r\n /********************************************************************************************************\r\n\tStep 6.4:\tCreate list of relevant IMO numbers\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_IMO_Numbers','U') IS NOT NULL DROP TABLE SupplyChain.GIT_IMO_Numbers\r\n\tSELECT\t\tDISTINCT CASE\r\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\r\n\t\t\t\t\t\tTHEN [Vessel IMO]\r\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\r\n\t\t\t\tEND AS [IMO]\r\n\tINTO\t\t[SupplyChain].[GIT_IMO_Numbers]\r\n\tFROM\t\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT\t[ATA Date]\r\n\t\t\t\t\t,\t\t\t[Vessel IMO]\r\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\r\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\r\n\t\t\t\t\tFROM\t\tSupplyChain.Shipping\r\n\t\t\t\t\tWHERE\t\t[Vessel IMO] <> ''\r\n\t\t\t\t\tAND\t\t\tISNULL([Vessel IMO],[Mothervessel IMO]) IS NOT NULL\r\n\t\t\t\t) x"
 								}
 							]
 						}
@@ -3365,6 +3369,48 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_GIT_Tables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_ShippingData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_GIT_Tables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "VesselFinder_GetData",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_GIT_Tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "VesselFinder_GetData",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -3383,7 +3429,9 @@
 				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Sharepoint_To_Blob')]",
 				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Blob_to_SQL')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_Inventory_QuantityTracker')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_ShippingData')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_ShippingData')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_GIT_Tables')]",
+				"[concat(variables('factoryId'), '/pipelines/VesselFinder_GetData')]"
 			]
 		},
 		{
@@ -4723,6 +4771,520 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_GetData')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup IMO",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "VesselFinder_IMOs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Each IMO",
+						"description": "Copies each IMO number in the lookup table to a separate API request.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup IMO",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup IMO').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_VesselFinder_To_Blob",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET",
+											"paginationRules": {
+												"supportRFC5988": "true"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "VesselFinder_Vessels",
+											"type": "DatasetReference",
+											"parameters": {
+												"IMO": {
+													"value": "@string(item().imo)",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "VesselFinder_JSON_Outputs",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Vessel JSON Blob Get Metadata",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Each IMO",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "VesselFinder_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "JsonReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Vesel JSON Copy Data",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Vessel JSON Blob Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"additionalColumns": [
+									{
+										"name": "Stamp",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": true,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['AIS']['MMSI']"
+										},
+										"sink": {
+											"name": "MMSI",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['TIMESTAMP']"
+										},
+										"sink": {
+											"name": "TIMESTAMP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['LATITUDE']"
+										},
+										"sink": {
+											"name": "LATITUDE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['LONGITUDE']"
+										},
+										"sink": {
+											"name": "LONGITUDE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['COURSE']"
+										},
+										"sink": {
+											"name": "COURSE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['SPEED']"
+										},
+										"sink": {
+											"name": "SPEED",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['HEADING']"
+										},
+										"sink": {
+											"name": "HEADING",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['NAVSTAT']"
+										},
+										"sink": {
+											"name": "NAVSTAT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['IMO']"
+										},
+										"sink": {
+											"name": "IMO",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['NAME']"
+										},
+										"sink": {
+											"name": "NAME",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['CALLSIGN']"
+										},
+										"sink": {
+											"name": "CALLSIGN",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['TYPE']"
+										},
+										"sink": {
+											"name": "TYPE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['A']"
+										},
+										"sink": {
+											"name": "A",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['B']"
+										},
+										"sink": {
+											"name": "B",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['C']"
+										},
+										"sink": {
+											"name": "C",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['D']"
+										},
+										"sink": {
+											"name": "D",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['DRAUGHT']"
+										},
+										"sink": {
+											"name": "DRAUGHT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['DESTINATION']"
+										},
+										"sink": {
+											"name": "DESTINATION",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['LOCODE']"
+										},
+										"sink": {
+											"name": "LOCODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['ETA_AIS']"
+										},
+										"sink": {
+											"name": "ETA_AIS",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['ETA']"
+										},
+										"sink": {
+											"name": "ETA",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['SRC']"
+										},
+										"sink": {
+											"name": "SRC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['ZONE']"
+										},
+										"sink": {
+											"name": "ZONE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['ECA']"
+										},
+										"sink": {
+											"name": "ECA",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['DISTANCE_REMAINING']"
+										},
+										"sink": {
+											"name": "DISTANCE_REMAINING",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['AIS']['ETA_PREDICTED']"
+										},
+										"sink": {
+											"name": "ETA_PREDICTED",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['Stamp']"
+										},
+										"sink": {
+											"name": "Stamp",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VesselFinder_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_Argent_Database",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": {
+										"value": "VesselFinderData",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Script1",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Vesel JSON Copy Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "\n\tDELETE FROM SupplyChain.VesselData\n\tWHERE CAST(LEFT([Stamp],10) AS DATE) = CAST(GETDATE() AS DATE)\n\n\tINSERT INTO\t\tSupplyChain.VesselData\n\tSELECT\t\t*\n\tFROM\t\t[RAW].[VesselFinderData] v\n\tLEFT JOIN\t(\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\n\t\t\t\t\t,\t\t\t[Vessel IMO]\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\n\n\t\t\t\t) s\n\tON\t\t\tCASE\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\n\t\t\t\t\t\tTHEN [Vessel IMO]\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\n\t\t\t\tEND = v.[IMO]"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/VesselFinder_IMOs')]",
+				"[concat(variables('factoryId'), '/datasets/VesselFinder_JSON_Outputs')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]",
+				"[concat(variables('factoryId'), '/datasets/VesselFinder_Vessels')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/audit_pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -5563,6 +6125,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_VesselFinder_IMOs')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "IMO_Numbers.csv",
+						"container": "vesselfinder"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dailyload')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -6008,6 +6597,83 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_IMOs')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "IMO",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "SupplyChain",
+					"table": "GIT_IMO_Numbers"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_JSON_Outputs')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "vessel-outputs"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OracleBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_Vessels')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VesselFinder",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"IMO": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": {
+						"value": "@concat('vessels?userkey=WS-093AF9B8-279D79&imo=',dataset().IMO)",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VesselFinder')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -6131,6 +6797,21 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('VesselFinder_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ARGENT_Exp_And_Pos_TRADE_Trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -6219,7 +6900,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 24,
-						"startTime": "2023-02-24T14:01:00Z",
+						"startTime": "2023-03-21T07:01:00Z",
 						"timeZone": "UTC"
 					}
 				}

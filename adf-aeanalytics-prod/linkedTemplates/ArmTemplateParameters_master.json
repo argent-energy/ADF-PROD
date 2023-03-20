@@ -38,6 +38,9 @@
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
 		},
+		"VesselFinder_properties_typeProperties_url": {
+			"value": "https://api.vesselfinder.com"
+		},
 		"containerUri": {
 			"value": ""
 		},
