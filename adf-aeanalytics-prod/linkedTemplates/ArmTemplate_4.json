@@ -2468,7 +2468,7 @@
 						]
 					},
 					{
-						"name": "Script1",
+						"name": "Create Final Vessel Table",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -2494,7 +2494,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "\n\tDELETE FROM SupplyChain.VesselData\n\tWHERE CAST(LEFT([Stamp],10) AS DATE) = CAST(GETDATE() AS DATE)\n\n\tINSERT INTO\t\tSupplyChain.VesselData\n\tSELECT\t\t*\n\tFROM\t\t[RAW].[VesselFinderData] v\n\tLEFT JOIN\t(\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\n\t\t\t\t\t,\t\t\t[Vessel IMO]\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\n\n\t\t\t\t) s\n\tON\t\t\tCASE\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\n\t\t\t\t\t\tTHEN [Vessel IMO]\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\n\t\t\t\tEND = v.[IMO]"
+									"text": "\n\tDELETE FROM SupplyChain.VesselData\n\tWHERE CAST(LEFT([Stamp],10) AS DATE) = CAST(GETDATE() AS DATE)\n\n\tINSERT INTO\t\tSupplyChain.VesselData\n\tSELECT\t\t*\n\tFROM\t\t[RAW].[VesselFinderData] v\n\tLEFT JOIN\t(\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\n\t\t\t\t\t,\t\t\t[Vessel IMO]\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\n\n\t\t\t\t) s\n\tON\t\t\tCASE\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\n\t\t\t\t\t\tTHEN [Vessel IMO]\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\n\t\t\t\tEND = v.[IMO]\n\n\tDROP TABLE [RAW].[VesselFinderData]"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
