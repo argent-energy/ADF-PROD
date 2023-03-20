@@ -1,0 +1,12 @@
+{
+	"name": "VesselFinder",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://api.vesselfinder.com/vessels?userkey=WS-093AF9B8-279D79&imo=",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
