@@ -1,0 +1,23 @@
+{
+	"name": "VesselFinder_Vessels",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VesselFinder",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"IMO": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@concat('vessels?userkey=WS-093AF9B8-279D79&imo=',dataset().IMO)",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}
