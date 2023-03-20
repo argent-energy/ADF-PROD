@@ -142,6 +142,46 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "SQL_GIT_Tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_ShippingData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_GIT_Tables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "VesselFinder_GetData",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_GIT_Tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "VesselFinder_GetData",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {

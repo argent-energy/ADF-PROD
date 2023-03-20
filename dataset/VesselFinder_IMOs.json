@@ -1,0 +1,21 @@
+{
+	"name": "VesselFinder_IMOs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerArgent",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "IMO",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "SupplyChain",
+			"table": "GIT_IMO_Numbers"
+		}
+	}
+}
