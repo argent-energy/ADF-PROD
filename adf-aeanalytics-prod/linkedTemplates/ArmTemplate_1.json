@@ -101,6 +101,49 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_GIT_Tables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Shipping Data",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": " /********************************************************************************************************\r\n\tStep 6.1:\tCreate GIT Inventory table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_Inventory','U') IS NOT NULL DROP TABLE SupplyChain.GIT_Inventory\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_Inventory\r\n\tFROM\t\tSupplyChain.InventoryQuantityAndValue\r\n\tWHERE\t\t[Subinventory] = 'GIT'\r\n\r\n /********************************************************************************************************\r\n\tStep 6.2:\tCreate GIT purchase contract table \r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_PurchaseContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_PurchaseContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_PurchaseContracts\r\n\tFROM\t\tSupplyChain.PurchaseContracts\r\n\tWHERE\t\t[Blanket Purchase Agreement Number] IN (\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t)\r\n\r\n /********************************************************************************************************\r\n\tStep 6.3:\tCreate GIT sales contract table\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('SupplyChain.GIT_SalesContracts','U') IS NOT NULL DROP TABLE SupplyChain.GIT_SalesContracts\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.GIT_SalesContracts\r\n\tFROM\t\tSupplyChain.SalesContracts\r\n\tWHERE\t\t[Sales Contract Number] IN\t(\r\n\t\t\t\t\t\t\t\t\t\t\t\tSELECT\t\tDISTINCT COALESCE([Agreement/Sales Contract Number],[Order Number])\r\n\t\t\t\t\t\t\t\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\t\t\t\t\t\t\t)"
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_GL_Drop_RAW_Script')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -846,27 +889,6 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileSystem": "oracle-data"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Binary_Source_Oracle')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your data source store. ",
-				"linkedServiceName": {
-					"referenceName": "FTP Oracle",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "FtpServerLocation",
-						"fileName": "*.CSV"
 					}
 				}
 			},
