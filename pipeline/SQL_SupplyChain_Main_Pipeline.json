@@ -122,6 +122,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "SQL_ShippingData",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_Inventory_QuantityTracker",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_ShippingData",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
