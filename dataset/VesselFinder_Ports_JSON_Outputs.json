@@ -1,0 +1,18 @@
+{
+	"name": "VesselFinder_Ports_JSON_Outputs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "vesselfinder-ports"
+			}
+		},
+		"schema": {}
+	}
+}

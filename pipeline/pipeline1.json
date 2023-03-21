@@ -1,0 +1,146 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy Portcalls",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "Stamp",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['PORTCALL']['MMSI']"
+								},
+								"sink": {
+									"name": "MMSI",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['IMO']"
+								},
+								"sink": {
+									"name": "IMO",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['LOCODE']"
+								},
+								"sink": {
+									"name": "LOCODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['EVENT']"
+								},
+								"sink": {
+									"name": "EVENT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['TIMESTAMP']"
+								},
+								"sink": {
+									"name": "TIMESTAMP",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['PORT']"
+								},
+								"sink": {
+									"name": "PORT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['PORTCALL']['COUNTRY']"
+								},
+								"sink": {
+									"name": "COUNTRY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Stamp']"
+								},
+								"sink": {
+									"name": "Stamp",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "VesselFinder_Ports_JSON_Outputs",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_Argent_Database",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "VesselFinderPortCalls"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Supply Chain"
+		},
+		"annotations": []
+	}
+}
