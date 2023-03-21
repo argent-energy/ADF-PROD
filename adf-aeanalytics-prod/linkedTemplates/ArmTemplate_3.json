@@ -537,7 +537,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_Vessels')]",
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_Ports')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -554,7 +554,7 @@
 				"type": "RestResource",
 				"typeProperties": {
 					"relativeUrl": {
-						"value": "@concat('vessels?userkey=WS-093AF9B8-279D79&imo=',dataset().IMO)",
+						"value": "@concat('portcalls?userkey=WS-093AF9B8-279D79&interval=144000&limit=3&imo=',dataset().IMO)",
 						"type": "Expression"
 					}
 				},
@@ -563,165 +563,25 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BLOB_To_SQL_Non-Oracle_Data_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_Ports_JSON_Outputs')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Non-Oracle Get Metadata",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "Blob_Non_Oracle_Get_Metadata",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Non-Oracle ForEach",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Non-Oracle Get Metadata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Non-Oracle Get Metadata').output.childitems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Non-Oracle Copy Data",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"additionalColumns": [
-												{
-													"name": "Stamp",
-													"value": {
-														"value": "@utcnow()",
-														"type": "Expression"
-													}
-												}
-											],
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "SqlServerSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": true,
-											"tableOption": "autoCreate"
-										},
-										"enableStaging": false,
-										"enableSkipIncompatibleRow": true,
-										"logSettings": {
-											"enableCopyActivityLog": true,
-											"copyActivityLogSettings": {
-												"logLevel": "Warning",
-												"enableReliableLogging": false
-											},
-											"logLocationSettings": {
-												"linkedServiceName": {
-													"referenceName": "OracleBlob",
-													"type": "LinkedServiceReference"
-												}
-											}
-										},
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_Non_Oracle_Files",
-											"type": "DatasetReference",
-											"parameters": {
-												"FileName": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Argent_Database",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": {
-													"value": "@concat('NO.',replace(item().name,'.csv',''))",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Trade"
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-09-01T10:21:43Z"
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "vesselfinder-ports"
+					}
+				},
+				"schema": {}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]"
-			]
+			"dependsOn": []
 		}
 	]
 }
