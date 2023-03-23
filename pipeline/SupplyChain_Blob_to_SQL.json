@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Drop Supply Chain Excel tables",
+				"name": "Drop Supply Chain Shipping tables",
 				"description": "Drop existing Supply Chain Excel tables in DWH",
 				"type": "Script",
 				"dependsOn": [],
@@ -24,7 +24,7 @@
 						{
 							"type": "NonQuery",
 							"text": {
-								"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]\nDROP TABLE IF EXISTS [RAW].[SC.ContractsReason]",
+								"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
 								"type": "Expression"
 							}
 						}
@@ -38,7 +38,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Drop Supply Chain Excel tables",
+						"activity": "Drop Supply Chain Shipping tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -100,7 +100,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Drop Supply Chain Excel tables",
+						"activity": "Drop Supply Chain Shipping tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -162,7 +162,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Drop Supply Chain Excel tables",
+						"activity": "Drop Supply Chain Shipping tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -224,7 +224,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Drop Supply Chain Excel tables",
+						"activity": "Drop Supply Chain Shipping tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
