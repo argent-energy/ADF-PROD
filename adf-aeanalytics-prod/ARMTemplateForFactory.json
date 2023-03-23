@@ -3700,7 +3700,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Drop Supply Chain Excel tables",
+						"name": "Drop Supply Chain Shipping tables",
 						"description": "Drop existing Supply Chain Excel tables in DWH",
 						"type": "Script",
 						"dependsOn": [],
@@ -3721,7 +3721,7 @@
 								{
 									"type": "NonQuery",
 									"text": {
-										"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]\nDROP TABLE IF EXISTS [RAW].[SC.ContractsReason]",
+										"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
 										"type": "Expression"
 									}
 								}
@@ -3735,7 +3735,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Drop Supply Chain Excel tables",
+								"activity": "Drop Supply Chain Shipping tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -3798,7 +3798,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Drop Supply Chain Excel tables",
+								"activity": "Drop Supply Chain Shipping tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -3861,7 +3861,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Drop Supply Chain Excel tables",
+								"activity": "Drop Supply Chain Shipping tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -3924,7 +3924,7 @@
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "Drop Supply Chain Excel tables",
+								"activity": "Drop Supply Chain Shipping tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -3977,7 +3977,14 @@
 								{
 									"name": "Copy Data Wallet",
 									"type": "Copy",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Drop",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -4030,6 +4037,36 @@
 											}
 										}
 									]
+								},
+								{
+									"name": "Drop",
+									"description": "Drop existing Supply Chain Excel tables",
+									"type": "Script",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "SqlServerArgent",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "NonQuery",
+												"text": {
+													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
 								}
 							]
 						}
@@ -5552,163 +5589,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Portcalls",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"additionalColumns": [
-									{
-										"name": "Stamp",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.json",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['PORTCALL']['MMSI']"
-										},
-										"sink": {
-											"name": "MMSI",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['IMO']"
-										},
-										"sink": {
-											"name": "IMO",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['LOCODE']"
-										},
-										"sink": {
-											"name": "LOCODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['EVENT']"
-										},
-										"sink": {
-											"name": "EVENT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['TIMESTAMP']"
-										},
-										"sink": {
-											"name": "TIMESTAMP",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['PORT']"
-										},
-										"sink": {
-											"name": "PORT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['COUNTRY']"
-										},
-										"sink": {
-											"name": "COUNTRY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['Stamp']"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VesselFinder_Ports_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Argent_Database",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "VesselFinderPortCalls"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VesselFinder_Ports_JSON_Outputs')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]"
 			]
 		},
 		{
