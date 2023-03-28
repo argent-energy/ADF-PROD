@@ -1,0 +1,19 @@
+{
+	"name": "Binary_Source_Oracle_OO",
+	"properties": {
+		"description": "ONE OFF. Connection to FTP server for copying one file.",
+		"linkedServiceName": {
+			"referenceName": "FTP Oracle",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FtpServerLocation",
+				"fileName": "CMR_RCV_EVENTS.csv"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
