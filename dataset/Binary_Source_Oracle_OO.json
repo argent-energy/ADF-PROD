@@ -10,8 +10,7 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "FtpServerLocation",
-				"fileName": "CMR_RCV_EVENTS.csv"
+				"type": "FtpServerLocation"
 			}
 		}
 	},
