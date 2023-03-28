@@ -6928,7 +6928,7 @@
 				"type": "RestResource",
 				"typeProperties": {
 					"relativeUrl": {
-						"value": "@concat('portcalls?userkey=WS-093AF9B8-279D79&interval=144000&limit=3&imo=',dataset().IMO)",
+						"value": "@concat('portcalls?userkey=WS-093AF9B8-279D79&interval=144000&limit=4&imo=',dataset().IMO)",
 						"type": "Expression"
 					}
 				},
