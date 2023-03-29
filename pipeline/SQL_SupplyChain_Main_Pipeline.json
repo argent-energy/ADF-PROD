@@ -182,6 +182,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "SQL_TSA_Tables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "VesselFinder_GetData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_TSA_Tables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
