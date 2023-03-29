@@ -3480,6 +3480,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_TSA_Tables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "VesselFinder_GetData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_TSA_Tables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -3500,7 +3521,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_Inventory_QuantityTracker')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_ShippingData')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_GIT_Tables')]",
-				"[concat(variables('factoryId'), '/pipelines/VesselFinder_GetData')]"
+				"[concat(variables('factoryId'), '/pipelines/VesselFinder_GetData')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_TSA_Tables')]"
 			]
 		},
 		{
@@ -7457,6 +7479,17 @@
 						}
 					}
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AppianRuntime')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"description": "Integration Runtime setup for Appian",
+				"typeProperties": {}
 			},
 			"dependsOn": []
 		}
