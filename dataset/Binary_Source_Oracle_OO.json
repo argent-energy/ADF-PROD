@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "CMR_RCV_EVENTS.csv"
+				"fileName": "CMR_RCV_TRANSACTIONS.csv"
 			}
 		}
 	},
