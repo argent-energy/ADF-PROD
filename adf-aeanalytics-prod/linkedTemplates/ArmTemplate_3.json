@@ -13,6 +13,122 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Test')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "09082022 PurchaseContracts",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "09082022 PurchaseContracts.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Level9",
+						"type": "String"
+					},
+					{
+						"name": "Level8",
+						"type": "String"
+					},
+					{
+						"name": "Level7",
+						"type": "String"
+					},
+					{
+						"name": "Level6",
+						"type": "String"
+					},
+					{
+						"name": "Level5",
+						"type": "String"
+					},
+					{
+						"name": "Level4",
+						"type": "String"
+					},
+					{
+						"name": "Level3",
+						"type": "String"
+					},
+					{
+						"name": "Level2",
+						"type": "String"
+					},
+					{
+						"name": "Level1",
+						"type": "String"
+					},
+					{
+						"name": "Child",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Account Type",
+						"type": "String"
+					},
+					{
+						"name": "Financial Category",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Trade Excel Data for DWH.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Sheets')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -530,53 +646,6 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"container": "vessel-outputs"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_Ports')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "VesselFinder",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"IMO": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": {
-						"value": "@concat('portcalls?userkey=WS-093AF9B8-279D79&interval=144000&limit=4&imo=',dataset().IMO)",
-						"type": "Expression"
-					}
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_Ports_JSON_Outputs')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "vesselfinder-ports"
 					}
 				},
 				"schema": {}

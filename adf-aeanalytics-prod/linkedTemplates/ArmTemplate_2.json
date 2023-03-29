@@ -13,6 +13,46 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/audit_pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "audit_tables_rowcounts",
+						"description": "This job gets details of row count and puts them in an audit table by calling a stored procedure ",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.01:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[prc_audit_table_rowcount]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Audit"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-08-31T12:30:58Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Binary_Destination_Oracle')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -49,6 +89,27 @@
 					"location": {
 						"type": "FtpServerLocation",
 						"fileName": "*.CSV"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Binary_Source_Oracle_OO')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "ONE OFF. Connection to FTP server for copying one file.",
+				"linkedServiceName": {
+					"referenceName": "FTP Oracle",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FtpServerLocation",
+						"fileName": "CMR_RCV_TRANSACTIONS.csv"
 					}
 				}
 			},
@@ -598,122 +659,6 @@
 					"location": {
 						"type": "AzureBlobStorageLocation",
 						"fileName": "RCV_SHIPMENT_LINES report.xlsx",
-						"container": "sharepoint-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "SheetName",
-						"type": "String"
-					},
-					{
-						"name": "TableName",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob_Test')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "09082022 PurchaseContracts",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "09082022 PurchaseContracts.xlsx",
-						"container": "sharepoint-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "Level9",
-						"type": "String"
-					},
-					{
-						"name": "Level8",
-						"type": "String"
-					},
-					{
-						"name": "Level7",
-						"type": "String"
-					},
-					{
-						"name": "Level6",
-						"type": "String"
-					},
-					{
-						"name": "Level5",
-						"type": "String"
-					},
-					{
-						"name": "Level4",
-						"type": "String"
-					},
-					{
-						"name": "Level3",
-						"type": "String"
-					},
-					{
-						"name": "Level2",
-						"type": "String"
-					},
-					{
-						"name": "Level1",
-						"type": "String"
-					},
-					{
-						"name": "Child",
-						"type": "String"
-					},
-					{
-						"name": "Description",
-						"type": "String"
-					},
-					{
-						"name": "Account Type",
-						"type": "String"
-					},
-					{
-						"name": "Financial Category",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob_Trade_DataWallet_Excel')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Tables",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Trade Excel Data for DWH.xlsx",
 						"container": "sharepoint-files"
 					},
 					"firstRowAsHeader": true
