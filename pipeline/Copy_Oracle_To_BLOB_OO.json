@@ -20,8 +20,7 @@
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "FtpReadSettings",
-							"recursive": true,
-							"wildcardFileName": "*.csv",
+							"recursive": false,
 							"useBinaryTransfer": true,
 							"deleteFilesAfterCompletion": false,
 							"disableChunking": false
