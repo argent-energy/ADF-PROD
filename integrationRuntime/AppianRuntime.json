@@ -1,7 +1,0 @@
-{
-	"name": "AppianRuntime",
-	"properties": {
-		"type": "SelfHosted",
-		"description": "Integration Runtime setup for Appian"
-	}
-}
