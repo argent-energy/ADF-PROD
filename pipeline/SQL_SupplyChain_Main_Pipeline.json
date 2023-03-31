@@ -128,7 +128,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "SQL_Inventory_QuantityTracker",
+						"activity": "SQL_TSA_Tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -188,7 +188,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "VesselFinder_GetData",
+						"activity": "SQL_Inventory_QuantityTracker",
 						"dependencyConditions": [
 							"Succeeded"
 						]
