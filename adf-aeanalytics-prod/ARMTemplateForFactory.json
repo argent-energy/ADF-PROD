@@ -3501,6 +3501,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "VesselFinder_PortData",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "VesselFinder_GetData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "VesselFinder_PortData",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -3522,7 +3543,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_ShippingData')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_GIT_Tables')]",
 				"[concat(variables('factoryId'), '/pipelines/VesselFinder_GetData')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_TSA_Tables')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_TSA_Tables')]",
+				"[concat(variables('factoryId'), '/pipelines/VesselFinder_PortData')]"
 			]
 		},
 		{
@@ -5668,6 +5690,39 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Create Port Calls Table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Portcalls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls\r\n\r\n\tSELECT\t\t*\r\n    INTO        SupplyChain.VesselFinderPortCalls\r\n\tFROM\t\t[RAW].[VesselFinderPortCalls] v\r\n\r\n\r\n\tDROP TABLE [RAW].[VesselFinderPortCalls]"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
@@ -5683,6 +5738,7 @@
 				"[concat(variables('factoryId'), '/datasets/VesselFinder_IMOs')]",
 				"[concat(variables('factoryId'), '/datasets/VesselFinder_Ports_JSON_Outputs')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]",
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]",
 				"[concat(variables('factoryId'), '/datasets/VesselFinder_Ports')]"
 			]
 		},
