@@ -6,12 +6,77 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
+		},
+		"appDev_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'appDev'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Trade_Tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Trade"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"container": "salesandpurchasedata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_IMOs')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "IMO",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "SupplyChain",
+					"table": "GIT_IMO_Numbers"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/VesselFinder_JSON_Outputs')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -103,6 +168,23 @@
 					}
 				},
 				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/appDev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('appDev_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": []
 		},
@@ -1344,7 +1426,9 @@
 				"annotations": [],
 				"lastPublishTime": "2022-09-02T10:47:57Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Trade_Tables')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ShipmentLines_Blob_to_SQL')]",
@@ -2079,797 +2163,6 @@
 				"lastPublishTime": "2022-11-11T15:23:09Z"
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Trade_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Trade_Excel_tables_lookup",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"dataset": {
-								"referenceName": "Blob_Trade_DataWallet_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Copy sheets to tables",
-						"description": "Copies each sheet in the lookup sheet to a separate SQL table",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Trade_Excel_tables_lookup",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Trade_Excel_tables_lookup').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy from Excel file",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Drop",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_Trade_DataWallet_Sheets",
-											"type": "DatasetReference",
-											"parameters": {
-												"SheetName": "@item().SheetName"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Sharepoint_Data_Tables",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "@item().TableName"
-											}
-										}
-									]
-								},
-								{
-									"name": "Drop",
-									"description": "Drop existing Trade Excel tables",
-									"type": "Script",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"linkedServiceName": {
-										"referenceName": "SqlServerArgent",
-										"type": "LinkedServiceReference"
-									},
-									"typeProperties": {
-										"scripts": [
-											{
-												"type": "NonQuery",
-												"text": {
-													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
-													"type": "Expression"
-												}
-											}
-										],
-										"scriptBlockExecutionTimeout": "02:00:00"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Trade_SharePoint_To_Blob')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copies the Trade Excel file to Azure blob storage container",
-				"activities": [
-					{
-						"name": "Sharepoint_token",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
-							},
-							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
-						}
-					},
-					{
-						"name": "Copy_SharePoint_to_Blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Sharepoint_token",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": true
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "Trade%20Excel%20Data%20for%20DWH.xlsx')/$value"
-							},
-							{
-								"name": "Destination",
-								"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET",
-									"additionalHeaders": {
-										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-										"type": "Expression"
-									},
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SharePoint_Trade_DataWallet",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Blob_Sharepoint_Files",
-								"type": "DatasetReference",
-								"parameters": {
-									"ItemName": "@pipeline().parameters.ExcelName"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"ExcelName": {
-						"type": "string",
-						"defaultValue": "Trade Excel Data for DWH.xlsx"
-					}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-11T15:23:09Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_GetData')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup IMO",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "VesselFinder_IMOs",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Each IMO",
-						"description": "Copies each IMO number in the lookup table to a separate API request.",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup IMO",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup IMO').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy_VesselFinder_To_Blob",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "RestSource",
-											"httpRequestTimeout": "00:01:40",
-											"requestInterval": "00.00:00:00.010",
-											"requestMethod": "GET",
-											"paginationRules": {
-												"supportRFC5988": "true"
-											}
-										},
-										"sink": {
-											"type": "JsonSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "JsonWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "VesselFinder_Vessels",
-											"type": "DatasetReference",
-											"parameters": {
-												"IMO": {
-													"value": "@string(item().imo)",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "VesselFinder_JSON_Outputs",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Vessel JSON Blob Get Metadata",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Each IMO",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "VesselFinder_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Vesel JSON Copy Data",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Vessel JSON Blob Get Metadata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"additionalColumns": [
-									{
-										"name": "Stamp",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.json",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": true,
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['AIS']['MMSI']"
-										},
-										"sink": {
-											"name": "MMSI",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['TIMESTAMP']"
-										},
-										"sink": {
-											"name": "TIMESTAMP",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['LATITUDE']"
-										},
-										"sink": {
-											"name": "LATITUDE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['LONGITUDE']"
-										},
-										"sink": {
-											"name": "LONGITUDE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['COURSE']"
-										},
-										"sink": {
-											"name": "COURSE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['SPEED']"
-										},
-										"sink": {
-											"name": "SPEED",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['HEADING']"
-										},
-										"sink": {
-											"name": "HEADING",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['NAVSTAT']"
-										},
-										"sink": {
-											"name": "NAVSTAT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['IMO']"
-										},
-										"sink": {
-											"name": "IMO",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['NAME']"
-										},
-										"sink": {
-											"name": "NAME",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['CALLSIGN']"
-										},
-										"sink": {
-											"name": "CALLSIGN",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['TYPE']"
-										},
-										"sink": {
-											"name": "TYPE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['A']"
-										},
-										"sink": {
-											"name": "A",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['B']"
-										},
-										"sink": {
-											"name": "B",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['C']"
-										},
-										"sink": {
-											"name": "C",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['D']"
-										},
-										"sink": {
-											"name": "D",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['DRAUGHT']"
-										},
-										"sink": {
-											"name": "DRAUGHT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['DESTINATION']"
-										},
-										"sink": {
-											"name": "DESTINATION",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['LOCODE']"
-										},
-										"sink": {
-											"name": "LOCODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['ETA_AIS']"
-										},
-										"sink": {
-											"name": "ETA_AIS",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['ETA']"
-										},
-										"sink": {
-											"name": "ETA",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['SRC']"
-										},
-										"sink": {
-											"name": "SRC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['ZONE']"
-										},
-										"sink": {
-											"name": "ZONE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['ECA']"
-										},
-										"sink": {
-											"name": "ECA",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['DISTANCE_REMAINING']"
-										},
-										"sink": {
-											"name": "DISTANCE_REMAINING",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['AIS']['ETA_PREDICTED']"
-										},
-										"sink": {
-											"name": "ETA_PREDICTED",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['Stamp']"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VesselFinder_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Argent_Database",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": {
-										"value": "VesselFinderData",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Create Final Vessel Table",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Vesel JSON Copy Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabase1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "\n\tDELETE FROM SupplyChain.VesselData\n\tWHERE CAST(LEFT([Stamp],10) AS DATE) <> (SELECT MAX(CAST(LEFT([Stamp],10) AS DATE)) FROM SupplyChain.VesselData)\n\t\n\tINSERT INTO\t\tSupplyChain.VesselData\n\tSELECT\t\t*\n\tFROM\t\t[RAW].[VesselFinderData] v\n\tLEFT JOIN\t(\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\n\t\t\t\t\t,\t\t\t[Vessel IMO]\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\n\n\t\t\t\t) s\n\tON\t\t\tCASE\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\n\t\t\t\t\t\tTHEN [Vessel IMO]\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\n\t\t\t\tEND = v.[IMO]\n\n\tDROP TABLE [RAW].[VesselFinderData]"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VesselFinder_JSON_Outputs')]",
-				"[concat(variables('factoryId'), '/datasets/VesselFinder_Vessels')]"
-			]
 		}
 	]
 }

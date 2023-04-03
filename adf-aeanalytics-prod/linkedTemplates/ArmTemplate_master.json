@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
 		},
+		"AppianDev_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AppianDev'"
+		},
 		"AzureDataLakeStorage_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage'"
@@ -30,6 +34,10 @@
 		"SqlServerArgent_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerArgent'"
+		},
+		"appDev_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'appDev'"
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -81,6 +89,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AppianDev_connectionString": {
+						"value": "[parameters('AppianDev_connectionString')]"
 					},
 					"AzureDataLakeStorage_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage_accountKey')]"
@@ -195,6 +206,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"appDev_connectionString": {
+						"value": "[parameters('appDev_connectionString')]"
 					}
 				}
 			},
