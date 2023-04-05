@@ -85,12 +85,7 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "Core.Suppliers"
-							}
-						],
+						"userProperties": [],
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
@@ -101,7 +96,8 @@
 							"sink": {
 								"type": "SqlServerSink",
 								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
 							},
 							"enableStaging": false,
 							"translator": {
