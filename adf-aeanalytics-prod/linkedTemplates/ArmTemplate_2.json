@@ -147,10 +147,7 @@
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
-				"typeProperties": {
-					"schema": "Core",
-					"table": "Suppliers"
-				}
+				"typeProperties": {}
 			},
 			"dependsOn": []
 		},
