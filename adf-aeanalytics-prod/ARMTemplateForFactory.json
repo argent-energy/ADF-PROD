@@ -6294,7 +6294,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup IMO",
+								"activity": "DeleteOldPortCalls",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -6448,7 +6448,76 @@
 								"sqlWriterUseTableLock": false,
 								"tableOption": "autoCreate"
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['PORTCALL']['MMSI']"
+										},
+										"sink": {
+											"name": "MMSI"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['IMO']"
+										},
+										"sink": {
+											"name": "IMO"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['LOCODE']"
+										},
+										"sink": {
+											"name": "LOCODE"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['EVENT']"
+										},
+										"sink": {
+											"name": "EVENT"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['TIMESTAMP']"
+										},
+										"sink": {
+											"name": "TIMESTAMP"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['PORT']"
+										},
+										"sink": {
+											"name": "PORT"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['COUNTRY']"
+										},
+										"sink": {
+											"name": "COUNTRY"
+										}
+									},
+									{
+										"source": {
+											"path": "$['Stamp']"
+										},
+										"sink": {
+											"name": "Stamp"
+										}
+									}
+								]
+							}
 						},
 						"inputs": [
 							{
@@ -6494,10 +6563,49 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls\r\n\r\n\tSELECT\t\t*\r\n    INTO        SupplyChain.VesselFinderPortCalls\r\n\tFROM\t\t[RAW].[VesselFinderPortCalls] v\r\n\r\n\r\n\tDROP TABLE [RAW].[VesselFinderPortCalls]"
+									"text": "\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls_Historical','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls_Historical\r\n\r\n\tSELECT\t\t*\r\n\tINTO\t\t[SupplyChain].[VesselFinderPortCalls_Historical]\r\n\tFROM\t\t[RAW].[VesselFinderPortCalls] v\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\r\n\t\t\t\t\t,\t\t\t[Vessel IMO]\r\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\r\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\r\n\t\t\t\t\t,\t\t\t[Live Shipment Indicator]\r\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\r\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\r\n\r\n\t\t\t\t) s\r\n\tON\t\t\tCASE\r\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\r\n\t\t\t\t\t\tTHEN [Vessel IMO]\r\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\r\n\t\t\t\tEND = v.[IMO]\r\n\r\n\r\n\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls\r\n\r\n\tSELECT\t\t*\r\n\tFROM\t\t[SupplyChain].[VesselFinderPortCalls]\r\n\tWHERE\t\t[Live Shipment Indicator] = 1\r\n\r\n\tDROP TABLE [RAW].[VesselFinderPortCalls]"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "DeleteOldPortCalls",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Lookup IMO",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "VesselFinder_Ports_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"modifiedDatetimeStart": "2023-04-06T00:00:00.000Z",
+								"modifiedDatetimeEnd": {
+									"value": "@subtractFromTime(utcnow(),3,'Month')",
+									"type": "Expression"
+								},
+								"wildcardFileName": "*.json",
+								"enablePartitionDiscovery": false
+							}
 						}
 					}
 				],
