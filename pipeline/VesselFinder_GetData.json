@@ -33,7 +33,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup IMO",
+						"activity": "DeleteOldVesselData",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -486,6 +486,43 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "DeleteOldVesselData",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Lookup IMO",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "VesselFinder_JSON_Outputs",
+						"type": "DatasetReference"
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"modifiedDatetimeEnd": {
+							"value": "@subtractFromTime(utcnow(),3,'Month')",
+							"type": "Expression"
+						},
+						"wildcardFileName": "*json",
+						"enablePartitionDiscovery": false
+					}
 				}
 			}
 		],
