@@ -2875,13 +2875,6 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "SupplyChain_Sharepoint_To_Blob",
-								"dependencyConditions": [
-									"Failed",
-									"Succeeded"
-								]
-							},
-							{
 								"activity": "SupplyChain_Blob_to_SQL",
 								"dependencyConditions": [
 									"Succeeded",
@@ -2942,30 +2935,9 @@
 						}
 					},
 					{
-						"name": "SupplyChain_Sharepoint_To_Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SupplyChain_Sharepoint_To_Blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "SupplyChain_Blob_to_SQL",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SupplyChain_Sharepoint_To_Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
