@@ -238,7 +238,7 @@
 			}
 		],
 		"typeProperties": {
-			"schema": "staging",
+			"schema": "Staging",
 			"table": "AppianBPA"
 		}
 	}
