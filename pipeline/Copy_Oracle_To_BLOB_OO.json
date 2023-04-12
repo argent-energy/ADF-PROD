@@ -20,7 +20,7 @@
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "FtpReadSettings",
-							"recursive": false,
+							"fileListPath": "AP_PAYMENT_HIST_DISTS.csv",
 							"useBinaryTransfer": true,
 							"deleteFilesAfterCompletion": false,
 							"disableChunking": false
