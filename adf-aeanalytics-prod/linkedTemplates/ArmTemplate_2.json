@@ -224,7 +224,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CMR_RCV_TRANSACTIONS.csv"
+						"fileName": "AP_PAYMENT_HIST_DISTS.csv"
 					}
 				}
 			},
