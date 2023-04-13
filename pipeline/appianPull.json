@@ -38,8 +38,9 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "Business Unit Name",
 									"type": "String",
-									"ordinal": 1
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Business Unit Name",
@@ -49,8 +50,9 @@
 							},
 							{
 								"source": {
+									"name": "Blanket Purchase Agreement Number",
 									"type": "String",
-									"ordinal": 2
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Blanket Purchase Agreement Number",
@@ -60,8 +62,9 @@
 							},
 							{
 								"source": {
+									"name": "Purchase Document Status",
 									"type": "String",
-									"ordinal": 3
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Purchase Document Status",
@@ -71,8 +74,9 @@
 							},
 							{
 								"source": {
+									"name": "Supplier Name",
 									"type": "String",
-									"ordinal": 4
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Supplier Name",
@@ -82,8 +86,9 @@
 							},
 							{
 								"source": {
+									"name": "Supplier Site Name",
 									"type": "String",
-									"ordinal": 5
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Supplier Site Name",
@@ -93,8 +98,9 @@
 							},
 							{
 								"source": {
+									"name": "Purchase Document Description",
 									"type": "String",
-									"ordinal": 6
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Purchase Document Description",
@@ -104,8 +110,9 @@
 							},
 							{
 								"source": {
+									"name": "Item Code",
 									"type": "String",
-									"ordinal": 7
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Item Code",
@@ -115,8 +122,9 @@
 							},
 							{
 								"source": {
+									"name": "Item Name",
 									"type": "String",
-									"ordinal": 8
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Item Name",
@@ -126,8 +134,9 @@
 							},
 							{
 								"source": {
+									"name": "Item Description",
 									"type": "String",
-									"ordinal": 9
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Item Description",
@@ -137,8 +146,9 @@
 							},
 							{
 								"source": {
+									"name": "Category Code",
 									"type": "String",
-									"ordinal": 10
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Category Code",
@@ -148,8 +158,9 @@
 							},
 							{
 								"source": {
+									"name": "Total Price",
 									"type": "String",
-									"ordinal": 11
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Total Price",
@@ -159,8 +170,9 @@
 							},
 							{
 								"source": {
+									"name": "Unit Price",
 									"type": "String",
-									"ordinal": 12
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Unit Price",
@@ -170,8 +182,9 @@
 							},
 							{
 								"source": {
+									"name": "Purchase Document Currency",
 									"type": "String",
-									"ordinal": 13
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Purchase Document Currency",
@@ -181,8 +194,9 @@
 							},
 							{
 								"source": {
+									"name": "Blanket Agreement Quantity",
 									"type": "String",
-									"ordinal": 14
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Blanket Agreement Quantity",
@@ -192,8 +206,9 @@
 							},
 							{
 								"source": {
+									"name": "UOM Code",
 									"type": "String",
-									"ordinal": 15
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "UOM Code",
@@ -203,8 +218,9 @@
 							},
 							{
 								"source": {
+									"name": "Delivered Quantity",
 									"type": "String",
-									"ordinal": 16
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Delivered Quantity",
@@ -214,8 +230,9 @@
 							},
 							{
 								"source": {
+									"name": "Order Quantity",
 									"type": "String",
-									"ordinal": 17
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Order Quantity",
@@ -225,8 +242,9 @@
 							},
 							{
 								"source": {
+									"name": "Remaining Quantity",
 									"type": "String",
-									"ordinal": 18
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Remaining Quantity",
@@ -236,8 +254,9 @@
 							},
 							{
 								"source": {
+									"name": "Trucks",
 									"type": "String",
-									"ordinal": 19
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Trucks",
@@ -247,8 +266,9 @@
 							},
 							{
 								"source": {
+									"name": "Position Now",
 									"type": "String",
-									"ordinal": 20
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Position Now",
@@ -258,8 +278,9 @@
 							},
 							{
 								"source": {
+									"name": "Expected Position",
 									"type": "String",
-									"ordinal": 21
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Expected Position",
@@ -269,8 +290,9 @@
 							},
 							{
 								"source": {
+									"name": "Weeknumbers Contract",
 									"type": "String",
-									"ordinal": 22
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Weeknumbers Contract",
@@ -280,8 +302,9 @@
 							},
 							{
 								"source": {
+									"name": "Weeks Remaining",
 									"type": "String",
-									"ordinal": 23
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Weeks Remaining",
@@ -291,8 +314,9 @@
 							},
 							{
 								"source": {
+									"name": "Next Monday",
 									"type": "String",
-									"ordinal": 24
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Next Monday",
@@ -302,8 +326,9 @@
 							},
 							{
 								"source": {
+									"name": "Agreement Start Date",
 									"type": "String",
-									"ordinal": 25
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Agreement Start Date",
@@ -313,8 +338,9 @@
 							},
 							{
 								"source": {
+									"name": "Agreement End Date",
 									"type": "String",
-									"ordinal": 26
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Agreement End Date",
@@ -324,8 +350,9 @@
 							},
 							{
 								"source": {
+									"name": "Shipping Method",
 									"type": "String",
-									"ordinal": 27
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Shipping Method",
@@ -335,8 +362,9 @@
 							},
 							{
 								"source": {
+									"name": "Incoterm",
 									"type": "String",
-									"ordinal": 28
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Incoterm",
@@ -346,8 +374,9 @@
 							},
 							{
 								"source": {
+									"name": "Transporter Name",
 									"type": "String",
-									"ordinal": 29
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Transporter Name",
@@ -357,8 +386,9 @@
 							},
 							{
 								"source": {
+									"name": "Transporter Unit Price",
 									"type": "String",
-									"ordinal": 30
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Transporter Unit Price",
@@ -368,8 +398,9 @@
 							},
 							{
 								"source": {
+									"name": "Transporter Amount",
 									"type": "String",
-									"ordinal": 31
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Transporter Amount",
@@ -379,8 +410,9 @@
 							},
 							{
 								"source": {
+									"name": "Transporter Currency",
 									"type": "String",
-									"ordinal": 32
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Transporter Currency",
@@ -390,8 +422,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 1 Supplier",
 									"type": "String",
-									"ordinal": 33
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 1 Supplier",
@@ -401,8 +434,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 1 Unit Price",
 									"type": "String",
-									"ordinal": 34
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 1 Unit Price",
@@ -412,8 +446,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 1 Amount",
 									"type": "String",
-									"ordinal": 35
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 1 Amount",
@@ -423,8 +458,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 1 Currency",
 									"type": "String",
-									"ordinal": 36
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 1 Currency",
@@ -434,8 +470,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 2 Supplier",
 									"type": "String",
-									"ordinal": 37
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 2 Supplier",
@@ -445,8 +482,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 2 Unit Price",
 									"type": "String",
-									"ordinal": 38
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 2 Unit Price",
@@ -456,8 +494,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 2 Amount",
 									"type": "String",
-									"ordinal": 39
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 2 Amount",
@@ -467,8 +506,9 @@
 							},
 							{
 								"source": {
+									"name": "Additional Charges 2 Currency",
 									"type": "String",
-									"ordinal": 40
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Additional Charges 2 Currency",
@@ -478,8 +518,9 @@
 							},
 							{
 								"source": {
+									"name": "Buyer",
 									"type": "String",
-									"ordinal": 41
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Buyer",
@@ -489,8 +530,9 @@
 							},
 							{
 								"source": {
+									"name": "Sustainability Position",
 									"type": "String",
-									"ordinal": 42
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Sustainability Position",
@@ -500,8 +542,9 @@
 							},
 							{
 								"source": {
+									"name": "Supplier Item",
 									"type": "String",
-									"ordinal": 43
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Supplier Item",
@@ -511,8 +554,9 @@
 							},
 							{
 								"source": {
+									"name": "Deal Date",
 									"type": "String",
-									"ordinal": 44
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Deal Date",
@@ -522,8 +566,9 @@
 							},
 							{
 								"source": {
+									"name": "Agreement Amount",
 									"type": "String",
-									"ordinal": 45
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Agreement Amount",
@@ -533,8 +578,9 @@
 							},
 							{
 								"source": {
+									"name": "Amount Released Against Agreement",
 									"type": "String",
-									"ordinal": 46
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Amount Released Against Agreement",
@@ -544,8 +590,9 @@
 							},
 							{
 								"source": {
+									"name": "Note To Vendor",
 									"type": "String",
-									"ordinal": 47
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Note To Vendor",
@@ -555,8 +602,9 @@
 							},
 							{
 								"source": {
+									"name": "FFA Spec",
 									"type": "String",
-									"ordinal": 48
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "FFA Spec",
@@ -566,8 +614,9 @@
 							},
 							{
 								"source": {
+									"name": "Line Status",
 									"type": "String",
-									"ordinal": 49
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Line Status",
@@ -577,8 +626,9 @@
 							},
 							{
 								"source": {
+									"name": "EUR USD",
 									"type": "String",
-									"ordinal": 50
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "EUR USD",
@@ -588,8 +638,9 @@
 							},
 							{
 								"source": {
+									"name": "EUR GBP",
 									"type": "String",
-									"ordinal": 51
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "EUR GBP",
@@ -599,8 +650,9 @@
 							},
 							{
 								"source": {
+									"name": "Updated Contract Status",
 									"type": "String",
-									"ordinal": 52
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Updated Contract Status",
@@ -610,8 +662,9 @@
 							},
 							{
 								"source": {
+									"name": "DateStamp",
 									"type": "String",
-									"ordinal": 53
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "DateStamp",
@@ -621,8 +674,9 @@
 							},
 							{
 								"source": {
+									"name": "Yield Adjusted Volume",
 									"type": "String",
-									"ordinal": 54
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Yield Adjusted Volume",
@@ -632,8 +686,9 @@
 							},
 							{
 								"source": {
+									"name": "Agreement Mid Date",
 									"type": "String",
-									"ordinal": 55
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Agreement Mid Date",
@@ -643,8 +698,9 @@
 							},
 							{
 								"source": {
+									"name": "Non-Delivered Quantity",
 									"type": "String",
-									"ordinal": 56
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Non-Delivered Quantity",
@@ -654,8 +710,9 @@
 							},
 							{
 								"source": {
+									"name": "Yield Adjusted Volume Non-Delivered",
 									"type": "String",
-									"ordinal": 57
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "Yield Adjusted Volume Non-Delivered",
