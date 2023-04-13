@@ -13,6 +13,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_SC_Shipping_NL_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Schepenorders",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Tankopslag en Planning.xlsx",
+						"container": "sharepoint-files"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_SC_Shipping_UK2022_Excel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -616,38 +652,6 @@
 						"type": "HttpServerLocation",
 						"relativeUrl": {
 							"value": "Finance%20DWH%20Excel%20data.xlsx')/$value",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Sharepoint_Pricing_Raw')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Sharepoint_Pricing_Data",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"ItemName": {
-						"type": "string",
-						"defaultValue": "Pricing dataset.xlsx"
-					}
-				},
-				"folder": {
-					"name": "Trade/Pricing"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "Pricing%20dataset.xlsx')/$value",
 							"type": "Expression"
 						}
 					}

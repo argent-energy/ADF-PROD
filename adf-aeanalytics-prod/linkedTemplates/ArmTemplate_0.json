@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerArgent'"
 		},
+		"TestBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'TestBlob'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://staeanalyticsprod.dfs.core.windows.net"
@@ -350,6 +354,19 @@
 					"url": "[parameters('SupplyChain_SharePoint_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": true,
 					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TestBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('TestBlob_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -722,74 +739,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-12-10T11:28:37Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_CurrencyExposure')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SQL_CurrencyExposure_CreateContracts",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[Finance].[SQL_CurrencyExposure_CreateContracts]"
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "SQL_CurrencyExposure_DataMarts",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "SQL_CurrencyExposure_CreateContracts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[Finance].[SQL_CurrencyExposure_DataMarts]"
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-12-10T11:42:32Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"

@@ -26,6 +26,9 @@
 		"SqlServerArgent_connectionString": {
 			"value": ""
 		},
+		"TestBlob_connectionString": {
+			"value": ""
+		},
 		"appDev_connectionString": {
 			"value": ""
 		},

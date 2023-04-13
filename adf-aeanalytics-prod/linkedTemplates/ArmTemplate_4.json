@@ -17,6 +17,38 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Sharepoint_Pricing_Raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Sharepoint_Pricing_Data",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ItemName": {
+						"type": "string",
+						"defaultValue": "Pricing dataset.xlsx"
+					}
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "Pricing%20dataset.xlsx')/$value",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_5nk')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -220,6 +252,30 @@
 						"value": "@concat('vessels?userkey=WS-093AF9B8-279D79&imo=',dataset().IMO)",
 						"type": "Expression"
 					}
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/testAppian')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "TestBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "newcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
 				},
 				"schema": []
 			},
@@ -1268,7 +1324,9 @@
 				"annotations": [],
 				"lastPublishTime": "2022-10-25T19:12:48Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Sharepoint_Pricing_Raw')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/OneFilepush')]",
@@ -1483,472 +1541,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Trade_Tables')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ShipmentLines_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Shipment Lines",
-						"description": "Copy Shipment Lines Excel sheet to DWH",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Blob_ShipmentLines_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Sharepoint_Data_Tables",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "TEMP.ShipmentLines"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SupplyChain_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Drop Supply Chain Shipping tables",
-						"description": "Drop existing Supply Chain Excel tables in DWH",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": {
-										"value": "DROP TABLE IF EXISTS [RAW].[SC.Shipping2023UK]\nDROP TABLE IF EXISTS [RAW].[SC.Shipping2022UK]\nDROP TABLE IF EXISTS [RAW].[SC.ShippingNL]",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Copy Shipping 2023 UK",
-						"description": "Copy Supply Chain UK Shipping 2023 Excel sheet to DWH",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Drop Supply Chain Shipping tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Blob_SC_Shipping_UK2023_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Sharepoint_Data_Tables",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "SC.Shipping2023UK"
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy Shipping 2022 UK",
-						"description": "Copy Supply Chain UK Shipping 2022 Excel sheet to DWH",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Drop Supply Chain Shipping tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Blob_SC_Shipping_UK2022_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Sharepoint_Data_Tables",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "SC.Shipping2022UK"
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy Shipping NL",
-						"description": "Copy Supply Chain NL Shipping Excel sheet to DWH",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Drop Supply Chain Shipping tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Blob_SC_Shipping_NL_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Sharepoint_Data_Tables",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "SC.ShippingNL"
-								}
-							}
-						]
-					},
-					{
-						"name": "Lookup Supply Chain Tables",
-						"description": "Return the names of the sheets/tables in the Supply Chain data wallet.",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Drop Supply Chain Shipping tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"dataset": {
-								"referenceName": "Blob_SC_DataWallet",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Each sheet",
-						"description": "Copies each sheet in the lookup sheet to a separate SQL table.",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Lookup Supply Chain Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup Supply Chain Tables').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy Data Wallet",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Drop",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_SC_DataWallet_Sheets",
-											"type": "DatasetReference",
-											"parameters": {
-												"SheetName": "@item().SheetName"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Sharepoint_Data_Tables",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "@item().TableName"
-											}
-										}
-									]
-								},
-								{
-									"name": "Drop",
-									"description": "Drop existing Supply Chain Excel tables",
-									"type": "Script",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"linkedServiceName": {
-										"referenceName": "SqlServerArgent",
-										"type": "LinkedServiceReference"
-									},
-									"typeProperties": {
-										"scripts": [
-											{
-												"type": "NonQuery",
-												"text": {
-													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
-													"type": "Expression"
-												}
-											}
-										],
-										"scriptBlockExecutionTimeout": "02:00:00"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
 		}
 	]
 }

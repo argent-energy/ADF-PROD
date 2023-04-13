@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServerArgent'"
 		},
+		"TestBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'TestBlob'"
+		},
 		"appDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
@@ -110,6 +114,9 @@
 					},
 					"SqlServerArgent_connectionString": {
 						"value": "[parameters('SqlServerArgent_connectionString')]"
+					},
+					"TestBlob_connectionString": {
+						"value": "[parameters('TestBlob_connectionString')]"
 					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
@@ -234,6 +241,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'adf-aeanalytics-prod_ArmTemplate_4')]"
+			]
+		},
+		{
+			"name": "adf-aeanalytics-prod_ArmTemplate_6",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_6.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-aeanalytics-prod_ArmTemplate_5')]"
 			]
 		}
 	]
