@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Pull BPA Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
