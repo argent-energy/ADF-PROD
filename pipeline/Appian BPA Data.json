@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "sp_executesql prc_AppianBPADetails",
+						"sqlReaderStoredProcedureName": "[dbo].[Prc_AppianBPADetails]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
