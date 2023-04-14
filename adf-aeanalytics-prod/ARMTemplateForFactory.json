@@ -4078,48 +4078,6 @@
 						}
 					},
 					{
-						"name": "SQL_TransactionsList",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendAnalysisCoreScripts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_TransactionsList",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_SubledgerSuppliersCustomers",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_TransactionsList",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_SubledgerSuppliersCustomers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "SQL_BlendAnalysisCoreScripts",
 						"type": "ExecutePipeline",
 						"dependsOn": [
@@ -4162,8 +4120,6 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_Subledger_TransactionsList_Blend_CoreTables')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendMarginAnalysis')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_CurrencyExposure')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_TransactionsList')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendAnalysisCoreScripts')]"
 			]
 		},
