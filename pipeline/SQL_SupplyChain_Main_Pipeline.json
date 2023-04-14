@@ -12,6 +12,12 @@
 							"Succeeded",
 							"Failed"
 						]
+					},
+					{
+						"activity": "SupplyChain_Sharepoint_To_Blob",
+						"dependencyConditions": [
+							"Failed"
+						]
 					}
 				],
 				"userProperties": [],
@@ -66,7 +72,14 @@
 			{
 				"name": "SupplyChain_Blob_to_SQL",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "SupplyChain_Sharepoint_To_Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -191,6 +204,19 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "VesselFinder_PortData",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SupplyChain_Sharepoint_To_Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SupplyChain_Sharepoint_To_Blob",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
