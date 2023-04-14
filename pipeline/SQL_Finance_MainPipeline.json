@@ -196,46 +196,6 @@
 				}
 			},
 			{
-				"name": "SQL_TransactionsList",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "SQL_BlendAnalysisCoreScripts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SQL_TransactionsList",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "SQL_SubledgerSuppliersCustomers",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "SQL_TransactionsList",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SQL_SubledgerSuppliersCustomers",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "SQL_BlendAnalysisCoreScripts",
 				"type": "ExecutePipeline",
 				"dependsOn": [
