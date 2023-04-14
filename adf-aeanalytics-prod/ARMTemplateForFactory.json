@@ -4907,6 +4907,12 @@
 									"Succeeded",
 									"Failed"
 								]
+							},
+							{
+								"activity": "SupplyChain_Sharepoint_To_Blob",
+								"dependencyConditions": [
+									"Failed"
+								]
 							}
 						],
 						"userProperties": [],
@@ -4964,7 +4970,14 @@
 					{
 						"name": "SupplyChain_Blob_to_SQL",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "SupplyChain_Sharepoint_To_Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5100,6 +5113,20 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SupplyChain_Sharepoint_To_Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SupplyChain_Sharepoint_To_Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -5121,7 +5148,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_GIT_Tables')]",
 				"[concat(variables('factoryId'), '/pipelines/VesselFinder_GetData')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_TSA_Tables')]",
-				"[concat(variables('factoryId'), '/pipelines/VesselFinder_PortData')]"
+				"[concat(variables('factoryId'), '/pipelines/VesselFinder_PortData')]",
+				"[concat(variables('factoryId'), '/pipelines/SupplyChain_Sharepoint_To_Blob')]"
 			]
 		},
 		{
