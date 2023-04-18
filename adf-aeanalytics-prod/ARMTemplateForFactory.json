@@ -4097,6 +4097,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_SubledgerSuppliersCustomers",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_SubledgerSuppliersCustomers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -4120,7 +4141,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_Subledger_TransactionsList_Blend_CoreTables')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendMarginAnalysis')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_CurrencyExposure')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_BlendAnalysisCoreScripts')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_BlendAnalysisCoreScripts')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]"
 			]
 		},
 		{
