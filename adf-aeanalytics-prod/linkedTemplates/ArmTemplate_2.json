@@ -263,7 +263,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "Supplier_BankAccount_Join.csv"
+						"fileName": "POR_REQUISITION_HEADERS_ALL.csv"
 					}
 				}
 			},
