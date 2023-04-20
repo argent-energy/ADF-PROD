@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "Supplier_BankAccount_Join.csv"
+				"fileName": "AP_PREPAY_APP_DISTIS.csv"
 			}
 		}
 	},
