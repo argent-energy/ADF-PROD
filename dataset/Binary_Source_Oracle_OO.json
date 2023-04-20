@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "AP_PREPAY_APP_DISTIS.csv"
+				"fileName": "POR_REQUISITION_HEADERS_ALL.csv"
 			}
 		}
 	},
