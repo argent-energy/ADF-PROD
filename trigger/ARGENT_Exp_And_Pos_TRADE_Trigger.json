@@ -2,7 +2,7 @@
 	"name": "ARGENT_Exp_And_Pos_TRADE_Trigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
