@@ -4889,7 +4889,8 @@
 							{
 								"activity": "SupplyChain_Sharepoint_To_Blob",
 								"dependencyConditions": [
-									"Failed"
+									"Failed",
+									"Succeeded"
 								]
 							}
 						],
@@ -8448,7 +8449,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "POR_REQUISITION_HEADERS_ALL.csv"
+						"fileName": "CST_TRADE_EVENTS.csv"
 					}
 				}
 			},
