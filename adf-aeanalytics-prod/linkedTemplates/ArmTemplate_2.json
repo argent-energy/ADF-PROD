@@ -421,8 +421,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "postcodes.csv",
-						"container": "manual-files"
+						"fileName": "WIE_WORK_ORDERS_B.csv",
+						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\"",
