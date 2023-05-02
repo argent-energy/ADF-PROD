@@ -64,15 +64,12 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "S.Postcodes"
+							"TableName": "O.WIE_WORK_ORDERS_B"
 						}
 					}
 				]
 			}
 		],
-		"folder": {
-			"name": "Trade"
-		},
 		"annotations": [],
 		"lastPublishTime": "2022-09-01T09:34:37Z"
 	},
