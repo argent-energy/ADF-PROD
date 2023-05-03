@@ -2049,7 +2049,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.WIE_WORK_ORDERS_B"
+									"TableName": "O.CST_TRANSACTIONS"
 								}
 							}
 						]
@@ -8536,7 +8536,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_TRADE_EVENTS.csv"
+						"fileName": "CST_TRANSACTIONS.csv"
 					}
 				}
 			},
@@ -8704,7 +8704,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "WIE_WORK_ORDERS_B.csv",
+						"fileName": "CST_TRANSACTIONS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -10640,7 +10640,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
