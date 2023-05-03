@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.WIE_WORK_ORDERS_B"
+							"TableName": "O.CST_TRANSACTIONS"
 						}
 					}
 				]
