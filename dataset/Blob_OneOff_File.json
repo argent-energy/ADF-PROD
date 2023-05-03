@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "WIE_WORK_ORDERS_B.csv",
+				"fileName": "CST_TRANSACTIONS.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
