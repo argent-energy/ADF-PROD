@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.CST_TRANSACTIONS"
+							"TableName": "O.DOO_FULFILL_LINES_ALL"
 						}
 					}
 				]
