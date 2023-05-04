@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "CST_TRANSACTIONS.csv"
+				"fileName": "DOO_HEADERS_ALL.csv"
 			}
 		}
 	},
