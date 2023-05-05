@@ -2049,7 +2049,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.CST_TRANSACTIONS"
+									"TableName": "O.DOO_FULFILL_LINES_ALL"
 								}
 							}
 						]
@@ -8536,7 +8536,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_TRANSACTIONS.csv"
+						"fileName": "DOO_FULFILL_LINES_ALL.csv"
 					}
 				}
 			},
@@ -8704,7 +8704,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_TRANSACTIONS.csv",
+						"fileName": "DOO_FULFILL_LINES_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -10640,7 +10640,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {

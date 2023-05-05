@@ -263,7 +263,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_TRANSACTIONS.csv"
+						"fileName": "DOO_FULFILL_LINES_ALL.csv"
 					}
 				}
 			},
@@ -421,7 +421,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_TRANSACTIONS.csv",
+						"fileName": "DOO_FULFILL_LINES_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
