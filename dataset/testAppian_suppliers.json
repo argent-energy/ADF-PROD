@@ -1,0 +1,24 @@
+{
+	"name": "testAppian_suppliers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "TestBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "SupplyData",
+				"folderPath": "suppliers",
+				"container": "appian"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
