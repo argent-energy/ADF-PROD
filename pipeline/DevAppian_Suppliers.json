@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "BPA Details",
+				"name": "Supplier Details",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
