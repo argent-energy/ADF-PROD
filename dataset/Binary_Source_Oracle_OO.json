@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "DOO_FULFILL_LINES_ALL.csv"
+				"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
 			}
 		}
 	},
