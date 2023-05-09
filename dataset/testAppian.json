@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "BPAData.csv",
+				"fileName": "BPAData",
 				"container": "appian"
 			},
 			"columnDelimiter": ",",
