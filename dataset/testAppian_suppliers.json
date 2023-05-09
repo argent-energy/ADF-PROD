@@ -11,8 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "SupplyData",
-				"folderPath": "suppliers",
-				"container": "appian"
+				"container": "appiansuppliers"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
