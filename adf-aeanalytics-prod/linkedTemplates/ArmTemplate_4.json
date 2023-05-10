@@ -730,7 +730,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.CST_COST_DISTRIBUTION_LINES"
+									"TableName": "O.CST_COST_DISTRIBUTION_LINES_2023"
 								}
 							}
 						]
