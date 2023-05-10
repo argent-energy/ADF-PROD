@@ -10,8 +10,7 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "FtpServerLocation",
-				"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
+				"type": "FtpServerLocation"
 			}
 		}
 	},
