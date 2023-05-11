@@ -2,7 +2,7 @@
 	"name": "AppianDataSuppliers_copy1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase1",
+			"referenceName": "AppianDev",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
