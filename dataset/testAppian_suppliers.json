@@ -5,6 +5,9 @@
 			"referenceName": "TestBlob",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Appian"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
