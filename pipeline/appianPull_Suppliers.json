@@ -259,18 +259,6 @@
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "ISCC_Cetificate_Number",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"name": "ISCC Certificate Expiry Date",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
 									"name": "ISCC_Certificate_Expiry_Date",
 									"type": "String",
 									"physicalType": "nvarchar"
