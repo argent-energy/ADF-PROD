@@ -2049,7 +2049,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.CST_COST_DISTRIBUTION_LINES_2023"
+									"TableName": "O.CST_COST_DISTRIBUTION_LINES_2019"
 								}
 							}
 						]
@@ -4281,6 +4281,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_TransactionsList",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_SubledgerSuppliersCustomers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_TransactionsList",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -4305,7 +4326,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendMarginAnalysis')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_CurrencyExposure')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendAnalysisCoreScripts')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_TransactionsList')]"
 			]
 		},
 		{
@@ -9369,7 +9391,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES_2023.csv"
+						"fileName": "CST_COST_DISTRIBUTION_LINES_2019.csv"
 					}
 				}
 			},
@@ -9537,7 +9559,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES_2023.csv",
+						"fileName": "CST_COST_DISTRIBUTION_LINES_2019.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -11500,7 +11522,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
