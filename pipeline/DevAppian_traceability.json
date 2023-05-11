@@ -16,8 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[prc_AppianGetSuppliers]",
+						"type": "SqlServerSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -44,7 +43,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AppianDataSuppliers",
+						"referenceName": "SqlServerTable2_traceability",
 						"type": "DatasetReference"
 					}
 				],
