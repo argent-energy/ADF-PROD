@@ -9,232 +9,112 @@
 		"type": "SqlServerTable",
 		"schema": [
 			{
-				"name": "Business Unit Name",
-				"type": "varchar"
+				"name": "Supplier_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Blanket Purchase Agreement Number",
-				"type": "varchar"
+				"name": "Depot_Name",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Purchase Document Status",
-				"type": "varchar"
+				"name": "Party_Name",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier Name",
-				"type": "varchar"
+				"name": "Organization_Type",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier Site Name",
-				"type": "varchar"
+				"name": "Supplier_Type",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Purchase Document Description",
-				"type": "varchar"
+				"name": "Supplier_Inactive_Date",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Item Code",
-				"type": "varchar"
+				"name": "Vendor_Site_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Item Name",
-				"type": "varchar"
+				"name": "Prc_BU_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Item Description",
-				"type": "varchar"
+				"name": "Location_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Category Code",
-				"type": "varchar"
+				"name": "Supplier_Site_Name",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Total Price",
-				"type": "varchar"
+				"name": "Purchasing_Site_Flag",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Unit Price",
-				"type": "varchar"
+				"name": "Pay_Site_Flag",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Purchase Document Currency",
-				"type": "varchar"
+				"name": "Terms_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Blanket Agreement Quantity",
-				"type": "varchar"
+				"name": "Site_Invoice_Currency_Code",
+				"type": "nvarchar"
 			},
 			{
-				"name": "UOM Code",
-				"type": "varchar"
+				"name": "Site_Payment_Currency_Code",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Delivered Quantity",
-				"type": "varchar"
+				"name": "Site_Inactive_Date",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Order Quantity",
-				"type": "varchar"
+				"name": "VIHB_Code",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Remaining Quantity",
-				"type": "varchar"
+				"name": "Vendor_Category",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Trucks",
-				"type": "varchar"
+				"name": "ISCC_Cetificate_Number",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Position Now",
-				"type": "varchar"
+				"name": "ISCC_Certificate_Expiry_Date",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Expected Position",
-				"type": "varchar"
+				"name": "Site_VET_ID",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Weeknumbers Contract",
-				"type": "varchar"
+				"name": "INS_Certificate_Number",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Weeks Remaining",
-				"type": "varchar"
+				"name": "INS_Certificate_Expiry_Date",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Next Monday",
-				"type": "varchar"
+				"name": "Site_Terms_Date_Basis",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Agreement Start Date",
-				"type": "varchar"
+				"name": "Postal_Code",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Agreement End Date",
-				"type": "varchar"
+				"name": "IBAN",
+				"type": "nvarchar"
 			},
 			{
-				"name": "Shipping Method",
-				"type": "varchar"
-			},
-			{
-				"name": "Incoterm",
-				"type": "varchar"
-			},
-			{
-				"name": "Transporter Name",
-				"type": "varchar"
-			},
-			{
-				"name": "Transporter Unit Price",
-				"type": "varchar"
-			},
-			{
-				"name": "Transporter Amount",
-				"type": "varchar"
-			},
-			{
-				"name": "Transporter Currency",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 1 Supplier",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 1 Unit Price",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 1 Amount",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 1 Currency",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 2 Supplier",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 2 Unit Price",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 2 Amount",
-				"type": "varchar"
-			},
-			{
-				"name": "Additional Charges 2 Currency",
-				"type": "varchar"
-			},
-			{
-				"name": "Buyer",
-				"type": "varchar"
-			},
-			{
-				"name": "Sustainability Position",
-				"type": "varchar"
-			},
-			{
-				"name": "Supplier Item",
-				"type": "varchar"
-			},
-			{
-				"name": "Deal Date",
-				"type": "varchar"
-			},
-			{
-				"name": "Agreement Amount",
-				"type": "varchar"
-			},
-			{
-				"name": "Amount Released Against Agreement",
-				"type": "varchar"
-			},
-			{
-				"name": "Note To Vendor",
-				"type": "varchar"
-			},
-			{
-				"name": "FFA Spec",
-				"type": "varchar"
-			},
-			{
-				"name": "Line Status",
-				"type": "varchar"
-			},
-			{
-				"name": "EUR USD",
-				"type": "varchar"
-			},
-			{
-				"name": "EUR GBP",
-				"type": "varchar"
-			},
-			{
-				"name": "Updated Contract Status",
-				"type": "varchar"
-			},
-			{
-				"name": "DateStamp",
-				"type": "varchar"
-			},
-			{
-				"name": "Yield Adjusted Volume",
-				"type": "varchar"
-			},
-			{
-				"name": "Agreement Mid Date",
-				"type": "varchar"
-			},
-			{
-				"name": "Non-Delivered Quantity",
-				"type": "varchar"
-			},
-			{
-				"name": "Yield Adjusted Volume Non-Delivered",
-				"type": "varchar"
+				"name": "BANK_ACCOUNT_NUM",
+				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {
