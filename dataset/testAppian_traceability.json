@@ -1,0 +1,25 @@
+{
+	"name": "testAppian_traceability",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "TestBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Appian"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "appiantraceability"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
