@@ -5,6 +5,9 @@
 			"referenceName": "AppianDev",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Appian"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": []
