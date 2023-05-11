@@ -3200,6 +3200,142 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable2_traceability')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "appDev",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CREATION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUSINESS_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ORGANIZATION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHYSICAL_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DOCUMENT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "REASON_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WORK_DEFINITION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_DESCRIPTION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_OF_MEASURE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSFER_SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_SITE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AGREEMENT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXT_REFERENCE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SHIPPING_METHOD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TANK_BALANCE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RUNNING_TOTAL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GRADE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LOT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSTYPE_REASON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DENSITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STD_LTRS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "traceabilityReport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian BPA Data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4789,211 +4925,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Oracle_Data_Trade_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Oracle To BLOB",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Drop RAW GL Tables Script",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Oracle_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute BLOB To SQL For Oracle Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Oracle To BLOB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "BLOB_To_SQL_Oracle_Data_Pipeline",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Data Marks Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Exp_And_Pos_Core_Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exp_And_Pos_Data_Marks_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute SQL To Blob For Trade Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Drop RAW Tables Script",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Trade-Tables_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Drop RAW Tables Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exp_And_Pos_Drop_RAW_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Drop RAW GL Tables Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Trade_Blob_to_SQL",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_GL_Drop_RAW_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Exp_And_Pos_Core_Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute BLOB To SQL For Oracle Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exp_And_Pos_Core_Tables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Trade_SharePoint_To_Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Trade_SharePoint_To_Blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Trade_Blob_to_SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Trade_SharePoint_To_Blob",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Trade_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-12-10T11:15:02Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SQL_Trade-Tables_To_BLOB')]",
-				"[concat(variables('factoryId'), '/pipelines/Trade_SharePoint_To_Blob')]",
-				"[concat(variables('factoryId'), '/pipelines/Trade_Blob_to_SQL')]"
 			]
 		}
 	]
