@@ -2205,6 +2205,393 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/appianPull_traceability')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Pull traceabilityData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Supplier ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Depot Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Depot_Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Party Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Party_Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Organization Type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Organization_Type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_Type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Inactive Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_Inactive_Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor Site ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vendor_Site_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Prc BU ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Prc_BU_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Location ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Location_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Site Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_Site_Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Purchasing Site Flag",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Purchasing_Site_Flag",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Pay Site Flag",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Pay_Site_Flag",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Terms ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Terms_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Invoice Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_Invoice_Currency_Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Payment Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_Payment_Currency_Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Inactive Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_Inactive_Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VIHB Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VIHB_Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor Category",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vendor_Category",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISCC Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ISCC_Certificate_Expiry_Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site VET ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_VET_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "INS_Certificate_Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "INS_Certificate_Expiry_Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Terms Date Basis",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_Terms_Date_Basis",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Postal_Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "testAppian_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerTable2_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ARGENT_Exp_And_Pos_TRADE_Trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
