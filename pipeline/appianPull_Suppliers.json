@@ -254,6 +254,18 @@
 							},
 							{
 								"source": {
+									"name": "ISCC Cetificate Number",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ISCC_Cetificate_Number",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
 									"name": "ISCC Certificate Expiry Date",
 									"type": "String",
 									"physicalType": "String"
@@ -344,6 +356,42 @@
 								},
 								"sink": {
 									"name": "BANK_ACCOUNT_NUM",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Party ID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "partyID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Vendor ID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "VendorID",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Party Site ID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ParySiteID",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
