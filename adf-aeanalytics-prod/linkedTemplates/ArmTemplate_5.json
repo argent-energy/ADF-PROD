@@ -3043,6 +3043,9 @@
 					"referenceName": "appDev",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Appian"
+				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [
@@ -3158,43 +3161,6 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "Suppliers"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AuditDaily_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "This is daily trigger for the Audit Job to run. This must run afer the Oracle Jobs that populate the tables ",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "audit_pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2022-09-05T14:01:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								8
-							]
-						}
-					}
 				}
 			},
 			"dependsOn": []
@@ -3331,6 +3297,43 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "traceabilityReport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AuditDaily_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "This is daily trigger for the Audit Job to run. This must run afer the Oracle Jobs that populate the tables ",
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "audit_pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2022-09-05T14:01:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								8
+							]
+						}
+					}
 				}
 			},
 			"dependsOn": []

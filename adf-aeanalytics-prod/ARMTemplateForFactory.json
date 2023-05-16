@@ -3072,6 +3072,81 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DevAppian_traceability')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Tracebility Details",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SqlServerTable2_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "testAppian_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_traceability')]",
+				"[concat(variables('factoryId'), '/datasets/testAppian_traceability')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OneFilepush')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8748,6 +8823,18 @@
 									},
 									{
 										"source": {
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ISCC_Cetificate_Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
 											"name": "ISCC Certificate Expiry Date",
 											"type": "String",
 											"physicalType": "String"
@@ -8841,6 +8928,42 @@
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
+									},
+									{
+										"source": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "partyID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VendorID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ParySiteID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
 									}
 								],
 								"typeConversion": true,
@@ -8878,6 +9001,432 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/testAppian_suppliers')]",
 				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_Suppliers')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/appianPull_traceability')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Pull traceabilityData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "CREATION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BUSINESS_UNIT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BUSINESS_UNIT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ORGANIZATION",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ORGANIZATION",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SUBINVENTORY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SUBINVENTORY",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TRANSACTION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TRANSACTION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "PHYSICAL_DATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "PHYSICAL_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DOCUMENT_NUMBER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DOCUMENT_NUMBER",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TRANSACTION_TYPE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TRANSACTION_TYPE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "REASON_NAME",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "REASON_NAME",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "WORK_DEFINITION",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "WORK_DEFINITION",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ITEM_CODE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ITEM_CODE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ITEM_DESCRIPTION",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ITEM_DESCRIPTION",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "UNIT_OF_MEASURE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "UNIT_OF_MEASURE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TRANSFER_SUBINVENTORY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TRANSFER_SUBINVENTORY",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SUPPLIER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SUPPLIER",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SUPPLIER_SITE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SUPPLIER_SITE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "AGREEMENT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "AGREEMENT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "EXT_REFERENCE_NUMBER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "EXT_REFERENCE_NUMBER",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "SHIPPING_METHOD",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "SHIPPING_METHOD",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "QUANTITY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "QUANTITY",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TANK_BALANCE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TANK_BALANCE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "RUNNING_TOTAL",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "RUNNING_TOTAL",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "GRADE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "GRADE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TRANSACTION_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TRANSACTION_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "LOT_NUMBER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "LOT_NUMBER",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "TRANSTYPE_REASON",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "TRANSTYPE_REASON",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DENSITY",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "DENSITY",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "STD_LTRS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "STD_LTRS",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Stamp",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Stamp",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "testAppian_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerTable2_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/testAppian_traceability')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_traceability')]"
 			]
 		},
 		{
@@ -8930,6 +9479,9 @@
 				"linkedServiceName": {
 					"referenceName": "AppianDev",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Appian"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -10749,6 +11301,9 @@
 					"referenceName": "appDev",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Appian"
+				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [
@@ -10864,6 +11419,144 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "Suppliers"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/appDev')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable2_traceability')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "appDev",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CREATION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUSINESS_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ORGANIZATION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHYSICAL_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DOCUMENT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "REASON_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WORK_DEFINITION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_DESCRIPTION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_OF_MEASURE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSFER_SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_SITE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AGREEMENT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXT_REFERENCE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SHIPPING_METHOD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TANK_BALANCE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RUNNING_TOTAL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GRADE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LOT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSTYPE_REASON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DENSITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STD_LTRS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "traceabilityReport"
 				}
 			},
 			"dependsOn": [
@@ -11331,7 +12024,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 12,
-						"startTime": "2022-11-03T02:30:00",
+						"startTime": "2023-05-17T01:30:00",
 						"timeZone": "W. Europe Standard Time"
 					}
 				}
@@ -11399,7 +12092,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 24,
-						"startTime": "2023-04-28T09:00:00Z",
+						"startTime": "2023-05-17T08:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -11468,7 +12161,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 24,
-						"startTime": "2022-11-03T05:00:00Z",
+						"startTime": "2023-05-17T04:20:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -11515,645 +12208,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DevAppian_traceability')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Tracebility Details",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SqlServerTable2_traceability",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "testAppian_traceability",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Appian"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_traceability')]",
-				"[concat(variables('factoryId'), '/datasets/testAppian_traceability')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServerTable2_traceability')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "appDev",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "CREATION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUSINESS_UNIT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ORGANIZATION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHYSICAL_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DOCUMENT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "REASON_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WORK_DEFINITION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_DESCRIPTION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_OF_MEASURE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSFER_SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_SITE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AGREEMENT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXT_REFERENCE_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SHIPPING_METHOD",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TANK_BALANCE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "RUNNING_TOTAL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GRADE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LOT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSTYPE_REASON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DENSITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STD_LTRS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Stamp",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "traceabilityReport"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/appDev')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/appianPull_traceability')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Pull traceabilityData",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "CREATION_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "CREATION_DATE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BUSINESS_UNIT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BUSINESS_UNIT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ORGANIZATION",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ORGANIZATION",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "SUBINVENTORY",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SUBINVENTORY",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TRANSACTION_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TRANSACTION_DATE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "PHYSICAL_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "PHYSICAL_DATE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DOCUMENT_NUMBER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DOCUMENT_NUMBER",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TRANSACTION_TYPE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TRANSACTION_TYPE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "REASON_NAME",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "REASON_NAME",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "WORK_DEFINITION",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "WORK_DEFINITION",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ITEM_CODE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ITEM_CODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ITEM_DESCRIPTION",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ITEM_DESCRIPTION",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "UNIT_OF_MEASURE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "UNIT_OF_MEASURE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TRANSFER_SUBINVENTORY",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TRANSFER_SUBINVENTORY",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "SUPPLIER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SUPPLIER",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "SUPPLIER_SITE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SUPPLIER_SITE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "AGREEMENT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "AGREEMENT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "EXT_REFERENCE_NUMBER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "EXT_REFERENCE_NUMBER",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "SHIPPING_METHOD",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "SHIPPING_METHOD",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "QUANTITY",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "QUANTITY",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TANK_BALANCE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TANK_BALANCE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "RUNNING_TOTAL",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "RUNNING_TOTAL",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "GRADE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "GRADE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TRANSACTION_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TRANSACTION_ID",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "LOT_NUMBER",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "LOT_NUMBER",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "TRANSTYPE_REASON",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "TRANSTYPE_REASON",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DENSITY",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "DENSITY",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "STD_LTRS",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "STD_LTRS",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Stamp",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "testAppian_traceability",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SqlServerTable2_traceability",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Appian"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/testAppian_traceability')]",
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_traceability')]"
-			]
 		}
 	]
 }

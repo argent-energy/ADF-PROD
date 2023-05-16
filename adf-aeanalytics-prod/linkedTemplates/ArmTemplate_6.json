@@ -13,6 +13,78 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DevAppian_traceability')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Tracebility Details",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SqlServerTable2_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "testAppian_traceability",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Oracle_Data_Trade_Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2003,6 +2075,18 @@
 									},
 									{
 										"source": {
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ISCC_Cetificate_Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
 											"name": "ISCC Certificate Expiry Date",
 											"type": "String",
 											"physicalType": "String"
@@ -2096,6 +2180,42 @@
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
+									},
+									{
+										"source": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "partyID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VendorID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ParySiteID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
 									}
 								],
 								"typeConversion": true,
@@ -2115,78 +2235,6 @@
 						"outputs": [
 							{
 								"referenceName": "SqlServerTable2_Suppliers",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Appian"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DevAppian_traceability')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Tracebility Details",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SqlServerTable2_traceability",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "testAppian_traceability",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2648,7 +2696,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 12,
-						"startTime": "2022-11-03T02:30:00",
+						"startTime": "2023-05-17T01:30:00",
 						"timeZone": "W. Europe Standard Time"
 					}
 				}
@@ -2716,7 +2764,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 24,
-						"startTime": "2023-04-28T09:00:00Z",
+						"startTime": "2023-05-17T08:00:00Z",
 						"timeZone": "UTC"
 					}
 				}
@@ -2746,7 +2794,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 24,
-						"startTime": "2022-11-03T05:00:00Z",
+						"startTime": "2023-05-17T04:20:00Z",
 						"timeZone": "UTC"
 					}
 				}
