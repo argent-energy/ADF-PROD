@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "CST_COST_DISTRIBUTION_LINES_2019.csv"
+				"fileName": "GL_IMPORT_REFERENCES_2022.csv"
 			}
 		}
 	},
