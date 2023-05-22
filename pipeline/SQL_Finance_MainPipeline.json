@@ -220,7 +220,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
+						"activity": "SQL_BlendAnalysisCoreScripts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
