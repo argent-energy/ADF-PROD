@@ -157,13 +157,6 @@
 								}
 							},
 							{
-								"sink": {
-									"name": "Address_line_4",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
 								"source": {
 									"name": "City",
 									"type": "String",
@@ -224,6 +217,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Business Unit Name",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Site_name",
 									"type": "String",
@@ -255,6 +253,11 @@
 								}
 							},
 							{
+								"source": {
+									"name": "Site Inactive Date",
+									"type": "String",
+									"physicalType": "String"
+								},
 								"sink": {
 									"name": "Inactive_date_VET_ID_expiry_date",
 									"type": "DateTime",
