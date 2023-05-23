@@ -218,18 +218,6 @@
 							},
 							{
 								"source": {
-									"name": "Business Unit Name",
-									"type": "String",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "Site_name",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
 									"name": "Purchasing Site Flag",
 									"type": "String",
 									"physicalType": "String"
