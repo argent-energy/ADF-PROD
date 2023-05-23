@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Pull BPA Data",
+				"name": "Pull SuppliersData",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -37,11 +37,6 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
-								"source": {
-									"name": "Supplier Name",
-									"type": "String",
-									"physicalType": "String"
-								},
 								"sink": {
 									"name": "Supplier_Name",
 									"type": "String",
@@ -49,11 +44,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "Supplier Number",
-									"type": "String",
-									"physicalType": "String"
-								},
 								"sink": {
 									"name": "Supplier_number",
 									"type": "Int16",
@@ -61,11 +51,6 @@
 								}
 							},
 							{
-								"source": {
-									"name": "Supplier Type",
-									"type": "String",
-									"physicalType": "String"
-								},
 								"sink": {
 									"name": "Supplier_type",
 									"type": "String",
