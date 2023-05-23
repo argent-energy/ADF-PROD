@@ -12,103 +12,148 @@
 		"type": "SqlServerTable",
 		"schema": [
 			{
-				"name": "Supplier_ID",
+				"name": "Supplier_Name",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Depot_Name",
+				"name": "Supplier_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Supplier_type",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Party_Name",
+				"name": "BU_bill_to",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Organization_Type",
+				"name": "BPA_exists",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier_Type",
+				"name": "Category_name",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier_Inactive_Date",
+				"name": "Address_name",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Vendor_Site_ID",
+				"name": "Address_line_1",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Prc_BU_ID",
+				"name": "Address_line_2",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Location_ID",
+				"name": "Address_line_3",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Supplier_Site_Name",
+				"name": "Address_line_4",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Purchasing_Site_Flag",
+				"name": "City",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Pay_Site_Flag",
+				"name": "Postal_code",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Terms_ID",
+				"name": "Country",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Site_Invoice_Currency_Code",
+				"name": "Phone",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Site_Payment_Currency_Code",
+				"name": "E_mail",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Site_Inactive_Date",
+				"name": "Site_name",
 				"type": "nvarchar"
 			},
 			{
-				"name": "VIHB_Code",
+				"name": "Purchasing",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Vendor_Category",
+				"name": "Pay",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ISCC_Cetificate_Number",
+				"name": "Inactive_date_VET_ID_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "VET_ID",
 				"type": "nvarchar"
 			},
 			{
-				"name": "ISCC_Certificate_Expiry_Date",
+				"name": "ISCC_certificate_number",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Site_VET_ID",
+				"name": "ISCC_certificate_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "INS_certificate_number",
 				"type": "nvarchar"
 			},
 			{
-				"name": "INS_Certificate_Number",
+				"name": "INS_certificate_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "Certification_type",
 				"type": "nvarchar"
 			},
 			{
-				"name": "INS_Certificate_Expiry_Date",
+				"name": "GMP_ID",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Site_Terms_Date_Basis",
+				"name": "VIHB_code",
 				"type": "nvarchar"
 			},
 			{
-				"name": "Postal_Code",
+				"name": "Vendor_category",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Default_payment_method",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_terms",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Invoice_currency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_currency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BIC_SWIFT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VAT_number_supplier",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VAT_number_site",
 				"type": "nvarchar"
 			},
 			{
@@ -116,13 +161,29 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "BANK_ACCOUNT_NUM",
+				"name": "Bank_account_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Supplier_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Address_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Site_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Site_created_by",
 				"type": "nvarchar"
 			}
 		],
 		"typeProperties": {
 			"schema": "Staging",
-			"table": "Suppliers"
+			"table": "SuppliersReport_Suppliers"
 		}
 	}
 }
