@@ -370,18 +370,6 @@
 									},
 									{
 										"source": {
-											"name": "Inventory Organization Name",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Inventory Organization Name",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
 											"name": "Supplier Type",
 											"type": "String",
 											"physicalType": "nvarchar"
@@ -4401,13 +4389,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Appian BPA Data')]",
+			"name": "[concat(parameters('factoryName'), '/Appian_Suppliers')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Appian BPA Data",
+						"name": "Get Suppliers",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -4421,15 +4409,20 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[Prc_AppianBPADetails]",
+								"sqlReaderStoredProcedureName": "[[dbo].[prc_AppianGetSuppliers_v2]",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate"
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
 							},
 							"enableStaging": false,
 							"translator": {
@@ -4437,42 +4430,6 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Business Unit Name",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Business Unit Name",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Blanket Purchase Agreement Number",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Blanket Purchase Agreement Number",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Purchase Document Status",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Purchase Document Status",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
 											"name": "Supplier Name",
 											"type": "String",
 											"physicalType": "nvarchar"
@@ -4480,683 +4437,559 @@
 										"sink": {
 											"name": "Supplier Name",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Supplier Site Name",
+											"name": "Supplier Number",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Supplier Site Name",
+											"name": "Supplier Number",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Purchase Document Description",
+											"name": "Organization Type",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Purchase Document Description",
+											"name": "Organization Type",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Item Code",
+											"name": "BU_bill_to",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Item Code",
+											"name": "BU_bill_to",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Item Name",
+											"name": "BPA_EXISTS",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Item Name",
+											"name": "BPA_EXISTS",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Item Description",
+											"name": "Business Unit Name",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Item Description",
+											"name": "Business Unit Name",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Category Code",
+											"name": "Supplier Type",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Category Code",
+											"name": "Supplier Type",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Total Price",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Total Price",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Unit Price",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Unit Price",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Purchase Document Currency",
+											"name": "Address Name",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Purchase Document Currency",
+											"name": "Address Name",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Blanket Agreement Quantity",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 10,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Blanket Agreement Quantity",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "UOM Code",
+											"name": "Address Line 2",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "UOM Code",
+											"name": "Address Line 2",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Delivered Quantity",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 8,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Delivered Quantity",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Order Quantity",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 8,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Order Quantity",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Remaining Quantity",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 8,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Remaining Quantity",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Trucks",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 8,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Trucks",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Position Now",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Position Now",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Expected Position",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 10,
-											"precision": 38
-										},
-										"sink": {
-											"name": "Expected Position",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Weeknumbers Contract",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Weeknumbers Contract",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Weeks Remaining",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Weeks Remaining",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Next Monday",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "Next Monday",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Agreement Start Date",
+											"name": "Address Line 3",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Agreement Start Date",
+											"name": "Address Line 3",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Agreement End Date",
+											"name": "City",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Agreement End Date",
+											"name": "City",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Shipping Method",
+											"name": "Country",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Shipping Method",
+											"name": "Country",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Incoterm",
+											"name": "Email",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Incoterm",
+											"name": "Email",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Transporter Name",
+											"name": "Phone",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Transporter Name",
+											"name": "Phone",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Transporter Unit Price",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Transporter Unit Price",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Transporter Amount",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Transporter Amount",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Transporter Currency",
+											"name": "Supplier Inactive Date",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Transporter Currency",
+											"name": "Supplier Inactive Date",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Additional Charges 1 Supplier",
+											"name": "Vendor Site ID",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Additional Charges 1 Supplier",
+											"name": "Vendor Site ID",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Additional Charges 1 Unit Price",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Additional Charges 1 Unit Price",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Additional Charges 1 Amount",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Additional Charges 1 Amount",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Additional Charges 1 Currency",
+											"name": "Prc BU ID",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Additional Charges 1 Currency",
+											"name": "Prc BU ID",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Additional Charges 2 Supplier",
+											"name": "Location ID",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Additional Charges 2 Supplier",
+											"name": "Location ID",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Additional Charges 2 Unit Price",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Additional Charges 2 Unit Price",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Additional Charges 2 Amount",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Additional Charges 2 Amount",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Additional Charges 2 Currency",
+											"name": "Purchasing Site Flag",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Additional Charges 2 Currency",
+											"name": "Purchasing Site Flag",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Buyer",
+											"name": "Pay",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Buyer",
+											"name": "Pay",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Sustainability Position",
+											"name": "Payment terms",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Sustainability Position",
+											"name": "Payment terms",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Supplier Item",
+											"name": "Site Invoice Currency Code",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Supplier Item",
+											"name": "Site Invoice Currency Code",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Deal Date",
+											"name": "Site Payment Currency Code",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Deal Date",
+											"name": "Site Payment Currency Code",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Agreement Amount",
+											"name": "BIC_SWIFT",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Agreement Amount",
+											"name": "BIC_SWIFT",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Amount Released Against Agreement",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 2,
-											"precision": 28
-										},
-										"sink": {
-											"name": "Amount Released Against Agreement",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Note To Vendor",
+											"name": "Site Inactive Date",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Note To Vendor",
+											"name": "Site Inactive Date",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "FFA Spec",
+											"name": "VIHB Code",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "FFA Spec",
+											"name": "VIHB Code",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Line Status",
+											"name": "Vendor Category",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Line Status",
+											"name": "Vendor Category",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "EUR USD",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
-										},
-										"sink": {
-											"name": "EUR USD",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "EUR GBP",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
-										},
-										"sink": {
-											"name": "EUR GBP",
-											"type": "String",
-											"physicalType": "varchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Updated Contract Status",
+											"name": "DEFAULT_PAYMENT_METHOD",
 											"type": "String",
 											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Updated Contract Status",
+											"name": "DEFAULT_PAYMENT_METHOD",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "DateStamp",
-											"type": "DateTime",
-											"physicalType": "date"
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "DateStamp",
+											"name": "ISCC Cetificate Number",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Yield Adjusted Volume",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
+											"name": "ISCC Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Yield Adjusted Volume",
+											"name": "ISCC Certificate Expiry Date",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Agreement Mid Date",
-											"type": "DateTime",
-											"physicalType": "date"
+											"name": "Site VET ID",
+											"type": "String",
+											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Agreement Mid Date",
+											"name": "Site VET ID",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Non-Delivered Quantity",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 8,
-											"precision": 38
+											"name": "INS Certificate Number",
+											"type": "String",
+											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Non-Delivered Quantity",
+											"name": "INS Certificate Number",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "Yield Adjusted Volume Non-Delivered",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 6,
-											"precision": 38
+											"name": "INS Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "nvarchar"
 										},
 										"sink": {
-											"name": "Yield Adjusted Volume Non-Delivered",
+											"name": "INS Certificate Expiry Date",
 											"type": "String",
-											"physicalType": "varchar"
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CERTIFICATION_TYPE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CERTIFICATION_TYPE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Terms Date Basis",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site Terms Date Basis",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SUP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VAT_NUM_SUP",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SITE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VAT_NUM_SITE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier_creation_date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier_creation_date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ADDRESS_CREATION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ADDRESS_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SITE_CREATION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SITE_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
 										}
 									}
 								],
@@ -5176,7 +5009,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "SqlServerTable1",
+								"referenceName": "testAppian_suppliers",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -5192,9 +5025,7 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
-			]
+			"dependsOn": []
 		}
 	]
 }
