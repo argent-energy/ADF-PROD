@@ -242,6 +242,18 @@
 							},
 							{
 								"source": {
+									"name": "CATEGORY_Name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "CATEGORY_Name",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "Location ID",
 									"type": "String",
 									"physicalType": "nvarchar"
