@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[dbo].[prc_AppianGetSuppliers]",
+						"sqlReaderStoredProcedureName": "[dbo].[prc_AppianGetSuppliers_v2]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
