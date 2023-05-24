@@ -1,0 +1,186 @@
+{
+	"name": "AppianTest",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Appian_Test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Supplier_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Supplier_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Supplier_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BU_bill_to",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BPA_exists",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address_line_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address_line_2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address_line_3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Address_line_4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "City",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Postal_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "E_mail",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Site_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Purchasing",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Pay",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Inactive_date_VET_ID_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "VET_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ISCC_certificate_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ISCC_certificate_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "INS_certificate_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INS_certificate_expiry_date",
+				"type": "date"
+			},
+			{
+				"name": "Certification_type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GMP_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VIHB_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Vendor_category",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Default_payment_method",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_terms",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Invoice_currency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_currency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BIC_SWIFT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VAT_number_supplier",
+				"type": "nvarchar"
+			},
+			{
+				"name": "VAT_number_site",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IBAN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Bank_account_number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Supplier_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Address_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Site_creation_date",
+				"type": "date"
+			},
+			{
+				"name": "Site_created_by",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "Staging",
+			"table": "SuppliersReport_Suppliers"
+		}
+	}
+}
