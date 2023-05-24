@@ -1,0 +1,340 @@
+{
+	"name": "appianPull_test_traceability_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Pull traceabilityData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "CREATION_DATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CREATION_DATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BUSINESS_UNIT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "BUSINESS_UNIT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ORGANIZATION",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ORGANIZATION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SUBINVENTORY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SUBINVENTORY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TRANSACTION_DATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TRANSACTION_DATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "PHYSICAL_DATE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "PHYSICAL_DATE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DOCUMENT_NUMBER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DOCUMENT_NUMBER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TRANSACTION_TYPE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TRANSACTION_TYPE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "REASON_NAME",
+									"type": "String"
+								},
+								"sink": {
+									"name": "REASON_NAME",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "WORK_DEFINITION",
+									"type": "String"
+								},
+								"sink": {
+									"name": "WORK_DEFINITION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ITEM_CODE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ITEM_CODE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "ITEM_DESCRIPTION",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ITEM_DESCRIPTION",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "UNIT_OF_MEASURE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "UNIT_OF_MEASURE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TRANSFER_SUBINVENTORY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TRANSFER_SUBINVENTORY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SUPPLIER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SUPPLIER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SUPPLIER_SITE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SUPPLIER_SITE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "AGREEMENT",
+									"type": "String"
+								},
+								"sink": {
+									"name": "AGREEMENT",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "EXT_REFERENCE_NUMBER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "EXT_REFERENCE_NUMBER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SHIPPING_METHOD",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SHIPPING_METHOD",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "QUANTITY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "QUANTITY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TANK_BALANCE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TANK_BALANCE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "RUNNING_TOTAL",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RUNNING_TOTAL",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "GRADE",
+									"type": "String"
+								},
+								"sink": {
+									"name": "GRADE",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TRANSACTION_ID",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TRANSACTION_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LOT_NUMBER",
+									"type": "String"
+								},
+								"sink": {
+									"name": "LOT_NUMBER",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "TRANSTYPE_REASON",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TRANSTYPE_REASON",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "DENSITY",
+									"type": "String"
+								},
+								"sink": {
+									"name": "DENSITY",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "STD_LTRS",
+									"type": "String"
+								},
+								"sink": {
+									"name": "STD_LTRS",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Stamp",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Stamp",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "testAppian_traceability",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "Appian"
+		},
+		"annotations": []
+	}
+}
