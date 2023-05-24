@@ -13,6 +13,255 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Finance_Sharepoint_To_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copies data from the Sharepoint site \"PowerBI data\" to the Azure Blob Storage",
+				"activities": [
+					{
+						"name": "Sharepoint_token",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded"
+							},
+							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
+						}
+					},
+					{
+						"name": "Copy_Sharepoint_to_Blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Sharepoint_token",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Finance%20DWH%20Excel%20data.xlsx')/$value"
+							},
+							{
+								"name": "Destination",
+								"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET",
+									"additionalHeaders": {
+										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Sharepoint_Finance_DWH_Excel_Data_Raw",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": {
+										"value": "@pipeline().parameters.ExcelName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Blob_Sharepoint_Files",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": {
+										"value": "@pipeline().parameters.ExcelName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"ExcelName": {
+						"type": "string",
+						"defaultValue": "Finance DWH Excel data.xlsx"
+					}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-11T15:23:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Oracle_To_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copies Oracle data that is stored on the Argent FTP server to the Data Lake Storage",
+				"activities": [
+					{
+						"name": "Copy_Oracle_SFTP_DLS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "FtpReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.csv",
+									"useBinaryTransfer": true,
+									"deleteFilesAfterCompletion": false,
+									"disableChunking": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Binary_Source_Oracle",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Binary_Destination_Oracle",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Copy_Oracle_SFTP_DLS_copy_upper_case",
+						"description": "To include upper case file extension",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy_Oracle_SFTP_DLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "FtpReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.CSV",
+									"useBinaryTransfer": true,
+									"deleteFilesAfterCompletion": false,
+									"disableChunking": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Binary_Source_Oracle",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Binary_Destination_Oracle",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-10-13T10:15:17Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy_Oracle_To_BLOB_OO')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3606,6 +3855,195 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AppianTest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Supplier_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Supplier_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU_bill_to",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BPA_exists",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Category_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Postal_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "E_mail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Purchasing",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Pay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Inactive_date_VET_ID_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "VET_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "INS_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "INS_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "Certification_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GMP_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VIHB_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Vendor_category",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Default_payment_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_terms",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Invoice_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BIC_SWIFT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IBAN",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Bank_account_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Address_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_created_by",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "SuppliersReport_Suppliers"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4097,371 +4535,6 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "AppianBPA"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServerTable2_Suppliers')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "appDev",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Appian"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Supplier_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_number",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "Supplier_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BU_bill_to",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BPA_exists",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Category_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "City",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Postal_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Country",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": "E_mail",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Site_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Purchasing",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Pay",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Inactive_date_VET_ID_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "VET_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "INS_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "INS_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "Certification_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GMP_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VIHB_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Vendor_category",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Default_payment_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_terms",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Invoice_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BIC_SWIFT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_supplier",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_site",
-						"type": "nvarchar"
-					},
-					{
-						"name": "IBAN",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Bank_account_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Address_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_created_by",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "SuppliersReport_Suppliers"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServerTable2_traceability')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "appDev",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "CREATION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUSINESS_UNIT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ORGANIZATION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHYSICAL_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DOCUMENT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "REASON_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WORK_DEFINITION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_DESCRIPTION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_OF_MEASURE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSFER_SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_SITE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AGREEMENT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXT_REFERENCE_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SHIPPING_METHOD",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TANK_BALANCE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "RUNNING_TOTAL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GRADE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LOT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSTYPE_REASON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DENSITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STD_LTRS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Stamp",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "traceabilityReport"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AuditDaily_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "This is daily trigger for the Audit Job to run. This must run afer the Oracle Jobs that populate the tables ",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "audit_pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2022-09-05T14:01:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								8
-							]
-						}
-					}
 				}
 			},
 			"dependsOn": []

@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
 		},
+		"Appian_Test_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_Test'"
+		},
+		"Appian_prod_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_prod'"
+		},
 		"appDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
@@ -370,6 +378,40 @@
 					"quoteChar": "\""
 				},
 				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Test')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Appian_Test_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_prod')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Appian_prod_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": []
 		},
@@ -1581,257 +1623,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_Finance_Sharepoint_To_BLOB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copies data from the Sharepoint site \"PowerBI data\" to the Azure Blob Storage",
-				"activities": [
-					{
-						"name": "Sharepoint_token",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
-							},
-							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
-						}
-					},
-					{
-						"name": "Copy_Sharepoint_to_Blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Sharepoint_token",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": true
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "Finance%20DWH%20Excel%20data.xlsx')/$value"
-							},
-							{
-								"name": "Destination",
-								"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET",
-									"additionalHeaders": {
-										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-										"type": "Expression"
-									},
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Sharepoint_Finance_DWH_Excel_Data_Raw",
-								"type": "DatasetReference",
-								"parameters": {
-									"ItemName": {
-										"value": "@pipeline().parameters.ExcelName",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Blob_Sharepoint_Files",
-								"type": "DatasetReference",
-								"parameters": {
-									"ItemName": {
-										"value": "@pipeline().parameters.ExcelName",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"ExcelName": {
-						"type": "string",
-						"defaultValue": "Finance DWH Excel data.xlsx"
-					}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-11T15:23:09Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sharepoint_Finance_DWH_Excel_Data_Raw')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_Oracle_To_BLOB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copies Oracle data that is stored on the Argent FTP server to the Data Lake Storage",
-				"activities": [
-					{
-						"name": "Copy_Oracle_SFTP_DLS",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "FtpReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.csv",
-									"useBinaryTransfer": true,
-									"deleteFilesAfterCompletion": false,
-									"disableChunking": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Binary_Source_Oracle",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Binary_Destination_Oracle",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy_Oracle_SFTP_DLS_copy_upper_case",
-						"description": "To include upper case file extension",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy_Oracle_SFTP_DLS",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "FtpReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.CSV",
-									"useBinaryTransfer": true,
-									"deleteFilesAfterCompletion": false,
-									"disableChunking": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Binary_Source_Oracle",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Binary_Destination_Oracle",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-10-13T10:15:17Z"
 			},
 			"dependsOn": []
 		}

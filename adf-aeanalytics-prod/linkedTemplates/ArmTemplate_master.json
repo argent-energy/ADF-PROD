@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AppianDev'"
 		},
+		"Appian_Test_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_Test'"
+		},
+		"Appian_prod_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_prod'"
+		},
 		"AzureDataLakeStorage_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage'"
@@ -213,6 +221,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Appian_Test_connectionString": {
+						"value": "[parameters('Appian_Test_connectionString')]"
+					},
+					"Appian_prod_connectionString": {
+						"value": "[parameters('Appian_prod_connectionString')]"
 					},
 					"appDev_connectionString": {
 						"value": "[parameters('appDev_connectionString')]"

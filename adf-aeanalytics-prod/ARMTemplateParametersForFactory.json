@@ -8,6 +8,12 @@
 		"AppianDev_connectionString": {
 			"value": ""
 		},
+		"Appian_Test_connectionString": {
+			"value": ""
+		},
+		"Appian_prod_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_accountKey": {
 			"value": ""
 		},
