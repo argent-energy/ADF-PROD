@@ -13,6 +13,142 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Appian_test_traceability')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CREATION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUSINESS_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ORGANIZATION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHYSICAL_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DOCUMENT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "REASON_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WORK_DEFINITION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_DESCRIPTION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_OF_MEASURE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSFER_SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_SITE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AGREEMENT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXT_REFERENCE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SHIPPING_METHOD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TANK_BALANCE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RUNNING_TOTAL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GRADE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LOT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSTYPE_REASON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DENSITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STD_LTRS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "traceabilityReport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -868,6 +1004,34 @@
 								8
 							]
 						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TL_CostAccounting_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SQL_TransactionList_CostAccounting",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 24,
+						"startTime": "2023-05-24T22:00:00",
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
@@ -3149,6 +3313,27 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "SQL_SubledgerSuppliersCustomers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SQL_TransactionsList",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_SubledgerSuppliersCustomers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_TransactionsList",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -6329,7 +6514,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_test_traceability')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/appianPull_traceability')]",
@@ -7286,74 +7473,6 @@
 				"annotations": []
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ARGENT_Exp_And_Pos_TRADE_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Oracle_Data_Trade_Pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 12,
-						"startTime": "2023-05-18T01:30:00",
-						"timeZone": "GMT Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Oracle_Data_Trade_Pipeline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ARGENT_Pricing_TRADE_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Pricing_Data_Trade_Pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2022-07-21T09:14:00",
-						"timeZone": "W. Europe Standard Time",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								10
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Pricing_Data_Trade_Pipeline')]"
-			]
 		}
 	]
 }

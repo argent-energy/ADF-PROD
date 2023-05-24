@@ -5935,6 +5935,27 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_TransactionsList",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_SubledgerSuppliersCustomers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_TransactionsList",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -5959,7 +5980,8 @@
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendMarginAnalysis')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_CurrencyExposure')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_BlendAnalysisCoreScripts')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_SubledgerSuppliersCustomers')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_TransactionsList')]"
 			]
 		},
 		{
@@ -7127,6 +7149,46 @@
 				"[concat(variables('factoryId'), '/datasets/SQL_Trade_Tables')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Dynamic_Trade_Table')]",
 				"[concat(variables('factoryId'), '/datasets/Trade_Tables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_TransactionList_CostAccounting')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_TransactionList_CostAccounting",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_TransactionsList_CostAccounting]"
+						},
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -16688,6 +16750,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TL_CostAccounting_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SQL_TransactionList_CostAccounting",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 24,
+						"startTime": "2023-05-24T22:00:00",
+						"timeZone": "GMT Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SQL_TransactionList_CostAccounting')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AppianRuntime')]",
