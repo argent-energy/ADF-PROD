@@ -1,0 +1,24 @@
+{
+	"name": "TL_CostAccounting_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SQL_TransactionList_CostAccounting",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2023-05-24T22:00:00",
+				"timeZone": "GMT Standard Time"
+			}
+		}
+	}
+}

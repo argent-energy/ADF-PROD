@@ -1,0 +1,31 @@
+{
+	"name": "SQL_TransactionList_CostAccounting",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_TransactionList_CostAccounting",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[Finance].[SQL_TransactionsList_CostAccounting]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": []
+	}
+}
