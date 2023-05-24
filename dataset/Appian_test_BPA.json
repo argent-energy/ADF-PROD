@@ -1,0 +1,245 @@
+{
+	"name": "Appian_test_BPA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Appian_Test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Business Unit Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Blanket Purchase Agreement Number",
+				"type": "varchar"
+			},
+			{
+				"name": "Purchase Document Status",
+				"type": "varchar"
+			},
+			{
+				"name": "Supplier Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Supplier Site Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Purchase Document Description",
+				"type": "varchar"
+			},
+			{
+				"name": "Item Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Item Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Item Description",
+				"type": "varchar"
+			},
+			{
+				"name": "Category Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Total Price",
+				"type": "varchar"
+			},
+			{
+				"name": "Unit Price",
+				"type": "varchar"
+			},
+			{
+				"name": "Purchase Document Currency",
+				"type": "varchar"
+			},
+			{
+				"name": "Blanket Agreement Quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "UOM Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Delivered Quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "Order Quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "Remaining Quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "Trucks",
+				"type": "varchar"
+			},
+			{
+				"name": "Position Now",
+				"type": "varchar"
+			},
+			{
+				"name": "Expected Position",
+				"type": "varchar"
+			},
+			{
+				"name": "Weeknumbers Contract",
+				"type": "varchar"
+			},
+			{
+				"name": "Weeks Remaining",
+				"type": "varchar"
+			},
+			{
+				"name": "Next Monday",
+				"type": "varchar"
+			},
+			{
+				"name": "Agreement Start Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Agreement End Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Shipping Method",
+				"type": "varchar"
+			},
+			{
+				"name": "Incoterm",
+				"type": "varchar"
+			},
+			{
+				"name": "Transporter Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Transporter Unit Price",
+				"type": "varchar"
+			},
+			{
+				"name": "Transporter Amount",
+				"type": "varchar"
+			},
+			{
+				"name": "Transporter Currency",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 1 Supplier",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 1 Unit Price",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 1 Amount",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 1 Currency",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 2 Supplier",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 2 Unit Price",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 2 Amount",
+				"type": "varchar"
+			},
+			{
+				"name": "Additional Charges 2 Currency",
+				"type": "varchar"
+			},
+			{
+				"name": "Buyer",
+				"type": "varchar"
+			},
+			{
+				"name": "Sustainability Position",
+				"type": "varchar"
+			},
+			{
+				"name": "Supplier Item",
+				"type": "varchar"
+			},
+			{
+				"name": "Deal Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Agreement Amount",
+				"type": "varchar"
+			},
+			{
+				"name": "Amount Released Against Agreement",
+				"type": "varchar"
+			},
+			{
+				"name": "Note To Vendor",
+				"type": "varchar"
+			},
+			{
+				"name": "FFA Spec",
+				"type": "varchar"
+			},
+			{
+				"name": "Line Status",
+				"type": "varchar"
+			},
+			{
+				"name": "EUR USD",
+				"type": "varchar"
+			},
+			{
+				"name": "EUR GBP",
+				"type": "varchar"
+			},
+			{
+				"name": "Updated Contract Status",
+				"type": "varchar"
+			},
+			{
+				"name": "DateStamp",
+				"type": "varchar"
+			},
+			{
+				"name": "Yield Adjusted Volume",
+				"type": "varchar"
+			},
+			{
+				"name": "Agreement Mid Date",
+				"type": "varchar"
+			},
+			{
+				"name": "Non-Delivered Quantity",
+				"type": "varchar"
+			},
+			{
+				"name": "Yield Adjusted Volume Non-Delivered",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "Staging",
+			"table": "AppianBPA"
+		}
+	}
+}
