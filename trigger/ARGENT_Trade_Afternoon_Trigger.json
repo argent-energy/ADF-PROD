@@ -14,7 +14,7 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Minute",
+				"frequency": "Hour",
 				"interval": 24,
 				"startTime": "2023-05-25T12:00:00",
 				"timeZone": "GMT Standard Time"
