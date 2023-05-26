@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "GL_JE_LINES_2023.csv",
+				"fileName": "XLA_DISTRIBUTION_LINKS_2022H2.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
