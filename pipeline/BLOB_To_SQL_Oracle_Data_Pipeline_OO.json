@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.GL_JE_LINES_2023"
+							"TableName": "O.XLA_DISTRIBUTION_LINKS_2022H2"
 						}
 					}
 				]
