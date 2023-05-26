@@ -304,7 +304,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "GL_JE_LINES_2022.csv"
+						"fileName": "XLA_AE_LINES.csv"
 					}
 				}
 			},
@@ -462,7 +462,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "GL_JE_LINES_2023.csv",
+						"fileName": "XLA_AE_LINES.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
