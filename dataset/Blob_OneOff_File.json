@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "XLA_AE_LINES.csv",
-				"container": "oracle-data"
+				"fileName": "Trade Excel Data for DWH.xlsx",
+				"container": "sharepoint-files"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\"",
