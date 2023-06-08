@@ -1473,7 +1473,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_AE_LINES"
+									"TableName": "NO.BlendedSales"
 								}
 							}
 						]
