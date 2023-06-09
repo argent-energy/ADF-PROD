@@ -2,7 +2,7 @@
 	"name": "ARGENT_Trade_Afternoon_Trigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
