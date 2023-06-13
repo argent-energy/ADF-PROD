@@ -1,0 +1,84 @@
+{
+	"name": "SQL_Create_GL_TB_AfternoonRun",
+	"properties": {
+		"activities": [
+			{
+				"name": "CREATEGL_Script_1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CREATEGL_Script_1",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "CREATEGL_Script_2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "CREATEGL_Script_1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CREATEGL_Script_2",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "CREATEGL_Script_3",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "CREATEGL_Script_2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CREATEGL_Script_3",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "CREATE_TB_Rec",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "CREATEGL_Script_3",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CREATE_TB_Rec",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": []
+	}
+}
