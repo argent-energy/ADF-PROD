@@ -16821,6 +16821,136 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Create_GL_TB_AfternoonRun')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CREATEGL_Script_1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CREATEGL_Script_1",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "CREATEGL_Script_2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "CREATEGL_Script_1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CREATEGL_Script_2",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "CREATEGL_Script_3",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "CREATEGL_Script_2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CREATEGL_Script_3",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "CREATE_TB_Rec",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "CREATEGL_Script_3",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "CREATE_TB_Rec",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CREATEGL_Script_1')]",
+				"[concat(variables('factoryId'), '/pipelines/CREATEGL_Script_2')]",
+				"[concat(variables('factoryId'), '/pipelines/CREATEGL_Script_3')]",
+				"[concat(variables('factoryId'), '/pipelines/CREATE_TB_Rec')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/GL_Trigger_Afternoon')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SQL_Create_GL_TB_AfternoonRun",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 24,
+						"startTime": "2023-06-14T15:00:00",
+						"timeZone": "GMT Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SQL_Create_GL_TB_AfternoonRun')]"
+			]
 		}
 	]
 }
