@@ -1316,7 +1316,14 @@
 								"sqlWriterUseTableLock": false,
 								"tableOption": "autoCreate"
 							},
-							"enableStaging": false,
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "TestBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "appian"
+							},
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
