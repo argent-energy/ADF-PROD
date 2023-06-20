@@ -13,6 +13,254 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Appian_test_BPA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Business Unit Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Blanket Purchase Agreement Number",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Status",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Site Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Description",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Description",
+						"type": "varchar"
+					},
+					{
+						"name": "Category Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Total Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Blanket Agreement Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "UOM Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Delivered Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Order Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Remaining Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Trucks",
+						"type": "varchar"
+					},
+					{
+						"name": "Position Now",
+						"type": "varchar"
+					},
+					{
+						"name": "Expected Position",
+						"type": "varchar"
+					},
+					{
+						"name": "Weeknumbers Contract",
+						"type": "varchar"
+					},
+					{
+						"name": "Weeks Remaining",
+						"type": "varchar"
+					},
+					{
+						"name": "Next Monday",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Start Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement End Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Shipping Method",
+						"type": "varchar"
+					},
+					{
+						"name": "Incoterm",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Supplier",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Supplier",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Buyer",
+						"type": "varchar"
+					},
+					{
+						"name": "Sustainability Position",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Item",
+						"type": "varchar"
+					},
+					{
+						"name": "Deal Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Amount Released Against Agreement",
+						"type": "varchar"
+					},
+					{
+						"name": "Note To Vendor",
+						"type": "varchar"
+					},
+					{
+						"name": "FFA Spec",
+						"type": "varchar"
+					},
+					{
+						"name": "Line Status",
+						"type": "varchar"
+					},
+					{
+						"name": "EUR USD",
+						"type": "varchar"
+					},
+					{
+						"name": "EUR GBP",
+						"type": "varchar"
+					},
+					{
+						"name": "Updated Contract Status",
+						"type": "varchar"
+					},
+					{
+						"name": "DateStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "Yield Adjusted Volume",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Mid Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Non-Delivered Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Yield Adjusted Volume Non-Delivered",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "AppianBPA"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian_test_traceability')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1038,101 +1286,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Create_GL_TB_AfternoonRun')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CREATEGL_Script_1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATEGL_Script_2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_2",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATEGL_Script_3",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_3",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATE_TB_Rec",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_3",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATE_TB_Rec",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Appian BPA Data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1163,7 +1316,14 @@
 								"sqlWriterUseTableLock": false,
 								"tableOption": "autoCreate"
 							},
-							"enableStaging": false,
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "TestBlob",
+									"type": "LinkedServiceReference"
+								},
+								"path": "appian"
+							},
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
@@ -3119,6 +3279,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "TicketNo",
@@ -6186,7 +6352,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_test_BPA')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/appianPull_test_traceability_copy1')]",
