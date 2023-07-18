@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Production_MotherwellBDR.csv",
+				"fileName": "Production_MotherwellBDR.xlsx",
 				"container": "sharepoint-files"
 			},
 			"columnDelimiter": ",",
