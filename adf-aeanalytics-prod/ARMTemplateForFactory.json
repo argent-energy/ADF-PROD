@@ -2707,7 +2707,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "NO.BlendedSales"
+									"TableName": "F.Production_MotherwellPTP"
 								}
 							}
 						]
@@ -14309,7 +14309,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Trade Excel Data for DWH.xlsx",
+						"fileName": "Production_MotherwellPTP.csv",
 						"container": "sharepoint-files"
 					},
 					"columnDelimiter": ",",
