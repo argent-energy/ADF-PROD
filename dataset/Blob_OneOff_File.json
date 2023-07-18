@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Production_StanlowBDR.csv",
+				"fileName": "Production_StanlowPTP.csv",
 				"container": "sharepoint-files"
 			},
 			"columnDelimiter": ",",
