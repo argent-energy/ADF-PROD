@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "NO.BlendedSales"
+							"TableName": "F.Production_MotherwellPTP"
 						}
 					}
 				]
