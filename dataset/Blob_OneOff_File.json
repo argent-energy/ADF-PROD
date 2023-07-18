@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Trade Excel Data for DWH.xlsx",
+				"fileName": "F.Production_MotherwellBDR.csv",
 				"container": "sharepoint-files"
 			},
 			"columnDelimiter": ",",
