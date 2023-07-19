@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "CST_STD_OVERHEAD_RATE_DETAILS.csv",
+				"fileName": "CST_STD_OVERHEAD_RATES.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
