@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "CST_COSTED_VU_COSTS_V.csv",
+				"fileName": "CST_COSTED_VU_ONHAND_V.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
