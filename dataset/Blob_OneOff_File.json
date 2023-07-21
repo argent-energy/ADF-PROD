@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "CST_STD_OVERHEAD_RATES.csv",
-				"container": "oracle-data"
+				"fileName": "Production_StanlowPTP.csv",
+				"container": "sharepoint-files"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\"",
