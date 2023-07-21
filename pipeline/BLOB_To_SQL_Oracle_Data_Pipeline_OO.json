@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.CST_STD_OVERHEAD_RATES"
+							"TableName": "F.Production_StanlowPTP"
 						}
 					}
 				]
