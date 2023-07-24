@@ -462,7 +462,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Production_StanlowPTP.csv",
+						"fileName": "Production_MotherwellPTP.csv",
 						"container": "sharepoint-files"
 					},
 					"columnDelimiter": ",",

@@ -2707,7 +2707,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowPTP"
+									"TableName": "F.Production_MotherwellPTP"
 								}
 							}
 						]
@@ -14304,7 +14304,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Production_StanlowPTP.csv",
+						"fileName": "Production_MotherwellPTP.csv",
 						"container": "sharepoint-files"
 					},
 					"columnDelimiter": ",",

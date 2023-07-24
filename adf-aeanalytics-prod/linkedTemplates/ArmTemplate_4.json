@@ -1473,7 +1473,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowPTP"
+									"TableName": "F.Production_MotherwellPTP"
 								}
 							}
 						]
