@@ -9364,7 +9364,8 @@
 											"path": "$['PORTCALL']['MMSI']"
 										},
 										"sink": {
-											"name": "MMSI"
+											"name": "MMSI",
+											"type": "String"
 										}
 									},
 									{
@@ -9372,7 +9373,8 @@
 											"path": "$['PORTCALL']['IMO']"
 										},
 										"sink": {
-											"name": "IMO"
+											"name": "IMO",
+											"type": "String"
 										}
 									},
 									{
@@ -9380,7 +9382,8 @@
 											"path": "$['PORTCALL']['LOCODE']"
 										},
 										"sink": {
-											"name": "LOCODE"
+											"name": "LOCODE",
+											"type": "String"
 										}
 									},
 									{
@@ -9388,7 +9391,8 @@
 											"path": "$['PORTCALL']['EVENT']"
 										},
 										"sink": {
-											"name": "EVENT"
+											"name": "EVENT",
+											"type": "String"
 										}
 									},
 									{
@@ -9396,7 +9400,8 @@
 											"path": "$['PORTCALL']['TIMESTAMP']"
 										},
 										"sink": {
-											"name": "TIMESTAMP"
+											"name": "TIMESTAMP",
+											"type": "String"
 										}
 									},
 									{
@@ -9404,7 +9409,8 @@
 											"path": "$['PORTCALL']['PORT']"
 										},
 										"sink": {
-											"name": "PORT"
+											"name": "PORT",
+											"type": "String"
 										}
 									},
 									{
@@ -9412,7 +9418,8 @@
 											"path": "$['PORTCALL']['COUNTRY']"
 										},
 										"sink": {
-											"name": "COUNTRY"
+											"name": "COUNTRY",
+											"type": "String"
 										}
 									},
 									{
@@ -9420,7 +9427,8 @@
 											"path": "$['Stamp']"
 										},
 										"sink": {
-											"name": "Stamp"
+											"name": "Stamp",
+											"type": "String"
 										}
 									}
 								]
