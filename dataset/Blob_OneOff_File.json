@@ -10,8 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Production_StanlowBDR.csv",
-				"container": "sharepoint-files"
+				"fileName": "CST_COST_ELEMENTS_VL.csv",
+				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\"",
