@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Appian BPA Data",
+				"name": "Prod Appian BPA Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -24,8 +24,7 @@
 					"sink": {
 						"type": "SqlServerSink",
 						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate"
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": true,
 					"stagingSettings": {
@@ -778,7 +777,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SqlServerTable1",
+						"referenceName": "Appian_Prod",
 						"type": "DatasetReference"
 					}
 				]
