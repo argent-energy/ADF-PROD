@@ -1,0 +1,12 @@
+{
+	"name": "AppianProduction",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AppianDev",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
