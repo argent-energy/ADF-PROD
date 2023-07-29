@@ -462,8 +462,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Production_StanlowBDR.csv",
-						"container": "sharepoint-files"
+						"fileName": "CST_STD_OVERHEAD_RATES.csv",
+						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\"",
