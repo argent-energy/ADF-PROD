@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Remove BPA Files ",
+						"activity": "Remove BPA Files",
 						"dependencyConditions": [
 							"Succeeded"
 						]
