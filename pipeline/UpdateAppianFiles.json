@@ -94,6 +94,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "Pull Traceability Data - Dev",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Pullv Suppliers Data - Dev",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "appianPull_traceability",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
