@@ -1,0 +1,133 @@
+{
+	"name": "Appian_Prod_Traceablity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Appian_prod",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BUSINESS_UNIT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ORGANIZATION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUBINVENTORY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PHYSICAL_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DOCUMENT_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REASON_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WORK_DEFINITION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ITEM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ITEM_DESCRIPTION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNIT_OF_MEASURE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSFER_SUBINVENTORY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPPLIER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPPLIER_SITE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AGREEMENT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EXT_REFERENCE_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIPPING_METHOD",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QUANTITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TANK_BALANCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RUNNING_TOTAL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GRADE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LOT_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSTYPE_REASON",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DENSITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "STD_LTRS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Stamp",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "Staging",
+			"table": "traceabilityReport"
+		}
+	}
+}
