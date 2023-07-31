@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Pull BPA Data",
+				"name": "Pull Supplier Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -412,7 +412,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SqlServerTable2_Suppliers",
+						"referenceName": "AppianProdSuppliers",
 						"type": "DatasetReference"
 					}
 				]
