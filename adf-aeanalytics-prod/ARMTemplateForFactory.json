@@ -10004,6 +10004,69 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "Pull BPA Data - Dev",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Get Traceability Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "appianPull_test_BPA",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Pullv Suppliers Data - Dev",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Pull BPA Data - Dev",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "appianPull_Suppliers_V2",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Pull Traceability Data - Dev",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Pullv Suppliers Data - Dev",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "appianPull_traceability",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -10018,7 +10081,10 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/DevAppian_BPA')]",
 				"[concat(variables('factoryId'), '/pipelines/DevAppian_Suppliers')]",
-				"[concat(variables('factoryId'), '/pipelines/DevAppian_traceability')]"
+				"[concat(variables('factoryId'), '/pipelines/DevAppian_traceability')]",
+				"[concat(variables('factoryId'), '/pipelines/appianPull_test_BPA')]",
+				"[concat(variables('factoryId'), '/pipelines/appianPull_Suppliers_V2')]",
+				"[concat(variables('factoryId'), '/pipelines/appianPull_traceability')]"
 			]
 		},
 		{
