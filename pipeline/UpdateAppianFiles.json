@@ -1,0 +1,64 @@
+{
+	"name": "UpdateAppianFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get BPA Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DevAppian_BPA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Get Suppliers Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get BPA Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DevAppian_Suppliers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Get Traceability Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get Suppliers Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DevAppian_traceability",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Appian PipeLine_Prod"
+		},
+		"annotations": []
+	}
+}
