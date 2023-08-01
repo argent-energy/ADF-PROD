@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Stored procedure1",
+				"name": "SQL_OrdersAndInvoicesTables",
+				"description": "Clears then repopulates all 3 tables used in Finance's Orders and Invoice Report.",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
@@ -15,7 +16,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[Finance].[SQL_BlendCoreScripts]"
+					"storedProcedureName": "[Finance].[SQL_OrdersAndInvoicesTables]"
 				},
 				"linkedServiceName": {
 					"referenceName": "SqlServerArgent",
