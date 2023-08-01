@@ -1,0 +1,24 @@
+{
+	"name": "Finance_OandI_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SQL_OrdersAndInvoicesTables",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-08-02T05:15:00",
+				"timeZone": "GMT Standard Time"
+			}
+		}
+	}
+}
