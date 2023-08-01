@@ -1683,7 +1683,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Appian BPA Prod')]",
+			"name": "[concat(parameters('factoryName'), '/Appian BPA Pull  Prod')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1702,10 +1702,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[dbo].[Prc_AppianBPADetails]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -2457,7 +2463,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "AppianDataSuppliers",
+								"referenceName": "testAppian",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2481,9 +2487,543 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AppianDataSuppliers')]",
+				"[concat(variables('factoryId'), '/datasets/testAppian')]",
 				"[concat(variables('factoryId'), '/datasets/Appian_Prod')]",
 				"[concat(variables('factoryId'), '/linkedServices/TestBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian Suppliers Pull Prod')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Pull SuppliersData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Supplier Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_number",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BU_bill_to",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BU_bill_to",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BPA_EXISTS",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BPA_exists",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Address_name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Business Unit Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Address_line_1",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Line 2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Address_line_2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Line 3",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Address_line_3",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Postal_code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Country",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Country",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Email",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "E_mail",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Purchasing Site Flag",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Purchasing",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Pay",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Pay",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Inactive Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Inactive_date_VET_ID_expiry_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "Site VET ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VET_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ISCC_certificate_number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "ISCC Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ISCC_certificate_expiry_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "INS_certificate_number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "INS_certificate_expiry_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "CERTIFICATION_TYPE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Certification_type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VIHB Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VIHB_code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor Category",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Vendor_category",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "DEFAULT_PAYMENT_METHOD",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Default_payment_method",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment terms",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Payment_terms",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Invoice Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Invoice_currency",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Payment Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Payment_currency",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BIC_SWIFT",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "BIC_SWIFT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SUP",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VAT_number_supplier",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SITE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "VAT_number_site",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Bank_account_number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier_creation_date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Supplier_creation_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "ADDRESS_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Address_creation_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									},
+									{
+										"source": {
+											"name": "SITE_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Site_creation_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "testAppian_suppliers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AppianProdSuppliers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian PipeLine_Prod"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/testAppian_suppliers')]",
+				"[concat(variables('factoryId'), '/datasets/AppianProdSuppliers')]"
 			]
 		},
 		{
@@ -7960,6 +8500,47 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_OrdersAndInvoicesTables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_OrdersAndInvoicesTables",
+						"description": "Clears then repopulates all 3 tables used in Finance's Orders and Invoice Report.",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_OrdersAndInvoicesTables]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Finance/OrdersAndInvoices"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Pricing_Data_Marks_Script')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -9941,6 +10522,112 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SharePoint_Trade_DataWallet')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Update Appian Production')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Clear Prod Staging Tables",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[prc_AppianClearStaging]"
+						},
+						"linkedServiceName": {
+							"referenceName": "Appian_prod",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Populate BPA Data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Clear Prod Staging Tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Appian BPA Pull  Prod",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Populate Suppliers Data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Populate BPA Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Appian Suppliers Pull Prod",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Populate Traceability Data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Populate Suppliers Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Appian Traceability Pull Prod",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Appian PipeLine_Prod"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Appian_prod')]",
+				"[concat(variables('factoryId'), '/pipelines/Appian BPA Pull  Prod')]",
+				"[concat(variables('factoryId'), '/pipelines/Appian Suppliers Pull Prod')]",
+				"[concat(variables('factoryId'), '/pipelines/Appian Traceability Pull Prod')]"
 			]
 		},
 		{
@@ -12243,540 +12930,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/testAppian_suppliers')]",
 				"[concat(variables('factoryId'), '/datasets/SqlServerTable2_Suppliers')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/appianPull_Suppliers_Prod')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Pull SuppliersData",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Supplier Name",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Supplier_Name",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Supplier Number",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Supplier_number",
-											"type": "Int16",
-											"physicalType": "smallint"
-										}
-									},
-									{
-										"source": {
-											"name": "Supplier Type",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Supplier_type",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BU_bill_to",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BU_bill_to",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BPA_EXISTS",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BPA_exists",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Address Name",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Address_name",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Business Unit Name",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Address_line_1",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Address Line 2",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Address_line_2",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Address Line 3",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Address_line_3",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "City",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "City",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Postal Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Postal_code",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Phone",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Phone",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Email",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "E_mail",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Purchasing Site Flag",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Purchasing",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Pay",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Pay",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Site Inactive Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Inactive_date_VET_ID_expiry_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "Site VET ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "VET_ID",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ISCC Cetificate Number",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ISCC_certificate_number",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "ISCC Certificate Expiry Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "ISCC_certificate_expiry_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "INS Certificate Number",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "INS_certificate_number",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "INS Certificate Expiry Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "INS_certificate_expiry_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "CERTIFICATION_TYPE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Certification_type",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "GMP_ID",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "GMP_ID",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "VIHB Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "VIHB_code",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Vendor Category",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Vendor_category",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "DEFAULT_PAYMENT_METHOD",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Default_payment_method",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Payment terms",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Payment_terms",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Site Invoice Currency Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Invoice_currency",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Site Payment Currency Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Payment_currency",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BIC_SWIFT",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "BIC_SWIFT",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "VAT_NUM_SUP",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "VAT_number_supplier",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "VAT_NUM_SITE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "VAT_number_site",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "IBAN",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "IBAN",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "BANK_ACCOUNT_NUM",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Bank_account_number",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Supplier_creation_date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Supplier_creation_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "ADDRESS_CREATION_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Address_creation_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									},
-									{
-										"source": {
-											"name": "SITE_CREATION_DATE",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Site_creation_date",
-											"type": "DateTime",
-											"physicalType": "date"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "testAppian_suppliers",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AppianProdSuppliers",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Appian PipeLine_Prod"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/testAppian_suppliers')]",
-				"[concat(variables('factoryId'), '/datasets/AppianProdSuppliers')]"
 			]
 		},
 		{
@@ -19249,6 +19402,36 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Finance_OandI_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SQL_OrdersAndInvoicesTables",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2023-08-02T05:15:00",
+						"timeZone": "GMT Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SQL_OrdersAndInvoicesTables')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/GL_TRIGGER')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -19376,112 +19559,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Update Appian Production')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Clear Prod Staging Tables",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[dbo].[prc_AppianClearStaging]"
-						},
-						"linkedServiceName": {
-							"referenceName": "Appian_prod",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Populate BPA Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Clear Prod Staging Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Appian BPA Prod",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Populate Suppliers Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Populate BPA Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "appianPull_Suppliers_Prod",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Populate Traceability Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Populate Suppliers Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Appian Traceability Pull Prod",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Appian PipeLine_Prod"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Appian_prod')]",
-				"[concat(variables('factoryId'), '/pipelines/Appian BPA Prod')]",
-				"[concat(variables('factoryId'), '/pipelines/appianPull_Suppliers_Prod')]",
-				"[concat(variables('factoryId'), '/pipelines/Appian Traceability Pull Prod')]"
-			]
 		}
 	]
 }

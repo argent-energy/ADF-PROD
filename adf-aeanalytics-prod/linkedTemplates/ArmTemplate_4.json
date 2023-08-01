@@ -25,6 +25,32 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SharePoint_SC_Tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SupplyChain_SharePoint",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "Supply%20Chain%20Excel%20Data%20for%20DWH.xlsx')/$value",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SharePoint_SC_UK')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1281,152 +1307,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-09-01T10:21:43Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BLOB_To_SQL_Oracle_Data_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Oracle Get Metadata",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "Blob_Oracle_Get_Metadata",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Oracle ForEach",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Oracle Get Metadata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Oracle Get Metadata').output.childitems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Oracle Copy Data",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "DelimitedTextSource",
-											"additionalColumns": [
-												{
-													"name": "Stamp",
-													"value": {
-														"value": "@utcnow()",
-														"type": "Expression"
-													}
-												}
-											],
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											},
-											"formatSettings": {
-												"type": "DelimitedTextReadSettings"
-											}
-										},
-										"sink": {
-											"type": "SqlServerSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": true,
-											"tableOption": "autoCreate"
-										},
-										"enableStaging": false,
-										"enableSkipIncompatibleRow": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_Oracle_Files",
-											"type": "DatasetReference",
-											"parameters": {
-												"FileName": {
-													"value": "@item().name",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Argent_Database",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": {
-													"value": "@concat('O.',replace(item().name,'.csv',''))",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Trade"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-01T09:34:37Z"
 			},
 			"dependsOn": []
 		}
