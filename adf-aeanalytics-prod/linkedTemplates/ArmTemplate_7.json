@@ -4930,6 +4930,60 @@
 							"referenceName": "appDev",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "Clear Main",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Pull Traceability Data - Dev",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[prc_AppianClearMain]"
+						},
+						"linkedServiceName": {
+							"referenceName": "appDev",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Move Staging To Main",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Clear Main",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[prc_AppianPopulateMain]"
+						},
+						"linkedServiceName": {
+							"referenceName": "appDev",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
