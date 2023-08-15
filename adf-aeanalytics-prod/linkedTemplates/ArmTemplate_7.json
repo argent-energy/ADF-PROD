@@ -426,7 +426,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "SQL_BlendAnalysisCoreScripts",
+								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -464,32 +464,11 @@
 						}
 					},
 					{
-						"name": "SQL_BlendAnalysisCoreScripts",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_BlendAnalysisCoreScripts",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "SQL_SubledgerSuppliersCustomers",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "SQL_BlendAnalysisCoreScripts",
+								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
