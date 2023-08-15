@@ -1,0 +1,24 @@
+{
+	"name": "Appian_Dev_Release",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "UpdateAppianFiles",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-08-15T22:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
