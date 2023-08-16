@@ -1,6 +1,7 @@
 {
 	"name": "Appian_Dev_Release",
 	"properties": {
+		"description": "This Pipeline populates the Deve environment for Appian",
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
