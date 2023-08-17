@@ -19399,6 +19399,7 @@
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "This Pipeline populates the Deve environment for Appian",
 				"annotations": [],
 				"runtimeState": "Started",
 				"pipelines": [
@@ -19417,7 +19418,14 @@
 						"interval": 1,
 						"startTime": "2023-08-15T22:00:00Z",
 						"timeZone": "UTC",
-						"schedule": {}
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								22
+							]
+						}
 					}
 				}
 			},
