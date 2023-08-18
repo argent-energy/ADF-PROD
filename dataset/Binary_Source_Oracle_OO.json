@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "XLA_AE_LINES.csv"
+				"fileName": "DOO_HEADERS_ALL.csv"
 			}
 		}
 	},
