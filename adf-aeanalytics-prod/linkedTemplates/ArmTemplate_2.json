@@ -517,7 +517,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PO_HEADERS_ALL.csv",
+						"fileName": "PO_GA_ORG_ASSIGNMENTS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

@@ -227,7 +227,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.PO_HEADERS_ALL"
+									"TableName": "O.PO_GA_ORG_ASSIGNMENTS"
 								}
 							}
 						]
