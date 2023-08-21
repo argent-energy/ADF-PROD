@@ -57,7 +57,9 @@
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
-							"requestMethod": "GET"
+							"requestMethod": "GET",
+							"additionalHeaders": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+							"requestTimeout": ""
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
