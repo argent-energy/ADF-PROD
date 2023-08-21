@@ -227,9 +227,6 @@
 					},
 					"Appian_prod_connectionString": {
 						"value": "[parameters('Appian_prod_connectionString')]"
-					},
-					"appDev_connectionString": {
-						"value": "[parameters('appDev_connectionString')]"
 					}
 				}
 			},
@@ -250,6 +247,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"appDev_connectionString": {
+						"value": "[parameters('appDev_connectionString')]"
 					}
 				}
 			},
@@ -295,6 +295,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'adf-aeanalytics-prod_ArmTemplate_6')]"
+			]
+		},
+		{
+			"name": "adf-aeanalytics-prod_ArmTemplate_8",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-aeanalytics-prod_ArmTemplate_7')]"
 			]
 		}
 	]
