@@ -1,0 +1,34 @@
+{
+	"name": "Blob_ProdRep_Excel_Get_Metadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Tables",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Finance DWH Excel data.xlsx",
+				"container": "sharepoint-files"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "SheetName",
+				"type": "String"
+			},
+			{
+				"name": "TableName",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
