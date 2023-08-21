@@ -1,7 +1,7 @@
 {
-	"name": "Copy_ProdPlan_Sharepoint_To_BLOB",
+	"name": "Copy_ProdRep_Sharepoint_To_BLOB",
 	"properties": {
-		"description": "Copies Production Planning data from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
+		"description": "Copies Production Reporting data from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
 		"activities": [
 			{
 				"name": "Sharepoint_token",
@@ -45,7 +45,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "Finance%20DWH%20Excel%20data.xlsx')/$value"
+						"value": "Production%20Reporting.xlsx')/$value"
 					},
 					{
 						"name": "Destination",
@@ -57,12 +57,7 @@
 						"type": "BinarySource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
-							"requestMethod": "GET",
-							"additionalHeaders": {
-								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-								"type": "Expression"
-							},
-							"requestTimeout": ""
+							"requestMethod": "GET"
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
@@ -78,7 +73,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_Finance_DWH_Excel_Data_Raw",
+						"referenceName": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
 						"type": "DatasetReference",
 						"parameters": {
 							"ItemName": {
@@ -105,7 +100,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Finance DWH Excel data.xlsx"
+				"defaultValue": "Production Reporting.xlsx"
 			}
 		},
 		"folder": {
