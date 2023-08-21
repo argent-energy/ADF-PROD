@@ -11,10 +11,9 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Tables",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Finance DWH Excel data.xlsx",
+				"fileName": "Production Reporting.xlsx",
 				"container": "sharepoint-files"
 			},
 			"firstRowAsHeader": true
