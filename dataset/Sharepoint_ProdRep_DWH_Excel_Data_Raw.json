@@ -1,0 +1,30 @@
+{
+	"name": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sharepoint_Pricing_Data",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ItemName": {
+				"type": "string",
+				"defaultValue": "Production Reporting.xlsx"
+			}
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Production%20Reporting.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
