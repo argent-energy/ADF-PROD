@@ -8,7 +8,7 @@
 		"parameters": {
 			"ItemName": {
 				"type": "string",
-				"defaultValue": "Production Reporting.xlsx"
+				"defaultValue": "BS and P&L FX Rates.xlsx"
 			}
 		},
 		"folder": {
