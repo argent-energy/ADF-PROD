@@ -78,13 +78,10 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
+						"referenceName": "Sharepoint_UltimoPlan_DWH_Excel_Data_Raw",
 						"type": "DatasetReference",
 						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
+							"ItemName": "@pipeline().parameters.ExcelName"
 						}
 					}
 				],
@@ -105,7 +102,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Production Reporting.xlsx"
+				"defaultValue": "Ultimo Planning Worksheet.xlsx"
 			}
 		},
 		"folder": {
