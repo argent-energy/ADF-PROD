@@ -221,12 +221,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Appian_Test_connectionString": {
-						"value": "[parameters('Appian_Test_connectionString')]"
-					},
-					"Appian_prod_connectionString": {
-						"value": "[parameters('Appian_prod_connectionString')]"
 					}
 				}
 			},
@@ -247,6 +241,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Appian_Test_connectionString": {
+						"value": "[parameters('Appian_Test_connectionString')]"
+					},
+					"Appian_prod_connectionString": {
+						"value": "[parameters('Appian_prod_connectionString')]"
 					},
 					"appDev_connectionString": {
 						"value": "[parameters('appDev_connectionString')]"
