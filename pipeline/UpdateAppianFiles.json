@@ -69,7 +69,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "appianPull_test_BPA",
+						"referenceName": "appianPull",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
