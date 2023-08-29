@@ -93,7 +93,7 @@
 							},
 							{
 								"source": {
-									"name": "Purchase Document Status",
+									"name": "Purchase Document Description",
 									"physicalType": "String"
 								},
 								"sink": {
