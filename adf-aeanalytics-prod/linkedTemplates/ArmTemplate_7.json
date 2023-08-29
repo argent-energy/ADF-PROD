@@ -6185,7 +6185,6 @@
 									{
 										"source": {
 											"name": "Business Unit Name",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6197,7 +6196,6 @@
 									{
 										"source": {
 											"name": "Blanket Purchase Agreement Number",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6209,7 +6207,6 @@
 									{
 										"source": {
 											"name": "Purchase Document Status",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6221,7 +6218,6 @@
 									{
 										"source": {
 											"name": "Supplier Name",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6233,7 +6229,6 @@
 									{
 										"source": {
 											"name": "Supplier Site Name",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6245,7 +6240,6 @@
 									{
 										"source": {
 											"name": "Purchase Document Description",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6257,7 +6251,6 @@
 									{
 										"source": {
 											"name": "Item Code",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6269,7 +6262,6 @@
 									{
 										"source": {
 											"name": "Item Name",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6281,7 +6273,6 @@
 									{
 										"source": {
 											"name": "Item Description",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6293,7 +6284,6 @@
 									{
 										"source": {
 											"name": "Category Code",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6305,7 +6295,6 @@
 									{
 										"source": {
 											"name": "Total Price",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6317,7 +6306,6 @@
 									{
 										"source": {
 											"name": "Unit Price",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6329,7 +6317,6 @@
 									{
 										"source": {
 											"name": "Purchase Document Currency",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6341,7 +6328,6 @@
 									{
 										"source": {
 											"name": "Blanket Agreement Quantity",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6353,7 +6339,6 @@
 									{
 										"source": {
 											"name": "UOM Code",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6365,7 +6350,6 @@
 									{
 										"source": {
 											"name": "Delivered Quantity",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6377,7 +6361,6 @@
 									{
 										"source": {
 											"name": "Order Quantity",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6389,7 +6372,6 @@
 									{
 										"source": {
 											"name": "Remaining Quantity",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6401,7 +6383,6 @@
 									{
 										"source": {
 											"name": "Trucks",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6413,7 +6394,6 @@
 									{
 										"source": {
 											"name": "Position Now",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6425,7 +6405,6 @@
 									{
 										"source": {
 											"name": "Expected Position",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6437,7 +6416,6 @@
 									{
 										"source": {
 											"name": "Weeknumbers Contract",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6449,7 +6427,6 @@
 									{
 										"source": {
 											"name": "Weeks Remaining",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6461,7 +6438,6 @@
 									{
 										"source": {
 											"name": "Next Monday",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6473,7 +6449,6 @@
 									{
 										"source": {
 											"name": "Agreement Start Date",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6485,7 +6460,6 @@
 									{
 										"source": {
 											"name": "Agreement End Date",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6497,7 +6471,6 @@
 									{
 										"source": {
 											"name": "Shipping Method",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6509,7 +6482,6 @@
 									{
 										"source": {
 											"name": "Incoterm",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6521,7 +6493,6 @@
 									{
 										"source": {
 											"name": "Transporter Name",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6533,7 +6504,6 @@
 									{
 										"source": {
 											"name": "Transporter Unit Price",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6545,7 +6515,6 @@
 									{
 										"source": {
 											"name": "Transporter Amount",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6557,7 +6526,6 @@
 									{
 										"source": {
 											"name": "Transporter Currency",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6569,7 +6537,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 1 Supplier",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6581,7 +6548,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 1 Unit Price",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6593,7 +6559,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 1 Amount",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6605,7 +6570,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 1 Currency",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6617,7 +6581,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 2 Supplier",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6629,7 +6592,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 2 Unit Price",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6641,7 +6603,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 2 Amount",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6653,7 +6614,6 @@
 									{
 										"source": {
 											"name": "Additional Charges 2 Currency",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6665,7 +6625,6 @@
 									{
 										"source": {
 											"name": "Buyer",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6677,7 +6636,6 @@
 									{
 										"source": {
 											"name": "Sustainability Position",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6689,7 +6647,6 @@
 									{
 										"source": {
 											"name": "Supplier Item",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6701,7 +6658,6 @@
 									{
 										"source": {
 											"name": "Deal Date",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6713,7 +6669,6 @@
 									{
 										"source": {
 											"name": "Agreement Amount",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6725,7 +6680,6 @@
 									{
 										"source": {
 											"name": "Amount Released Against Agreement",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6737,7 +6691,6 @@
 									{
 										"source": {
 											"name": "Note To Vendor",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6749,7 +6702,6 @@
 									{
 										"source": {
 											"name": "FFA Spec",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6761,7 +6713,6 @@
 									{
 										"source": {
 											"name": "Line Status",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6773,7 +6724,6 @@
 									{
 										"source": {
 											"name": "EUR USD",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6785,7 +6735,6 @@
 									{
 										"source": {
 											"name": "EUR GBP",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6797,7 +6746,6 @@
 									{
 										"source": {
 											"name": "Updated Contract Status",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6809,7 +6757,6 @@
 									{
 										"source": {
 											"name": "DateStamp",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6821,7 +6768,6 @@
 									{
 										"source": {
 											"name": "Yield Adjusted Volume",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6833,7 +6779,6 @@
 									{
 										"source": {
 											"name": "Agreement Mid Date",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6845,7 +6790,6 @@
 									{
 										"source": {
 											"name": "Non-Delivered Quantity",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
@@ -6857,7 +6801,6 @@
 									{
 										"source": {
 											"name": "Yield Adjusted Volume Non-Delivered",
-											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
