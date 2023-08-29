@@ -11229,7 +11229,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "appianPull_test_BPA",
+								"referenceName": "appianPull",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -11373,7 +11373,7 @@
 				"[concat(variables('factoryId'), '/pipelines/DevAppian_BPA')]",
 				"[concat(variables('factoryId'), '/pipelines/DevAppian_Suppliers')]",
 				"[concat(variables('factoryId'), '/pipelines/DevAppian_traceability')]",
-				"[concat(variables('factoryId'), '/pipelines/appianPull_test_BPA')]",
+				"[concat(variables('factoryId'), '/pipelines/appianPull')]",
 				"[concat(variables('factoryId'), '/pipelines/appianPull_Suppliers_V2')]",
 				"[concat(variables('factoryId'), '/pipelines/appianPull_traceability')]",
 				"[concat(variables('factoryId'), '/linkedServices/appDev')]"
