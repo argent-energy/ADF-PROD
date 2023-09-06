@@ -517,7 +517,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PO_GA_ORG_ASSIGNMENTS.csv",
+						"fileName": "AP_INVOICE_PAYMENTS_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

@@ -1088,7 +1088,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.PO_GA_ORG_ASSIGNMENTS"
+									"TableName": "O.AP_INVOICE_PAYMENTS_ALL"
 								}
 							}
 						]
