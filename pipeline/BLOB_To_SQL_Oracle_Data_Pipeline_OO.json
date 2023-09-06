@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.AP_PAYMENT_HISTORY_ALL"
+							"TableName": "O.AP_INVOICE_PAYMENTS_ALL"
 						}
 					}
 				]
