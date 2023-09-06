@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "PO_GA_ORG_ASSIGNMENTS.csv",
+				"fileName": "AP_PAYMENT_HISTORY_ALL.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
