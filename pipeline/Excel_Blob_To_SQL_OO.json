@@ -100,7 +100,7 @@
 									"referenceName": "Excel_Blob_Source_OO",
 									"type": "DatasetReference",
 									"parameters": {
-										"SheetName": "@item().'Sheet Name'"
+										"SheetName": "@item().SheetName"
 									}
 								}
 							],
@@ -109,7 +109,7 @@
 									"referenceName": "SQL_Sharepoint_Data_Tables",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": "@item().'Table Name'"
+										"TableName": "@item().TableName"
 									}
 								}
 							]
@@ -136,7 +136,7 @@
 									{
 										"type": "NonQuery",
 										"text": {
-											"value": "DROP TABLE IF EXISTS [RAW].[@{item().'Table Name'}]",
+											"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
 											"type": "Expression"
 										}
 									}
