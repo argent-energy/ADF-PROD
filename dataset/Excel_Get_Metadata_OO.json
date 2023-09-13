@@ -11,11 +11,11 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Tables",
+			"sheetName": "Table Names",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Finance DWH Excel data.xlsx",
-				"container": "sharepoint-files"
+				"fileName": "STD Cost update - April 23 - post month end.xlsx",
+				"container": "manual-files"
 			},
 			"firstRowAsHeader": true
 		},
