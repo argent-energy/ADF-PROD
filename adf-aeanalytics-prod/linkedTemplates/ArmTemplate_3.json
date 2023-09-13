@@ -678,65 +678,76 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Argent_Database')]",
+			"name": "[concat(parameters('factoryName'), '/Excel_Blob_Source_OO')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Excel file to be copied.",
 				"linkedServiceName": {
-					"referenceName": "SqlServerArgent",
+					"referenceName": "OracleBlob",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"TableName": {
-						"type": "string"
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
 					}
 				},
+				"folder": {
+					"name": "Finance"
+				},
 				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
+				"type": "Excel",
 				"typeProperties": {
-					"schema": "RAW",
-					"table": {
-						"value": "@dataset().TableName",
+					"sheetName": {
+						"value": "@dataset().SheetName",
 						"type": "Expression"
-					}
-				}
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Finance DWH Excel data.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Dynamic_Trade_Table')]",
+			"name": "[concat(parameters('factoryName'), '/Excel_Get_Metadata_OO')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
+					"referenceName": "OracleBlob",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"schema": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
 				"folder": {
-					"name": "Trade"
+					"name": "Finance"
 				},
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
+				"type": "Excel",
 				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schema",
-						"type": "Expression"
+					"sheetName": "Tables",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Finance DWH Excel data.xlsx",
+						"container": "sharepoint-files"
 					},
-					"table": {
-						"value": "@dataset().table",
-						"type": "Expression"
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "SheetName",
+						"type": "String"
+					},
+					{
+						"name": "TableName",
+						"type": "String"
 					}
-				}
+				]
 			},
 			"dependsOn": []
 		}
