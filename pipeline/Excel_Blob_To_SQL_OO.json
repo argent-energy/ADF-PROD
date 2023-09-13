@@ -4,7 +4,7 @@
 		"description": "Copies an Excel file with multiple sheets from blob storage to prod environment. Excel file must include sheet/table name tab.",
 		"activities": [
 			{
-				"name": "Finance_Excel_tables_lookup",
+				"name": "Excel_tables_lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -25,7 +25,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Blob_Finance_Excel_Get_Metadata",
+						"referenceName": "Excel_Get_Metadata_OO",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -37,7 +37,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Finance_Excel_tables_lookup",
+						"activity": "Excel_tables_lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -46,7 +46,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Finance_Excel_tables_lookup').output.value",
+						"value": "@activity('Excel_tables_lookup').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -97,7 +97,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Finance_Excel",
+									"referenceName": "Excel_Blob_Source_OO",
 									"type": "DatasetReference",
 									"parameters": {
 										"SheetName": "@item().SheetName"
@@ -116,7 +116,7 @@
 						},
 						{
 							"name": "Drop",
-							"description": "Drop existing finance excel tables",
+							"description": "Drop existing tables",
 							"type": "Script",
 							"dependsOn": [],
 							"policy": {
