@@ -21,11 +21,11 @@
 		},
 		"schema": [
 			{
-				"name": "SheetName",
+				"name": "Sheet Name",
 				"type": "String"
 			},
 			{
-				"name": "TableName",
+				"name": "Table Name",
 				"type": "String"
 			}
 		]
