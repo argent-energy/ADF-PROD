@@ -13,6 +13,43 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Trade/Pricing"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Pricing dataset.xlsx",
+						"container": "sharepoint-files"
+					},
+					"range": "B2",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_Pricing_Get_Metadata')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -712,42 +749,6 @@
 					"firstRowAsHeader": true
 				},
 				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Excel_Get_Metadata_OO')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Table Names",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "STD Cost update - March 23 POME in FG after month end check V2.xlsx",
-						"container": "manual-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "SheetName",
-						"type": "String"
-					},
-					{
-						"name": "TableName",
-						"type": "String"
-					}
-				]
 			},
 			"dependsOn": []
 		}
