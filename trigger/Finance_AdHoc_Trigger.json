@@ -6,12 +6,6 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "SQL_OrdersAndInvoicesTables",
-					"type": "PipelineReference"
-				}
-			},
-			{
-				"pipelineReference": {
 					"referenceName": "Run_AdHoc_Finance_Stored_Procedures",
 					"type": "PipelineReference"
 				}
