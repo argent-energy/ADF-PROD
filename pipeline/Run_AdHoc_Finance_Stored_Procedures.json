@@ -1,0 +1,44 @@
+{
+	"name": "Run_AdHoc_Finance_Stored_Procedures",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_FinancePricingTables",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_FinancePricingTables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SQL_OrdersAndInvoicesTables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_FinancePricingTables",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_OrdersAndInvoicesTables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Finance/Ad-hoc Fianance Reporting"
+		},
+		"annotations": []
+	}
+}
