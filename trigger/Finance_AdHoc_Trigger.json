@@ -1,5 +1,5 @@
 {
-	"name": "Finance_OandI_Trigger",
+	"name": "Finance_AdHoc_Trigger",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
