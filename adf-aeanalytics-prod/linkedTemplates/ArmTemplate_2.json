@@ -560,7 +560,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "AP_INVOICE_PAYMENTS_ALL.csv",
+						"fileName": "FND_DF_SEGMENTS_B.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

@@ -1174,7 +1174,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.AP_INVOICE_PAYMENTS_ALL"
+									"TableName": "O.FND_DF_SEGMENTS_B"
 								}
 							}
 						]
