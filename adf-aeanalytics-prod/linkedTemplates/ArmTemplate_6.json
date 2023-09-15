@@ -1508,7 +1508,14 @@
 					{
 						"name": "SQL_FinancePricingTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "SQL_OrdersAndInvoicesTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1522,14 +1529,7 @@
 					{
 						"name": "SQL_OrdersAndInvoicesTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_FinancePricingTables",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
