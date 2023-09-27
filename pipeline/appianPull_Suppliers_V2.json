@@ -110,8 +110,7 @@
 							},
 							{
 								"source": {
-									"name": "Business Unit Name",
-									"type": "String",
+									"name": "Address Name",
 									"physicalType": "String"
 								},
 								"sink": {
