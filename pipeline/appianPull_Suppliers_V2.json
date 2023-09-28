@@ -110,17 +110,6 @@
 							},
 							{
 								"source": {
-									"name": "Address Name",
-									"physicalType": "String"
-								},
-								"sink": {
-									"name": "Address_line_1",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
 									"name": "Address Line 2",
 									"type": "String",
 									"physicalType": "String"
