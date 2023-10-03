@@ -395,7 +395,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "PO_HEADERS_ALL.csv"
+						"fileName": "PER_LOCATION_DETAILS_F_TL.csv"
 					}
 				}
 			},
@@ -553,7 +553,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "FND_DF_SEGMENTS_B.csv",
+						"fileName": "PER_LOCATION_DETAILS_F_TL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
