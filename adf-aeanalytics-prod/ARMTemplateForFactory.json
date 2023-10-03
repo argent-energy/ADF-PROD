@@ -4469,7 +4469,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.PER_LOCATION_DETAILS_F_TL"
+									"TableName": "O.PER_LOCATIONS_query"
 								}
 							}
 						]
@@ -17394,7 +17394,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "PER_LOCATION_DETAILS_F_TL.csv"
+						"fileName": "PER_LOCATIONS_query.csv"
 					}
 				}
 			},
@@ -17562,7 +17562,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PER_LOCATION_DETAILS_F_TL.csv",
+						"fileName": "PER_LOCATIONS_query.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

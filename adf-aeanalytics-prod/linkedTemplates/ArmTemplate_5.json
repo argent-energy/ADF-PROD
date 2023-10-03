@@ -1171,7 +1171,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.PER_LOCATION_DETAILS_F_TL"
+									"TableName": "O.PER_LOCATIONS_query"
 								}
 							}
 						]
