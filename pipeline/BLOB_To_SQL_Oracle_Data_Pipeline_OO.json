@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.FND_DF_SEGMENTS_B"
+							"TableName": "O.PER_LOCATION_DETAILS_F_TL"
 						}
 					}
 				]
