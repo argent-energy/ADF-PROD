@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "FND_VS_TYPED_VALUES_VL.csv"
+				"fileName": "PER_LOCATION_DETAILS_F_TL.csv"
 			}
 		}
 	},
