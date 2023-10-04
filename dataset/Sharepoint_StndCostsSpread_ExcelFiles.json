@@ -2,7 +2,7 @@
 	"name": "Sharepoint_StndCostsSpread_ExcelFiles",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Sharepoint_Pricing_Data",
+			"referenceName": "Sharepoint_StdCostsSpread_Data",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -12,11 +12,7 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation",
-				"relativeUrl": {
-					"value": "Finance%20-%20Standard%20Costs%20and%20Spread')/",
-					"type": "Expression"
-				}
+				"type": "HttpServerLocation"
 			}
 		}
 	},
