@@ -13,6 +13,63 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5nk')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "GIT_Adjustments_Template"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Excel_Blob_Source_OO')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Excel file to be copied.",
+				"linkedServiceName": {
+					"referenceName": "OracleBlob",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SheetName": {
+						"type": "string",
+						"defaultValue": "Value"
+					}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": {
+						"value": "@dataset().SheetName",
+						"type": "Expression"
+					},
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "STD Cost update - March 23 POME in FG after month end check V2.xlsx",
+						"container": "manual-files"
+					},
+					"range": "A1",
+					"firstRowAsHeader": true
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Excel_Get_Metadata_OO')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -326,18 +383,17 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sharepoint_ProdRep_DWH_Excel_Data_Raw')]",
+			"name": "[concat(parameters('factoryName'), '/Sharepoint_StndCostsSpread_ExcelFiles')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Sharepoint_Pricing_Data",
+					"referenceName": "Sharepoint_StdCostsSpread_Data",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
-					"ItemName": {
-						"type": "string",
-						"defaultValue": "BS and P&L FX Rates.xlsx"
+					"RelativeURL": {
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -347,11 +403,7 @@
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
-						"type": "HttpServerLocation",
-						"relativeUrl": {
-							"value": "Production%20Reporting.xlsx')/$value",
-							"type": "Expression"
-						}
+						"type": "HttpServerLocation"
 					}
 				}
 			},
@@ -544,53 +596,6 @@
 				"typeProperties": {
 					"relativeUrl": {
 						"value": "@concat('portcalls?userkey=WS-093AF9B8-279D79&interval=144000&limit=4&imo=',dataset().IMO)",
-						"type": "Expression"
-					}
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_Ports_JSON_Outputs')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "vesselfinder-ports"
-					}
-				},
-				"schema": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_Vessels')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "VesselFinder",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"IMO": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {
-					"relativeUrl": {
-						"value": "@concat('vessels?userkey=WS-093AF9B8-279D79&imo=',dataset().IMO)",
 						"type": "Expression"
 					}
 				},

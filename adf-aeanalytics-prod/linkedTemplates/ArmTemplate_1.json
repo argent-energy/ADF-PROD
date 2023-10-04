@@ -13,6 +13,98 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_BlendMarginAnalysis')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_BlendMargin_TraceabilityLooped",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_BlendMargin_TraceabilityLoop]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "SQL_BlendMargin_OrdersAndInvoices",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "SQL_BlendMargin_TraceabilityLooped",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_BlendMargin_OrdersAndInvoices]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "SQL_BlendMargin_DataMarts",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "SQL_BlendMargin_OrdersAndInvoices",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_BlendMargin_DataMarts]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-12-10T11:28:37Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_CurrencyExposure')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -857,49 +949,6 @@
 						"linkedServiceName": {
 							"referenceName": "AzureSqlDatabase1",
 							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_SalesContracts_Invoices')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SalesContracts_To_Invoices",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "/********************************************************************************************************\r\n\tStep 3.1:\tCreate a table linking sales invoices to sales contracts.\r\n********************************************************************************************************/\t\r\n\r\n\tIF OBJECT_ID('[SupplyChain].[SalesInvoicesAndContractNumber]','U') IS NOT NULL\r\n\t\tDROP TABLE [SupplyChain].[SalesInvoicesAndContractNumber]\r\n\r\n\tSELECT\t\tsc.[Sales Contract Number]\r\n\t,\t\t\tsoi.[Order Number]\r\n    ,\t\t\tsoi.[Parent Order]\r\n    ,\t\t\tsoi.[Invoice Price]\r\n    ,\t\t\tsoi.[Invoiced Quantity]\r\n    ,\t\t\tsoi.[Transactional Currency Code]\r\n    ,\t\t\tsoi.[Business Unit Name]\r\n    ,\t\t\tsoi.[Transaction Date]\r\n    ,\t\t\tsoi.[Invoice Amount]\r\n    ,\t\t\tsoi.[EUR:GBP]\r\n    ,\t\t\tsoi.[EUR:USD]\r\n    ,\t\t\tsoi.[Sold To Party ID]\r\n    ,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\tINTO\t\t[SupplyChain].[SalesInvoicesAndContractNumber]\r\n\tFROM\t\tFinance.SalesOrdersAndInvoices soi\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Agreement Header ID]\r\n\t\t\t\t\t,\t\t\t[Order Number]\r\n\t\t\t\t\tFROM\t\tCore.[SalesOrders]\r\n\t\t\t\t\tWHERE\t\t[Submitted Flag] = 'Y'\r\n\t\t\t\t) so\r\n\tON\t\t\tsoi.[Order Number] = so.[Order Number]\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Sales Contract Number]\r\n\t\t\t\t\t,\t\t\t[Contract Header ID]\r\n\t\t\t\t\tFROM\t\tCore.SalesContracts\r\n\t\t\t\t) sc\r\n\tON\t\t\tsc.[Contract Header ID] = so.[Agreement Header ID]\r\n\tORDER BY\t[Transaction Date]\r\n\r\n\r\n /********************************************************************************************************\r\n\tStep 3.2:\tCreate a table linking purchase invoices to purchase contracts.\r\n********************************************************************************************************/\r\n\r\n\tIF OBJECT_ID('[SupplyChain].[PurchaseInvoicesAndContractNumber]','U') IS NOT NULL\r\n\t\tDROP TABLE [SupplyChain].[PurchaseInvoicesAndContractNumber]\r\n\r\n\tSELECT\t\tpc.[Blanket Purchase Agreement Number]\r\n\t,\t\t\tpoi.[Order Number]\r\n    ,\t\t\tpoi.[Parent Order]\r\n    ,\t\t\tpoi.[Supplier/Customer]\r\n    ,\t\t\tpoi.[Supplier/Customer Number]\r\n    ,\t\t\tpoi.[Agreement Number/Sales Contract Number]\r\n    ,\t\t\tpoi.[Item Code]\r\n    ,\t\t\tpoi.[Item Description]\r\n    ,\t\t\tpoi.[Category Code]\r\n    ,\t\t\tpoi.[UOM Code]\r\n    ,\t\t\tpoi.[Agreement Price]\r\n    ,\t\t\tpoi.Quantity\r\n    ,\t\t\tpoi.[Invoice Price]\r\n    ,\t\t\tpoi.[Invoiced Quantity]\r\n    ,\t\t\tpoi.[Invoice Line Amount]\r\n    ,\t\t\tpoi.Currency\r\n    ,\t\t\tpoi.[Business Unit]\r\n    ,\t\t\tpoi.[Inventory Organization Code]\r\n    ,\t\t\tpoi.[Inventory Organization Name]\r\n    ,\t\t\tpoi.[Ordered Quantity]\r\n    ,\t\t\tpoi.[Approval Status]\r\n    ,\t\t\tpoi.[Mode of Transport]\r\n    ,\t\t\tpoi.[Freight Terms]\r\n    ,\t\t\tpoi.[Invoice Number]\r\n    ,\t\t\tpoi.[Order Status]\r\n    ,\t\t\tpoi.[Transaction Date]\r\n    ,\t\t\tpoi.[Invoice Amount]\r\n    ,\t\t\tpoi.[EUR USD]\r\n    ,\t\t\tpoi.[EUR GBP]\r\n    ,\t\t\tCAST(GETDATE() AS DATE) AS [DateStamp]\r\n\tINTO\t\t[SupplyChain].[PurchaseInvoicesAndContractNumber]\r\n\tFROM\t\t[Finance].[PurchaseOrdersAndinvoices] poi \r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Blanket Purchase Agreement Number]\r\n\t\t\t\t\t,\t\t\t[PO Header ID]\r\n\t\t\t\t\t,\t\t\t[PO Line ID]\r\n\t\t\t\t\tFROM\t\tCore.PurchaseContracts\r\n\t\t\t\t) pc\r\n\tON\t\t\tpoi.[From Header ID] = pc.[PO Header ID]\r\n\tAND\t\t\tpoi.[From Line ID] = pc.[PO Line ID]\r\n\tWHERE\t\t[poi].[Business Unit] NOT IN ('ROTIE BU','Quatra BU')"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
