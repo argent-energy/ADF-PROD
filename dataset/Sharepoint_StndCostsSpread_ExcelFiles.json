@@ -5,6 +5,11 @@
 			"referenceName": "Sharepoint_StdCostsSpread_Data",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"RelativeURL": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Finance"
 		},
