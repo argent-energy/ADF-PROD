@@ -5,21 +5,12 @@
 			"referenceName": "OracleBlob",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"ItemName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().ItemName",
-					"type": "Expression"
-				},
-				"container": "sharepoint-files"
+				"container": "standard-costs-files"
 			}
 		}
 	},
