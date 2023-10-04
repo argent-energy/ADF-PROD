@@ -58,7 +58,10 @@
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET",
-							"additionalHeaders": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+							"additionalHeaders": {
+								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+								"type": "Expression"
+							},
 							"requestTimeout": ""
 						},
 						"formatSettings": {
@@ -75,7 +78,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
+						"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
 						"type": "DatasetReference",
 						"parameters": {
 							"ItemName": {
