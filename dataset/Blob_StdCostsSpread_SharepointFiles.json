@@ -1,0 +1,27 @@
+{
+	"name": "Blob_StdCostsSpread_SharepointFiles",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ItemName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().ItemName",
+					"type": "Expression"
+				},
+				"container": "sharepoint-files"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
