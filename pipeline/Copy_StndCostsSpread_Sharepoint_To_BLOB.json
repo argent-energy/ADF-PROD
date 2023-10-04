@@ -25,8 +25,8 @@
 				}
 			},
 			{
-				"name": "Copy_Sharepoint_to_Blob",
-				"type": "Copy",
+				"name": "Get_file_list",
+				"type": "WebActivity",
 				"dependsOn": [
 					{
 						"activity": "Sharepoint_token",
@@ -36,58 +36,106 @@
 					}
 				],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
-					"secureInput": true
+					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "Finance%20-%20Standard%20Costs%20and%20Spread')/$value"
-					},
-					{
-						"name": "Destination",
-						"value": "standard-costs-files//"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "BinarySource",
-						"storeSettings": {
-							"type": "HttpReadSettings",
-							"requestMethod": "GET",
-							"additionalHeaders": {
-								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-								"type": "Expression"
-							},
-							"requestTimeout": ""
+					"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFolderByServerRelativeUrl('Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread')/Files",
+					"method": "GET",
+					"headers": {
+						"Authorization": {
+							"value": "@{concat('Bearer ', activity('Sharepoint_token').output.access_token)}",
+							"type": "Expression"
 						},
-						"formatSettings": {
-							"type": "BinaryReadSettings"
-						}
-					},
-					"sink": {
-						"type": "BinarySink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
+						"Accept": "application/json"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
 					{
-						"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
-						"type": "DatasetReference"
+						"activity": "Get_file_list",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
-				"outputs": [
-					{
-						"referenceName": "Blob_StdCostsSpread_SharepointFiles",
-						"type": "DatasetReference"
-					}
-				]
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get_file_list').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Copy_Sharepoint_to_Blob",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": true
+							},
+							"userProperties": [
+								{
+									"name": "Destination",
+									"value": "standard-costs-files//"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET",
+										"additionalHeaders": {
+											"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+											"type": "Expression"
+										},
+										"requestTimeout": ""
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
+									"type": "DatasetReference",
+									"parameters": {
+										"RelativeURL": {
+											"value": "@{item().ServerRelativeUrl}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Blob_StdCostsSpread_SharepointFiles",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
 			}
 		],
 		"folder": {
