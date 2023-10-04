@@ -5,7 +5,7 @@
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread/')",
+			"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl ('@{linkedService().FileName}')/$value",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		}
