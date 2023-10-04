@@ -13,6 +13,237 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy_UltimoPlan_Sharepoint_Blob_to_SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Drop edited Ultimo Planning table",
+						"description": "Drop existing Ultimo Planning table that contains Jason's additional columns data",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DROP TABLE IF EXISTS [RAW].[OPS.EditedUltimoPlanning]",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Copy edited Ultimo Planning data",
+						"description": "Copy the edited version of the Ultimo Planning Excel file",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Drop edited Ultimo Planning table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Blob_UltimoPlanningWorksheet_Excel",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_Sharepoint_Data_Tables",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "OPS.EditedUltimoPlanning"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-14T16:24:18Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_UltimoPlan_Sharepoint_To_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copies the edited Ultimo Planning Excel file from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
+				"activities": [
+					{
+						"name": "Sharepoint_token",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded"
+							},
+							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
+						}
+					},
+					{
+						"name": "Copy_Sharepoint_to_Blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Sharepoint_token",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Production%20Reporting.xlsx')/$value"
+							},
+							{
+								"name": "Destination",
+								"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET",
+									"additionalHeaders": {
+										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Sharepoint_UltimoPlan_DWH_Excel_Data_Raw",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": "@pipeline().parameters.ExcelName"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Blob_Sharepoint_Files",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": {
+										"value": "@pipeline().parameters.ExcelName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"ExcelName": {
+						"type": "string",
+						"defaultValue": "Ultimo Planning Worksheet.xlsx"
+					}
+				},
+				"folder": {
+					"name": "Operations"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-11T15:23:09Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DevAppian_BPA')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4090,390 +4321,6 @@
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "AppianBPA"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Appian_Prod_Traceablity')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_prod",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "CREATION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUSINESS_UNIT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ORGANIZATION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHYSICAL_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DOCUMENT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "REASON_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WORK_DEFINITION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_DESCRIPTION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_OF_MEASURE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSFER_SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_SITE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AGREEMENT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXT_REFERENCE_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SHIPPING_METHOD",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TANK_BALANCE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "RUNNING_TOTAL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GRADE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LOT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSTYPE_REASON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DENSITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STD_LTRS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Stamp",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "traceabilityReport"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Appian_test_BPA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_Test",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Business Unit Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Blanket Purchase Agreement Number",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Status",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Site Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Description",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Description",
-						"type": "varchar"
-					},
-					{
-						"name": "Category Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Total Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Blanket Agreement Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "UOM Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Delivered Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Order Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Remaining Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Trucks",
-						"type": "varchar"
-					},
-					{
-						"name": "Position Now",
-						"type": "varchar"
-					},
-					{
-						"name": "Expected Position",
-						"type": "varchar"
-					},
-					{
-						"name": "Weeknumbers Contract",
-						"type": "varchar"
-					},
-					{
-						"name": "Weeks Remaining",
-						"type": "varchar"
-					},
-					{
-						"name": "Next Monday",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Start Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement End Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Shipping Method",
-						"type": "varchar"
-					},
-					{
-						"name": "Incoterm",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Supplier",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Supplier",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Buyer",
-						"type": "varchar"
-					},
-					{
-						"name": "Sustainability Position",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Item",
-						"type": "varchar"
-					},
-					{
-						"name": "Deal Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Amount Released Against Agreement",
-						"type": "varchar"
-					},
-					{
-						"name": "Note To Vendor",
-						"type": "varchar"
-					},
-					{
-						"name": "FFA Spec",
-						"type": "varchar"
-					},
-					{
-						"name": "Line Status",
-						"type": "varchar"
-					},
-					{
-						"name": "EUR USD",
-						"type": "varchar"
-					},
-					{
-						"name": "EUR GBP",
-						"type": "varchar"
-					},
-					{
-						"name": "Updated Contract Status",
-						"type": "varchar"
-					},
-					{
-						"name": "DateStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "Yield Adjusted Volume",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Mid Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Non-Delivered Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Yield Adjusted Volume Non-Delivered",
-						"type": "varchar"
-					}
-				],
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "AppianBPA"
