@@ -1,5 +1,5 @@
 {
-	"name": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
+	"name": "Sharepoint_StndCostsSpread_ExcelFiles",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Sharepoint_Pricing_Data",
@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "Production%20Reporting.xlsx')/$value",
+					"value": "Finance%20-%20Standard%20Costs%20and%20Spread')/$value",
 					"type": "Expression"
 				}
 			}
