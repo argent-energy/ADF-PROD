@@ -14,7 +14,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "Finance%20-%20Standard%20Costs%20and%20Spread')/$value",
+					"value": "Finance%20-%20Standard%20Costs%20and%20Spread')/",
 					"type": "Expression"
 				}
 			}
