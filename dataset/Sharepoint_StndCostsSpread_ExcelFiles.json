@@ -17,11 +17,7 @@
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
-				"type": "HttpServerLocation",
-				"relativeUrl": {
-					"value": "@dataset().RelativeURL",
-					"type": "Expression"
-				}
+				"type": "HttpServerLocation"
 			}
 		}
 	},
