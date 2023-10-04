@@ -78,36 +78,18 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_ProdRep_DWH_Excel_Data_Raw",
-						"type": "DatasetReference",
-						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Blob_Sharepoint_Files",
-						"type": "DatasetReference",
-						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "Blob_StdCostsSpread_SharepointFiles",
+						"type": "DatasetReference"
 					}
 				]
 			}
 		],
-		"parameters": {
-			"ExcelName": {
-				"type": "string",
-				"defaultValue": "Production Reporting.xlsx"
-			}
-		},
 		"folder": {
 			"name": "Finance/Std Costs + Spread"
 		},
