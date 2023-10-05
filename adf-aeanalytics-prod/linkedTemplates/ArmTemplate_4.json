@@ -389,7 +389,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "Sharepoint_StdCostsSpread_Data",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"FileName": "@dataset().RelativeURL"
+					}
 				},
 				"parameters": {
 					"RelativeURL": {

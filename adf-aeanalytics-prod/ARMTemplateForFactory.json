@@ -69,7 +69,7 @@
 		},
 		"Sharepoint_StdCostsSpread_Data_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl ('@Sharepoint_StndCostsSpread_ExcelFiles')/$value"
+			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('@{linkedService().FileName}')/$value"
 		},
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"type": "string",
@@ -5824,8 +5824,6 @@
 					{
 						"name": "ForEach1",
 						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Get_file_list",
@@ -5899,7 +5897,12 @@
 										{
 											"referenceName": "Blob_StdCostsSpread_SharepointFiles",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"ItemName": {
+													"value": "@{item().Name}",
+													"type": "Expression"
+												}
+											}
 										}
 									]
 								}
@@ -18323,11 +18326,20 @@
 					"referenceName": "OracleBlob",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"ItemName": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().ItemName",
+							"type": "Expression"
+						},
 						"container": "standard-costs-files"
 					}
 				}
@@ -18996,7 +19008,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "Sharepoint_StdCostsSpread_Data",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"FileName": "@dataset().RelativeURL"
+					}
 				},
 				"parameters": {
 					"RelativeURL": {
@@ -20349,6 +20364,12 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"description": "Link to Sharepoint site \"PowerBI data\" folder \"Finance - Standard Costs and Spread\"",
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "abc"
+					}
+				},
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {

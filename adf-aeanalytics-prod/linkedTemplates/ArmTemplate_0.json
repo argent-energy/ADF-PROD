@@ -57,7 +57,7 @@
 		},
 		"Sharepoint_StdCostsSpread_Data_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl ('@Sharepoint_StndCostsSpread_ExcelFiles')/$value"
+			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('@{linkedService().FileName}')/$value"
 		},
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"type": "string",
@@ -343,6 +343,12 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"description": "Link to Sharepoint site \"PowerBI data\" folder \"Finance - Standard Costs and Spread\"",
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "abc"
+					}
+				},
 				"annotations": [],
 				"type": "HttpServer",
 				"typeProperties": {

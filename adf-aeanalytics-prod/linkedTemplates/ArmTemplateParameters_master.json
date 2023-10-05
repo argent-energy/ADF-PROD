@@ -51,7 +51,7 @@
 			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
 		},
 		"Sharepoint_StdCostsSpread_Data_properties_typeProperties_url": {
-			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl ('@Sharepoint_StndCostsSpread_ExcelFiles')/$value"
+			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('@{linkedService().FileName}')/$value"
 		},
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"

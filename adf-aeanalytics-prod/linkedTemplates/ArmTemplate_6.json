@@ -74,8 +74,6 @@
 					{
 						"name": "ForEach1",
 						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Get_file_list",
@@ -149,7 +147,12 @@
 										{
 											"referenceName": "Blob_StdCostsSpread_SharepointFiles",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"ItemName": {
+													"value": "@{item().Name}",
+													"type": "Expression"
+												}
+											}
 										}
 									]
 								}

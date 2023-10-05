@@ -69,7 +69,7 @@
 		},
 		"Sharepoint_StdCostsSpread_Data_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl ('@Sharepoint_StndCostsSpread_ExcelFiles')/$value"
+			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('@{linkedService().FileName}')/$value"
 		},
 		"SupplyChain_SharePoint_properties_typeProperties_url": {
 			"type": "string",
