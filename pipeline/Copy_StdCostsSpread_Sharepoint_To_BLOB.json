@@ -117,7 +117,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
+									"referenceName": "Sharepoint_StdCostsSpread_ExcelFiles",
 									"type": "DatasetReference",
 									"parameters": {
 										"RelativeURL": {
