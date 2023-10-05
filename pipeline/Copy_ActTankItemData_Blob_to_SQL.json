@@ -3,324 +3,10 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy SBDR Production sheet",
+				"name": "Copy Actual Tank and Item sheet",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Truncate Production tables",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "ExcelSource",
-						"storeSettings": {
-							"type": "AzureBlobStorageReadSettings",
-							"recursive": false,
-							"enablePartitionDiscovery": false
-						}
-					},
-					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 1
-								},
-								"sink": {
-									"name": "Row",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 2
-								},
-								"sink": {
-									"name": "Tanks",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 3
-								},
-								"sink": {
-									"name": "Values",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 4
-								},
-								"sink": {
-									"name": "Blank",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 5
-								},
-								"sink": {
-									"name": "2023-01-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 6
-								},
-								"sink": {
-									"name": "2023-02-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 7
-								},
-								"sink": {
-									"name": "2023-03-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 8
-								},
-								"sink": {
-									"name": "2023-04-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 9
-								},
-								"sink": {
-									"name": "2023-05-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 10
-								},
-								"sink": {
-									"name": "2023-06-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 11
-								},
-								"sink": {
-									"name": "2023-07-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 12
-								},
-								"sink": {
-									"name": "2023-08-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 13
-								},
-								"sink": {
-									"name": "2023-09-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 14
-								},
-								"sink": {
-									"name": "2023-10-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 15
-								},
-								"sink": {
-									"name": "2023-11-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 16
-								},
-								"sink": {
-									"name": "2023-12-01",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
-									"type": "String",
-									"ordinal": 17
-								},
-								"sink": {
-									"name": "Stamp",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "SBDR_Production_Excel",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "SQL_Argent_Database",
-						"type": "DatasetReference",
-						"parameters": {
-							"TableName": "F.Production_StanlowBDR"
-						}
-					}
-				]
-			},
-			{
-				"name": "Truncate Production tables",
-				"type": "Script",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "SqlServerArgent",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP]"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "Add datestamp to SBDR",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Copy SBDR Production sheet",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "SqlServerArgent",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "UPDATE [RAW].[F.Production_StanlowBDR]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
-			},
-			{
-				"name": "Copy SPTP Production sheet",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Truncate Production tables",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
@@ -331,6 +17,29 @@
 				"typeProperties": {
 					"source": {
 						"type": "ExcelSource",
+						"additionalColumns": [
+							{
+								"name": "Year",
+								"value": {
+									"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'yyyy')",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "Month",
+								"value": {
+									"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MM')",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "Stamp",
+								"value": {
+									"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd')",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": false,
@@ -348,184 +57,210 @@
 						"mappings": [
 							{
 								"source": {
+									"name": "Unique Ref",
 									"type": "String",
-									"ordinal": 1
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "Row",
+									"name": "Unique_Ref",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Inventory Org",
 									"type": "String",
-									"ordinal": 2
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "Tanks",
+									"name": "Oracle_Plant",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Plant",
 									"type": "String",
-									"ordinal": 3
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "Values",
+									"name": "Plant",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Tank",
 									"type": "String",
-									"ordinal": 4
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "Blank",
+									"name": "Tank",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Item",
 									"type": "String",
-									"ordinal": 5
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-01-31",
+									"name": "Item",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Oracle Qty (from inv valuation)",
 									"type": "String",
-									"ordinal": 6
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-02-28",
+									"name": "Oracle_Qty_from_inv_valuation",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Oracle STG/Ship WO/Virtual/Other",
 									"type": "String",
-									"ordinal": 7
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-03-31",
+									"name": "Oracle_STG_Ship_WO_Virtual_Other",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Known Differences",
 									"type": "String",
-									"ordinal": 8
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-04-30",
+									"name": "Known_Differences",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Actual Qty",
 									"type": "String",
-									"ordinal": 9
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-05-31",
+									"name": "Actual_Qty",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Standard Cost",
 									"type": "String",
-									"ordinal": 10
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-06-30",
+									"name": "Standard_Cost",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Actual Cost",
 									"type": "String",
-									"ordinal": 11
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-07-31",
+									"name": "Actual_Cost",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Valuation",
 									"type": "String",
-									"ordinal": 12
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-08-31",
+									"name": "Valuation",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "GL Code",
 									"type": "String",
-									"ordinal": 13
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-09-30",
+									"name": "GL_Code",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Variance Value",
 									"type": "String",
-									"ordinal": 14
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-10-31",
+									"name": "Variance_Value",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Price Variance",
 									"type": "String",
-									"ordinal": 15
+									"physicalType": "String"
 								},
 								"sink": {
-									"name": "2023-11-30",
+									"name": "Price_Variance",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
-									"type": "String",
-									"ordinal": 16
+									"name": "Year",
+									"type": "String"
 								},
 								"sink": {
-									"name": "2023-12-31",
+									"name": "Year",
 									"type": "String",
 									"physicalType": "nvarchar"
 								}
 							},
 							{
 								"source": {
+									"name": "Month",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Month",
 									"type": "String",
-									"ordinal": 17
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Stamp",
+									"type": "String"
 								},
 								"sink": {
 									"name": "Stamp",
@@ -543,7 +278,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SPTP_Production_Excel",
+						"referenceName": "ActTankItems_Excel",
 						"type": "DatasetReference"
 					}
 				],
@@ -552,43 +287,10 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "F.Production_StanlowPTP"
+							"TableName": "F.ActTankItem"
 						}
 					}
 				]
-			},
-			{
-				"name": "Add datestamp to SPTP",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Copy SPTP Production sheet",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "SqlServerArgent",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"type": "Query",
-							"text": "UPDATE [RAW].[F.Production_StanlowPTP]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
-						}
-					],
-					"scriptBlockExecutionTimeout": "02:00:00"
-				}
 			}
 		],
 		"folder": {
