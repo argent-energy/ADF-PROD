@@ -1,5 +1,5 @@
 {
-	"name": "Copy_StndCostsSpread_Sharepoint_To_BLOB",
+	"name": "Copy_StdCostsSpread_Sharepoint_To_BLOB",
 	"properties": {
 		"description": "Copies Standard Costs and Spread Excel files from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
 		"activities": [
