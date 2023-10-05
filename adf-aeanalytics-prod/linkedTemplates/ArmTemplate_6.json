@@ -13,7 +13,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy_StndCostsSpread_Sharepoint_To_BLOB')]",
+			"name": "[concat(parameters('factoryName'), '/Copy_StdCostsSpread_Sharepoint_To_BLOB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {

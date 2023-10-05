@@ -147,42 +147,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Blob_ProdRep_Excel_Get_Metadata')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "OracleBlob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"type": "Excel",
-				"typeProperties": {
-					"sheetName": "Tables",
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Production Reporting.xlsx",
-						"container": "sharepoint-files"
-					},
-					"firstRowAsHeader": true
-				},
-				"schema": [
-					{
-						"name": "SheetName",
-						"type": "String"
-					},
-					{
-						"name": "TableName",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Blob_SC_DataWallet')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -745,6 +709,25 @@
 						"type": "String"
 					}
 				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5nk')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "GIT_Adjustments_Template"
+				}
 			},
 			"dependsOn": []
 		}
