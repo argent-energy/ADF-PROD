@@ -140,6 +140,11 @@
 				}
 			}
 		],
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Finance/Std Costs + Spread"
 		},
