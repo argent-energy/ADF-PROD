@@ -15,7 +15,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ','Aug-23',' Post Journal.xlsx')",
+					"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MMM-yy'),' Post Journal.xlsx')",
 					"type": "Expression"
 				},
 				"container": "standard-costs-files"
