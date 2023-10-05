@@ -11,14 +11,17 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Monthly STD Cost Model Upload",
+			"sheetName": "Actual Tank & Item Model Upload",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Stanlow BDR Production Reporting 2023.xlsx",
+				"fileName": {
+					"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ','Aug-23',' Post Journal.xlsx')",
+					"type": "Expression"
+				},
 				"container": "standard-costs-files"
 			},
-			"range": "A7:Q100",
-			"firstRowAsHeader": false
+			"range": "A2:Q300",
+			"firstRowAsHeader": true
 		},
 		"schema": []
 	},
