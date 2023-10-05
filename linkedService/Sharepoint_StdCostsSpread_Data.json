@@ -2,11 +2,6 @@
 	"name": "Sharepoint_StdCostsSpread_Data",
 	"properties": {
 		"description": "Link to Sharepoint site \"PowerBI data\" folder \"Finance - Standard Costs and Spread\"",
-		"parameters": {
-			"FileName": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
