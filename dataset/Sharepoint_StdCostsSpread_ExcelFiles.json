@@ -1,5 +1,5 @@
 {
-	"name": "Sharepoint_StndCostsSpread_ExcelFiles",
+	"name": "Sharepoint_StdCostsSpread_ExcelFiles",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Sharepoint_StdCostsSpread_Data",
