@@ -1,5 +1,5 @@
 {
-	"name": "Copy_StndCostsSpread_Sharepoint_Blob_to_SQL",
+	"name": "Copy_ProductionData_Sharepoint_Blob_to_SQL",
 	"properties": {
 		"activities": [
 			{
