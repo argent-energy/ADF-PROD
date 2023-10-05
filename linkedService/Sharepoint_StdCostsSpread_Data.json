@@ -4,7 +4,8 @@
 		"description": "Link to Sharepoint site \"PowerBI data\" folder \"Finance - Standard Costs and Spread\"",
 		"parameters": {
 			"FileName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "abc"
 			}
 		},
 		"annotations": [],
