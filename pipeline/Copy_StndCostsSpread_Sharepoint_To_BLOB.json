@@ -130,7 +130,13 @@
 							"outputs": [
 								{
 									"referenceName": "Blob_StdCostsSpread_SharepointFiles",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"ItemName": {
+											"value": "@{item().Name}",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
