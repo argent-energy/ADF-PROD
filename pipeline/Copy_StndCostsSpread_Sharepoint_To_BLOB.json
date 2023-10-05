@@ -44,7 +44,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFolderByServerRelativeUrl('Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread')/Files",
+					"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFolderByServerRelativeUrl('/Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread')/Files",
 					"method": "GET",
 					"headers": {
 						"Authorization": {
