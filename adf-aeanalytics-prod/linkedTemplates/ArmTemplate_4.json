@@ -420,7 +420,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sharepoint_StndCostsSpread_ExcelFiles')]",
+			"name": "[concat(parameters('factoryName'), '/Sharepoint_StdCostsSpread_ExcelFiles')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {

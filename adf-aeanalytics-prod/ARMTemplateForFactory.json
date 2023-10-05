@@ -6142,7 +6142,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "Sharepoint_StndCostsSpread_ExcelFiles",
+											"referenceName": "Sharepoint_StdCostsSpread_ExcelFiles",
 											"type": "DatasetReference",
 											"parameters": {
 												"RelativeURL": {
@@ -6179,7 +6179,7 @@
 				"lastPublishTime": "2022-11-11T15:23:09Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sharepoint_StndCostsSpread_ExcelFiles')]",
+				"[concat(variables('factoryId'), '/datasets/Sharepoint_StdCostsSpread_ExcelFiles')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_StdCostsSpread_SharepointFiles')]"
 			]
 		},
@@ -19283,7 +19283,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Sharepoint_StndCostsSpread_ExcelFiles')]",
+			"name": "[concat(parameters('factoryName'), '/Sharepoint_StdCostsSpread_ExcelFiles')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
