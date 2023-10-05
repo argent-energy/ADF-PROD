@@ -11,6 +11,9 @@
 		"parameters": {
 			"RelativeURL": {
 				"type": "string"
+			},
+			"BlobFileName": {
+				"type": "string"
 			}
 		},
 		"folder": {
