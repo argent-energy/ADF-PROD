@@ -13,6 +13,377 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/VesselFinder_PortData')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup IMO",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "VesselFinder_IMOs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Each IMO",
+						"description": "Copies each IMO number in the lookup table to a separate API request.",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "DeleteOldPortCalls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup IMO').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_VesselFinder_To_Blob",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET",
+											"paginationRules": {
+												"supportRFC5988": "true"
+											}
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "VesselFinder_Ports",
+											"type": "DatasetReference",
+											"parameters": {
+												"IMO": {
+													"value": "@string(item().imo)",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "VesselFinder_Ports_JSON_Outputs",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Vessel Portcalls JSON Blob Get Metadata",
+						"type": "GetMetadata",
+						"dependsOn": [
+							{
+								"activity": "Each IMO",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "VesselFinder_Ports_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "JsonReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Copy Portcalls",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Vessel Portcalls JSON Blob Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"additionalColumns": [
+									{
+										"name": "Stamp",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['PORTCALL']['MMSI']"
+										},
+										"sink": {
+											"name": "MMSI",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['IMO']"
+										},
+										"sink": {
+											"name": "IMO",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['LOCODE']"
+										},
+										"sink": {
+											"name": "LOCODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['EVENT']"
+										},
+										"sink": {
+											"name": "EVENT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['TIMESTAMP']"
+										},
+										"sink": {
+											"name": "TIMESTAMP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['PORT']"
+										},
+										"sink": {
+											"name": "PORT",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['PORTCALL']['COUNTRY']"
+										},
+										"sink": {
+											"name": "COUNTRY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['Stamp']"
+										},
+										"sink": {
+											"name": "Stamp",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VesselFinder_Ports_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_Argent_Database",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "VesselFinderPortCalls"
+								}
+							}
+						]
+					},
+					{
+						"name": "Create Port Calls Table",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Portcalls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "Query",
+									"text": "\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls_Historical','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls_Historical\r\n\r\n\tSELECT\t\t*\r\n\tINTO\t\t[SupplyChain].[VesselFinderPortCalls_Historical]\r\n\tFROM\t\t[RAW].[VesselFinderPortCalls] v\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\r\n\t\t\t\t\t,\t\t\t[Vessel IMO]\r\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\r\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\r\n\t\t\t\t\t,\t\t\t[Live Shipment Indicator]\r\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\r\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\r\n\r\n\t\t\t\t) s\r\n\tON\t\t\tCASE\r\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\r\n\t\t\t\t\t\tTHEN [Vessel IMO]\r\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\r\n\t\t\t\tEND = v.[IMO]\r\n\r\n\r\n\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls\r\n\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.VesselFinderPortCalls\r\n\tFROM\t\t[SupplyChain].[VesselFinderPortCalls_Historical]\r\n\tWHERE\t\t[Live Shipment Indicator] = 1\r\n\r\n\tDROP TABLE [RAW].[VesselFinderPortCalls]"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "DeleteOldPortCalls",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Lookup IMO",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "VesselFinder_Ports_JSON_Outputs",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"modifiedDatetimeStart": "2023-04-06T00:00:00.000Z",
+								"modifiedDatetimeEnd": {
+									"value": "@subtractFromTime(utcnow(),3,'Month')",
+									"type": "Expression"
+								},
+								"wildcardFileName": "*.json",
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Supply Chain"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AppianProdSuppliers')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5616,269 +5987,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-09-14T10:20:07Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Finance_MainPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Blob to SQL DB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_2",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATE_TB_Rec",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_3",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATE_TB_Rec",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATEGL_Script_3",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_3",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Sharepoint to Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Blob to SQL DB",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Sharepoint to Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Exceptions",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_CurrencyExposure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exceptions",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATE_TB_Rec",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_BlendMarginAnalysis",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_BlendMarginAnalysis",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_CurrencyExposure",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendMarginAnalysis",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_CurrencyExposure",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_SubledgerSuppliersCustomers",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_SubledgerSuppliersCustomers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_TransactionsList",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_SubledgerSuppliersCustomers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_TransactionsList",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-05T10:34:53Z"
 			},
 			"dependsOn": []
 		}
