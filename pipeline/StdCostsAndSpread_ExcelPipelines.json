@@ -1,0 +1,10 @@
+{
+	"name": "StdCostsAndSpread_ExcelPipelines",
+	"properties": {
+		"description": "Copy all Excel files in the \"Finance - Standard Costs\" and Spread folder on SharePoint to the \"standard-costs-files\" container. Then copy the production files to [RAW].[F.Production_StanlowBDR] and [RAW].[F.Production_StanlowPTP]. Then copies the previous month stock file (if it exists) to the [RAW].[F.ActTankItem]  table.\n",
+		"folder": {
+			"name": "Finance/Std Costs + Spread"
+		},
+		"annotations": []
+	}
+}
