@@ -43,12 +43,24 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": false,
+							"wildcardFileName": {
+								"value": "@{concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MMM-yy'))}*",
+								"type": "Expression"
+							},
 							"enablePartitionDiscovery": false
 						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": false,
+							"keys": [
+								"Unique_Ref",
+								"Year",
+								"Month"
+							]
+						},
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
