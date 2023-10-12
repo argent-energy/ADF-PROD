@@ -1312,7 +1312,14 @@
 					{
 						"name": "Copy Actual Tank and Item sheet",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Delete previous month data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -1328,14 +1335,14 @@
 									{
 										"name": "Year",
 										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'yyyy')",
+											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'yyyy')",
 											"type": "Expression"
 										}
 									},
 									{
 										"name": "Month",
 										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MM')",
+											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MM')",
 											"type": "Expression"
 										}
 									},
@@ -1350,6 +1357,10 @@
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": false,
+									"wildcardFileName": {
+										"value": "@{concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MMM-yy'))}*",
+										"type": "Expression"
+									},
 									"enablePartitionDiscovery": false
 								}
 							},
@@ -1599,6 +1610,73 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Delete previous month data",
+						"description": "Delete all rows in [RAW].[F.ActTankItem] for the previous month from today.",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [MONTH] = DATEPART(m, DATEADD(MM, -1, GETDATE()))\n    AND [YEAR] = DATEPART(year, DATEADD(MM, -1, GETDATE()))",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Delete null rows",
+						"description": "Delete all rows where the Unique Ref is null.",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Actual Tank and Item sheet",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [Unique_Ref] IS NULL",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {

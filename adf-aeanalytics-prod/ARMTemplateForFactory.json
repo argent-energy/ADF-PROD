@@ -4679,7 +4679,14 @@
 					{
 						"name": "Copy Actual Tank and Item sheet",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Delete previous month data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -4695,14 +4702,14 @@
 									{
 										"name": "Year",
 										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'yyyy')",
+											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'yyyy')",
 											"type": "Expression"
 										}
 									},
 									{
 										"name": "Month",
 										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MM')",
+											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MM')",
 											"type": "Expression"
 										}
 									},
@@ -4717,6 +4724,10 @@
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": false,
+									"wildcardFileName": {
+										"value": "@{concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MMM-yy'))}*",
+										"type": "Expression"
+									},
 									"enablePartitionDiscovery": false
 								}
 							},
@@ -4966,6 +4977,73 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Delete previous month data",
+						"description": "Delete all rows in [RAW].[F.ActTankItem] for the previous month from today.",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [MONTH] = DATEPART(m, DATEADD(MM, -1, GETDATE()))\n    AND [YEAR] = DATEPART(year, DATEADD(MM, -1, GETDATE()))",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "Delete null rows",
+						"description": "Delete all rows where the Unique Ref is null.",
+						"type": "Script",
+						"dependsOn": [
+							{
+								"activity": "Copy Actual Tank and Item sheet",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [Unique_Ref] IS NULL",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
 				"policy": {
@@ -4979,7 +5057,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ActTankItems_Excel')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]"
+				"[concat(variables('factoryId'), '/datasets/SQL_Argent_Database')]",
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
 			]
 		},
 		{
@@ -10993,6 +11072,84 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Blob_ShipmentLines_Excel')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/StdCostsAndSpread_ExcelPipelines')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy all Excel files in the \"Finance - Standard Costs\" and Spread folder on SharePoint to the \"standard-costs-files\" container. Then copy the production files to [RAW].[F.Production_StanlowBDR] and [RAW].[F.Production_StanlowPTP]. Then copies the previous month stock file (if it exists) to the [RAW].[F.ActTankItem]  table.\n",
+				"activities": [
+					{
+						"name": "Copy SharePoint files to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Copy_StdCostsSpread_Sharepoint_To_BLOB",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Copy Production Blob to DWH",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy SharePoint files to Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Copy_ProductionData_Blob_to_SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Copy Stock Blob to DWH",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Copy Production Blob to DWH",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Copy_ActTankItemData_Blob_to_SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance/Std Costs + Spread"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy_StdCostsSpread_Sharepoint_To_BLOB')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy_ProductionData_Blob_to_SQL')]",
+				"[concat(variables('factoryId'), '/pipelines/Copy_ActTankItemData_Blob_to_SQL')]"
 			]
 		},
 		{
@@ -17228,13 +17385,9 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Actual Tank & Item Model Upload",
+					"sheetName": "Actual Tank & Item",
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": {
-							"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MMM-yy'),' Post Journal.xlsx')",
-							"type": "Expression"
-						},
 						"container": "standard-costs-files"
 					},
 					"range": "A2:Q300",
