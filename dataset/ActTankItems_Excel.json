@@ -17,7 +17,7 @@
 				"container": "standard-costs-files"
 			},
 			"range": "A2:Q300",
-			"firstRowAsHeader": false
+			"firstRowAsHeader": true
 		},
 		"schema": []
 	},
