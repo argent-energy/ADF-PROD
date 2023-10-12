@@ -305,6 +305,7 @@
 			},
 			{
 				"name": "Delete previous month data",
+				"description": "Delete all rows in [RAW].[F.ActTankItem] for the previous month from today.",
 				"type": "Script",
 				"dependsOn": [],
 				"policy": {
@@ -334,6 +335,7 @@
 			},
 			{
 				"name": "Delete null rows",
+				"description": "Delete all rows where the Unique Ref is null.",
 				"type": "Script",
 				"dependsOn": [
 					{
