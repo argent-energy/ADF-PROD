@@ -325,7 +325,7 @@
 						{
 							"type": "NonQuery",
 							"text": {
-								"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [MONTH] = DATEPART(m, DATEADD(MM, -2, GETDATE()))",
+								"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [MONTH] = DATEPART(m, DATEADD(MM, -2, GETDATE()))\n    AND [YEAR] = DATEPART(year, DATEADD(MM, -2, GETDATE()))",
 								"type": "Expression"
 							}
 						}
