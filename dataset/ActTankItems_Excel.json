@@ -5,21 +5,17 @@
 			"referenceName": "OracleBlob",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"ExcelName": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "Finance/Std Costs + Spread"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
+			"sheetName": "Actual Tank & Item",
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
-					"value": "@dataset().ExcelName",
+					"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MMM-yy'),' Post Journal.xlsx')",
 					"type": "Expression"
 				},
 				"container": "standard-costs-files"
