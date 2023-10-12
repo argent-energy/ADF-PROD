@@ -2,6 +2,61 @@
 	"name": "StdCostsAndSpread_ExcelPipelines",
 	"properties": {
 		"description": "Copy all Excel files in the \"Finance - Standard Costs\" and Spread folder on SharePoint to the \"standard-costs-files\" container. Then copy the production files to [RAW].[F.Production_StanlowBDR] and [RAW].[F.Production_StanlowPTP]. Then copies the previous month stock file (if it exists) to the [RAW].[F.ActTankItem]  table.\n",
+		"activities": [
+			{
+				"name": "Copy SharePoint files to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_StdCostsSpread_Sharepoint_To_BLOB",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Copy Production Blob to DWH",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy SharePoint files to Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_ProductionData_Blob_to_SQL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Copy Stock Blob to DWH",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy Production Blob to DWH",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_ActTankItemData_Blob_to_SQL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "Finance/Std Costs + Spread"
 		},
