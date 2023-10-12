@@ -14,10 +14,6 @@
 			"sheetName": "Actual Tank & Item",
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 2, 'Month'), 'MMM-yy'),' Post Journal.xlsx')",
-					"type": "Expression"
-				},
 				"container": "standard-costs-files"
 			},
 			"range": "A2:Q300",
