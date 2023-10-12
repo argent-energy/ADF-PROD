@@ -5,15 +5,23 @@
 			"referenceName": "OracleBlob",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"ExcelName": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "Finance/Std Costs + Spread"
 		},
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
-			"sheetName": "Actual Tank & Item",
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().ExcelName",
+					"type": "Expression"
+				},
 				"container": "standard-costs-files"
 			},
 			"range": "A2:Q300",
