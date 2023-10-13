@@ -18446,7 +18446,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "PER_LOCATIONS_query.csv"
+						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv"
 					}
 				}
 			},
@@ -18614,7 +18614,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "PER_LOCATIONS_query.csv",
+						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
