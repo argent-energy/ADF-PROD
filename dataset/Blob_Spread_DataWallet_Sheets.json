@@ -23,7 +23,7 @@
 			},
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Trade Excel Data for DWH.xlsx",
+				"fileName": "Spread Excel Data for DWH.xlsx",
 				"container": "sharepoint-files"
 			},
 			"range": "A1",
