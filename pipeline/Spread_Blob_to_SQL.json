@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Trade_Excel_tables_lookup",
+				"name": "Spread_Excel_tables_lookup",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -24,7 +24,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Blob_Trade_DataWallet_Excel",
+						"referenceName": "Blob_Spread_DataWallet_Excel",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -36,7 +36,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Trade_Excel_tables_lookup",
+						"activity": "Spread_Excel_tables_lookup",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Trade_Excel_tables_lookup').output.value",
+						"value": "@activity('Spread_Excel_tables_lookup').output.value",
 						"type": "Expression"
 					},
 					"activities": [
