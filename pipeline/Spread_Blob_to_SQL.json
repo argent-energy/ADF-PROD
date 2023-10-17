@@ -96,7 +96,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Trade_DataWallet_Sheets",
+									"referenceName": "Blob_Spread_DataWallet_Sheets",
 									"type": "DatasetReference",
 									"parameters": {
 										"SheetName": "@item().SheetName"
