@@ -96,7 +96,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Trade Excel Data for DWH.xlsx"
+				"defaultValue": "Spread Excel Data for DWH.xlsx"
 			}
 		},
 		"folder": {
