@@ -1,5 +1,5 @@
 {
-	"name": "Blob_Sread_DataWallet_Excel",
+	"name": "Blob_Spread_DataWallet_Excel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "OracleBlob",
