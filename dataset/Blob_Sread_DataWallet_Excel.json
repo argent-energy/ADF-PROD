@@ -1,0 +1,34 @@
+{
+	"name": "Blob_Sread_DataWallet_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Trade"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Tables",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Spread Excel Data for DWH.xlsx",
+				"container": "sharepoint-files"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Sheet Name",
+				"type": "String"
+			},
+			{
+				"name": "Table Name",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
