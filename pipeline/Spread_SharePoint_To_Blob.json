@@ -78,7 +78,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SharePoint_Trade_DataWallet",
+						"referenceName": "SharePoint_Spread_DataWallet",
 						"type": "DatasetReference"
 					}
 				],
