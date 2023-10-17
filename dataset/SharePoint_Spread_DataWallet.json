@@ -1,0 +1,24 @@
+{
+	"name": "SharePoint_Spread_DataWallet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sharepoint_Pricing_Data",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Trade"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "Spread%20Excel%20Data%20for%20DWH.xlsx')/$value",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
