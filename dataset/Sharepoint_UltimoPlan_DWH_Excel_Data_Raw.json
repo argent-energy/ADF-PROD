@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "Ultimo%20Planning%20Working%20Doc.xlsx')/$value",
+					"value": "Ultimo%20Planning%20Worksheet.xlsx')/$value",
 					"type": "Expression"
 				}
 			}
