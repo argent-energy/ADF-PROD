@@ -2,7 +2,7 @@
 	"name": "Sharepoint_UltimoPlan_DWH_Excel_Data_Raw",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Sharepoint_Pricing_Data",
+			"referenceName": "Operations_SharePoint",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -20,7 +20,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "Ultimo%20Planning%20Worksheet.xlsx')/$value",
+					"value": "Ultimo%20Planning%20Working%20Doc.xlsx')/$value",
 					"type": "Expression"
 				}
 			}
