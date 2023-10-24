@@ -1,0 +1,26 @@
+{
+	"name": "Blob_UltimoPlan_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Ultimo Planning Download",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Ultimo Planning Worksheet.xlsx",
+				"container": "sharepoint-files"
+			},
+			"range": "",
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
