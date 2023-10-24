@@ -63,6 +63,10 @@
 			"type": "string",
 			"defaultValue": "Oracle"
 		},
+		"Operations_SharePoint_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Operations/"
+		},
 		"Sharepoint_Pricing_Data_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Excel%20files/"
@@ -138,6 +142,9 @@
 					},
 					"FTP Oracle_properties_typeProperties_userName": {
 						"value": "[parameters('FTP Oracle_properties_typeProperties_userName')]"
+					},
+					"Operations_SharePoint_properties_typeProperties_url": {
+						"value": "[parameters('Operations_SharePoint_properties_typeProperties_url')]"
 					},
 					"Sharepoint_Pricing_Data_properties_typeProperties_url": {
 						"value": "[parameters('Sharepoint_Pricing_Data_properties_typeProperties_url')]"
