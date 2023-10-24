@@ -20,7 +20,88 @@
 			"range": "",
 			"firstRowAsHeader": true
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "Code",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "Report Date",
+				"type": "String"
+			},
+			{
+				"name": "Reporter",
+				"type": "String"
+			},
+			{
+				"name": "Equipment Code",
+				"type": "String"
+			},
+			{
+				"name": "Department",
+				"type": "String"
+			},
+			{
+				"name": "Process Function Code",
+				"type": "String"
+			},
+			{
+				"name": "Process Function",
+				"type": "String"
+			},
+			{
+				"name": "Team",
+				"type": "String"
+			},
+			{
+				"name": "Priority",
+				"type": "String"
+			},
+			{
+				"name": "Job Type",
+				"type": "String"
+			},
+			{
+				"name": "Planned Start Date",
+				"type": "String"
+			},
+			{
+				"name": "Progress Status",
+				"type": "String"
+			},
+			{
+				"name": "SIOPE",
+				"type": "String"
+			},
+			{
+				"name": "Supporting Documents / Additional Information",
+				"type": "String"
+			},
+			{
+				"name": "Resource Number",
+				"type": "String"
+			},
+			{
+				"name": "Duration (Hrs)",
+				"type": "String"
+			},
+			{
+				"name": "Scheduled Date",
+				"type": "String"
+			},
+			{
+				"name": "Progress (%)",
+				"type": "String"
+			},
+			{
+				"name": "Comments / Update",
+				"type": "String"
+			}
+		]
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
