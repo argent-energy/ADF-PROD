@@ -62,7 +62,7 @@
 				}
 			},
 			{
-				"name": "WarehouseTabes",
+				"name": "WarehouseTables",
 				"type": "Script",
 				"dependsOn": [
 					{
