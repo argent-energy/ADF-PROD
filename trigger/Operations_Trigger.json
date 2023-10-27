@@ -1,0 +1,25 @@
+{
+	"name": "Operations_Trigger",
+	"properties": {
+		"description": "Trigger the main operations pipeline\n",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "SQL_Operations_MainPipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-10-28T05:00:00",
+				"timeZone": "GMT Standard Time"
+			}
+		}
+	}
+}
