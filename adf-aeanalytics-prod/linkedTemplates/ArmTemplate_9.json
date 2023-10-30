@@ -499,8 +499,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2023-10-30T23:00:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
