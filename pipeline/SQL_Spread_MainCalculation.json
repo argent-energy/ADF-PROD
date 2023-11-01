@@ -1,0 +1,31 @@
+{
+	"name": "SQL_Spread_MainCalculation",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_Spread_MainCalculation",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[Finance].[SQL_SpreadCalculation]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Finance/Std Costs + Spread"
+		},
+		"annotations": []
+	}
+}

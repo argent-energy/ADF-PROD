@@ -1,0 +1,31 @@
+{
+	"name": "SQL_Spread_FS_CountUp_Calculations",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_FS_CountUp_Calculations",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[Finance].[SQL_SpreadCalc_FS_CountUp]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Finance/Std Costs + Spread"
+		},
+		"annotations": []
+	}
+}
