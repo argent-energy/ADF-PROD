@@ -15,12 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[Finance].[SQL_StandardCosts_PreMonthEnd]",
-					"storedProcedureParameters": {
-						"": {
-							"value": ""
-						}
-					}
+					"storedProcedureName": "[Finance].[SQL_StandardCosts_PreMonthEnd]"
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureSqlDatabase1",
