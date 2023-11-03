@@ -11,7 +11,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv"
+				"fileName": "Traceability report.csv",
+				"folderPath": "OTBI_Reports"
 			}
 		}
 	},
