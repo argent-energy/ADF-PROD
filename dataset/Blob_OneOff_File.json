@@ -10,8 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Traceability report.csv",
-				"folderPath": "OTBI_Reports",
+				"fileName": "TraceabilityReport_20-22.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
