@@ -11,8 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "Traceability report.csv",
-				"folderPath": "OTBI_Reports"
+				"fileName": "TraceabilityReport_20-22.csv"
 			}
 		}
 	},
