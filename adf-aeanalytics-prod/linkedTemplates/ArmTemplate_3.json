@@ -27,7 +27,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv"
+						"fileName": "TraceabilityReport_20-22.csv"
 					}
 				}
 			},
@@ -185,7 +185,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv",
+						"fileName": "TraceabilityReport_20-22.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
