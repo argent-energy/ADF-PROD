@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.Traceability_report"
+							"TableName": "O.TraceabilityReport_20-22"
 						}
 					}
 				]
