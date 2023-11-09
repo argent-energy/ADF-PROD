@@ -2,7 +2,7 @@
 	"name": "ARGENT_SupplyChain_MainPipeline",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
