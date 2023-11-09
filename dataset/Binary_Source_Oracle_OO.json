@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "XLA_DISTRIBUTION_LINKS_2023H1.csv"
+				"fileName": "XLA_DISTRIBUTION_LINKS.csv"
 			}
 		}
 	},
