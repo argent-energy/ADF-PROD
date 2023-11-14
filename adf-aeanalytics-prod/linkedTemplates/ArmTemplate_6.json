@@ -375,7 +375,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_DISTRIBUTION_LINKS"
+									"TableName": "O.CST_ATTR_ONHAND_VALUATIONS"
 								}
 							}
 						]
