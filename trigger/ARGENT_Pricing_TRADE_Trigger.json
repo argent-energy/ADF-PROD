@@ -2,7 +2,7 @@
 	"name": "ARGENT_Pricing_TRADE_Trigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
