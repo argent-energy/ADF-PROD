@@ -114,7 +114,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Clear main tables ",
+						"activity": "Clear main tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
