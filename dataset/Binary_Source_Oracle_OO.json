@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "Traceability report"
+				"fileName": "Traceability report.csv"
 			}
 		}
 	},
