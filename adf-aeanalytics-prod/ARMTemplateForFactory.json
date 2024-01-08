@@ -4468,7 +4468,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.CST_ATTR_ONHAND_VALUATIONS"
+									"TableName": "O.Traceability report"
 								}
 							}
 						]
@@ -19061,7 +19061,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv"
+						"fileName": "Traceability report.csv"
 					}
 				}
 			},
@@ -19229,7 +19229,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv",
+						"fileName": "Traceability report.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -22277,7 +22277,7 @@
 								0
 							],
 							"hours": [
-								22
+								2
 							]
 						}
 					}
