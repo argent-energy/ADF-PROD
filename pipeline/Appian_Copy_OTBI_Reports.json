@@ -258,7 +258,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "/* Delete Traceability Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].[O.Traceability report]\r\n\r\n\r\n/* Delete Suppliers Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].][O.Sustainability Suppliers Report]"
+							"text": "/* Delete Traceability Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].[O.Traceability report]\r\n\r\n\r\n/* Delete Suppliers Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].[O.Sustainability Suppliers Report]"
 						}
 					]
 				}
