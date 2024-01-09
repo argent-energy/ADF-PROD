@@ -108,7 +108,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy Suppliers Report to BLOB",
+						"activity": "Delete existing tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -230,6 +230,38 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Delete existing tables",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Copy Suppliers Report to BLOB",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "/* Delete Traceability Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].[O.Traceability report]\r\n\r\n\r\n/* Delete Suppliers Report if it exists */\r\nDROP TABLE IF EXISTS [RAW].][O.Sustainability Suppliers Report]"
+						}
+					]
+				}
 			}
 		],
 		"annotations": []
