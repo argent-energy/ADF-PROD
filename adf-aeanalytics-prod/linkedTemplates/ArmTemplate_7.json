@@ -13,6 +13,690 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DevAppian_Suppliers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Supplier Details",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Delete Existnig Files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[dbo].[prc_AppianGetSuppliers_v2]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Supplier Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier Name",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier Number",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Organization Type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Organization Type",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BU_bill_to",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "BU_bill_to",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BPA_EXISTS",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "BPA_EXISTS",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Business Unit Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Business Unit Name",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Type",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier Type",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Address Name",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Line 2",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Address Line 2",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Address Line 3",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Address Line 3",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "City",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Country",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Country",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Email",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Email",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Phone",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier Inactive Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier Inactive Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor Site ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Vendor Site ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Prc BU ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Prc BU ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Category Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Category Name",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Location ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Location ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Purchasing Site Flag",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Purchasing Site Flag",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Pay",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Pay",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment terms",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Payment terms",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Invoice Currency Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site Invoice Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Payment Currency Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site Payment Currency Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BIC_SWIFT",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "BIC_SWIFT",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Inactive Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site Inactive Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VIHB Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VIHB Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor Category",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Vendor Category",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "DEFAULT_PAYMENT_METHOD",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DEFAULT_PAYMENT_METHOD",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ISCC Cetificate Number",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ISCC Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ISCC Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site VET ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site VET ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Number",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "INS Certificate Number",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "INS Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "INS Certificate Expiry Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CERTIFICATION_TYPE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CERTIFICATION_TYPE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "GMP_ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Site Terms Date Basis",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Site Terms Date Basis",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Postal Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SUP",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VAT_NUM_SUP",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "VAT_NUM_SITE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "VAT_NUM_SITE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "IBAN",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "BANK_ACCOUNT_NUM",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Party ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Vendor ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Party Site ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Supplier_creation_date",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Supplier_creation_date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ADDRESS_CREATION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ADDRESS_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SITE_CREATION_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "SITE_CREATION_DATE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AppianDataSuppliers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "testAppian_suppliers",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Delete Existnig Files",
+						"type": "Delete",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "testAppian_suppliers",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobStorageReadSettings",
+								"recursive": true,
+								"wildcardFileName": "*.csv",
+								"enablePartitionDiscovery": false
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Appian"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DevAppian_traceability')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3717,254 +4401,6 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "traceabilityReport"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Appian_test_BPA')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_Test",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Business Unit Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Blanket Purchase Agreement Number",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Status",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Site Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Description",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Item Description",
-						"type": "varchar"
-					},
-					{
-						"name": "Category Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Total Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Purchase Document Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Blanket Agreement Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "UOM Code",
-						"type": "varchar"
-					},
-					{
-						"name": "Delivered Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Order Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Remaining Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Trucks",
-						"type": "varchar"
-					},
-					{
-						"name": "Position Now",
-						"type": "varchar"
-					},
-					{
-						"name": "Expected Position",
-						"type": "varchar"
-					},
-					{
-						"name": "Weeknumbers Contract",
-						"type": "varchar"
-					},
-					{
-						"name": "Weeks Remaining",
-						"type": "varchar"
-					},
-					{
-						"name": "Next Monday",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Start Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement End Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Shipping Method",
-						"type": "varchar"
-					},
-					{
-						"name": "Incoterm",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Transporter Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Supplier",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 1 Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Supplier",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Unit Price",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Additional Charges 2 Currency",
-						"type": "varchar"
-					},
-					{
-						"name": "Buyer",
-						"type": "varchar"
-					},
-					{
-						"name": "Sustainability Position",
-						"type": "varchar"
-					},
-					{
-						"name": "Supplier Item",
-						"type": "varchar"
-					},
-					{
-						"name": "Deal Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Amount",
-						"type": "varchar"
-					},
-					{
-						"name": "Amount Released Against Agreement",
-						"type": "varchar"
-					},
-					{
-						"name": "Note To Vendor",
-						"type": "varchar"
-					},
-					{
-						"name": "FFA Spec",
-						"type": "varchar"
-					},
-					{
-						"name": "Line Status",
-						"type": "varchar"
-					},
-					{
-						"name": "EUR USD",
-						"type": "varchar"
-					},
-					{
-						"name": "EUR GBP",
-						"type": "varchar"
-					},
-					{
-						"name": "Updated Contract Status",
-						"type": "varchar"
-					},
-					{
-						"name": "DateStamp",
-						"type": "varchar"
-					},
-					{
-						"name": "Yield Adjusted Volume",
-						"type": "varchar"
-					},
-					{
-						"name": "Agreement Mid Date",
-						"type": "varchar"
-					},
-					{
-						"name": "Non-Delivered Quantity",
-						"type": "varchar"
-					},
-					{
-						"name": "Yield Adjusted Volume Non-Delivered",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "AppianBPA"
 				}
 			},
 			"dependsOn": []
