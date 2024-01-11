@@ -273,6 +273,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Appian"
+		},
 		"annotations": []
 	}
 }
