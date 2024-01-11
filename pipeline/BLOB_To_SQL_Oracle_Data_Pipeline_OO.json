@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.Traceability report"
+							"TableName": "O.XLA_DISTRIBUTION_LINKS"
 						}
 					}
 				]
