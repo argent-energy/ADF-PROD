@@ -3588,6 +3588,15 @@
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "Stamp",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
@@ -3731,6 +3740,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Appian"
 				},
 				"annotations": []
 			},
@@ -22661,8 +22673,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T23:45:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
@@ -22692,8 +22703,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T23:15:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
@@ -22723,8 +22733,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T00:15:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},

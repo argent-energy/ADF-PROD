@@ -3819,8 +3819,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T23:15:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
@@ -4456,8 +4455,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T23:45:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
@@ -4487,8 +4485,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-10T00:15:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
