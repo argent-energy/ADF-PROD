@@ -115,7 +115,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "Traceability report.csv"
+						"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
 					}
 				}
 			},
@@ -273,7 +273,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Traceability report.csv",
+						"fileName": "CST_COST_DISTRIBUTION_LINES.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

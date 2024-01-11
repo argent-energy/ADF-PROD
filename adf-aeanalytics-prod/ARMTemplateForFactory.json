@@ -4731,6 +4731,15 @@
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "Stamp",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
@@ -4769,7 +4778,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.Traceability report"
+									"TableName": "O.CST_COST_DISTRIBUTION_LINES"
 								}
 							}
 						]
@@ -19463,7 +19472,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "Traceability report.csv"
+						"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
 					}
 				}
 			},
@@ -19631,7 +19640,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Traceability report.csv",
+						"fileName": "CST_COST_DISTRIBUTION_LINES.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
