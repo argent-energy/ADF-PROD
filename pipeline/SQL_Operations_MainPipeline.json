@@ -31,6 +31,8 @@
 			{
 				"name": "PastPO_NotReceipted",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GroupCAPEXCommittedExpenditure",
@@ -64,6 +66,8 @@
 			{
 				"name": "WarehouseTables",
 				"type": "Script",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PastPO_NotReceipted",
