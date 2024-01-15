@@ -10450,6 +10450,8 @@
 					{
 						"name": "PastPO_NotReceipted",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "GroupCAPEXCommittedExpenditure",
@@ -10483,6 +10485,8 @@
 					{
 						"name": "WarehouseTables",
 						"type": "Script",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "PastPO_NotReceipted",
@@ -22914,7 +22918,7 @@
 			"properties": {
 				"description": "Trigger the main operations pipeline\n",
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -22929,8 +22933,9 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2023-10-28T05:00:00",
-						"timeZone": "GMT Standard Time"
+						"startTime": "2024-01-15T05:00:00",
+						"timeZone": "GMT Standard Time",
+						"schedule": {}
 					}
 				}
 			},
