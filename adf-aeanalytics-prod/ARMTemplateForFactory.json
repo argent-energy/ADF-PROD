@@ -4778,7 +4778,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.CST_COST_DISTRIBUTION_LINES"
+									"TableName": "O.XLA_DISTRIBUTION_LINKS_2023H2"
 								}
 							}
 						]
@@ -19472,7 +19472,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
+						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv"
 					}
 				}
 			},
@@ -19640,7 +19640,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES.csv",
+						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

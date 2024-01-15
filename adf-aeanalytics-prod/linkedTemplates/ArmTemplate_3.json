@@ -115,7 +115,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES.csv"
+						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv"
 					}
 				}
 			},
@@ -273,7 +273,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_COST_DISTRIBUTION_LINES.csv",
+						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
