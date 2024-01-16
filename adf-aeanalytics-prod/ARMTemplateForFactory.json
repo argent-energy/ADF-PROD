@@ -4778,7 +4778,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_DISTRIBUTION_LINKS_2023H2"
+									"TableName": "O.XLA_AE_LINES_2021"
 								}
 							}
 						]
@@ -19476,7 +19476,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv"
+						"fileName": "XLA_AE_LINES_2021.csv"
 					}
 				}
 			},
@@ -19644,7 +19644,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "XLA_DISTRIBUTION_LINKS_2023H2.csv",
+						"fileName": "XLA_AE_LINES_2021.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -22934,8 +22934,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-15T05:00:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},

@@ -1280,8 +1280,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-15T05:00:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
