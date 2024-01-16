@@ -1292,7 +1292,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -1308,8 +1308,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2024-01-16T22:30:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {}
+						"timeZone": "GMT Standard Time"
 					}
 				}
 			},
