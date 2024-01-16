@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.GL_IMPORT_REFERENCES_2020"
+							"TableName": "O.XLA_AE_LINES_2019"
 						}
 					}
 				]
