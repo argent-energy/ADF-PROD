@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "XLA_AE_LINES_2021.csv"
+				"fileName": "CST_TRANSACTIONS_2018-22.csv"
 			}
 		}
 	},
