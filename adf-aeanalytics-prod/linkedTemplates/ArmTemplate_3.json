@@ -115,7 +115,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "XLA_AE_LINES_2021.csv"
+						"fileName": "CST_TRANSACTIONS.csv"
 					}
 				}
 			},
@@ -273,7 +273,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "XLA_AE_LINES_2021.csv",
+						"fileName": "CST_TRANSACTIONS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

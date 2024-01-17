@@ -4778,7 +4778,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_AE_LINES_2021"
+									"TableName": "O.CST_TRANSACTIONS"
 								}
 							}
 						]
@@ -19476,7 +19476,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "XLA_AE_LINES_2021.csv"
+						"fileName": "CST_TRANSACTIONS.csv"
 					}
 				}
 			},
@@ -19644,7 +19644,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "XLA_AE_LINES_2021.csv",
+						"fileName": "CST_TRANSACTIONS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -22948,7 +22948,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {

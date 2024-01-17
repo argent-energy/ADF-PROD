@@ -1378,7 +1378,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_AE_LINES_2021"
+									"TableName": "O.CST_TRANSACTIONS"
 								}
 							}
 						]
