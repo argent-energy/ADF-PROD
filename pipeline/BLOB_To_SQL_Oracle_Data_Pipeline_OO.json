@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.CST_TRANSACTIONS"
+							"TableName": "O.XLA_AE_LINES_2019"
 						}
 					}
 				]
