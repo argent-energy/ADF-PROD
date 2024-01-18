@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv",
+				"fileName": "CST_ATTR_ONHAND_VALUATIONS_2018-22.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
