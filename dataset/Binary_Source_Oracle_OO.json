@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "CST_ATTR_ONHAND_VALUATIONS.csv"
+				"fileName": "CST_ATTR_ONHAND_VALUATIONS_2023Q3.csv"
 			}
 		}
 	},
