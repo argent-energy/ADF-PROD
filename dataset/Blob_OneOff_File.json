@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "CST_TRANSACTIONS.csv",
+				"fileName": "XLA_AE_LINES_2019.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
