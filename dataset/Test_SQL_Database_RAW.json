@@ -1,0 +1,21 @@
+{
+	"name": "Test_SQL_Database_RAW",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "@dataset().TableName"
+		}
+	}
+}
