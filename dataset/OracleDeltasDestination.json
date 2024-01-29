@@ -1,0 +1,16 @@
+{
+	"name": "OracleDeltasDestination",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Oracle Pricing data test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation"
+			}
+		}
+	}
+}
