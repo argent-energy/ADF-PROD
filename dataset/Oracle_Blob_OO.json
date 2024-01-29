@@ -1,0 +1,23 @@
+{
+	"name": "Oracle_Blob_OO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Oracle Pricing data test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "GL_JE_HEADERS_DELTA.csv",
+				"container": "oracle-deltas"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
