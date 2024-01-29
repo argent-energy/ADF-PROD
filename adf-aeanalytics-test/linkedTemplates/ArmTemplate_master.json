@@ -1,0 +1,99 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-aeanalytics-test"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"Oracle Pricing data test_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Oracle Pricing data test'"
+		},
+		"Pricing_data_test_Max_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Pricing_data_test_Max'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-aeanalytics-prod.database.windows.net;Initial Catalog=sqldb-aeanalytics-test"
+		},
+		"Production Azure Server_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Production Azure Server'"
+		},
+		"Production_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Production'"
+		},
+		"FTP Oracle_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FTP Oracle'"
+		},
+		"FTP Oracle_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "sftp.argentenergy.nl"
+		},
+		"FTP Oracle_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "Oracle"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-aeanalytics-test_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"Oracle Pricing data test_connectionString": {
+						"value": "[parameters('Oracle Pricing data test_connectionString')]"
+					},
+					"Pricing_data_test_Max_connectionString": {
+						"value": "[parameters('Pricing_data_test_Max_connectionString')]"
+					},
+					"Production Azure Server_connectionString": {
+						"value": "[parameters('Production Azure Server_connectionString')]"
+					},
+					"Production_connectionString": {
+						"value": "[parameters('Production_connectionString')]"
+					},
+					"FTP Oracle_password": {
+						"value": "[parameters('FTP Oracle_password')]"
+					},
+					"FTP Oracle_properties_typeProperties_host": {
+						"value": "[parameters('FTP Oracle_properties_typeProperties_host')]"
+					},
+					"FTP Oracle_properties_typeProperties_userName": {
+						"value": "[parameters('FTP Oracle_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

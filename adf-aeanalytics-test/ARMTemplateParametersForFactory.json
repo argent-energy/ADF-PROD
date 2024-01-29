@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-aeanalytics-test"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"Oracle Pricing data test_connectionString": {
+			"value": ""
+		},
+		"Pricing_data_test_Max_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sql-aeanalytics-prod.database.windows.net;Initial Catalog=sqldb-aeanalytics-test"
+		},
+		"Production Azure Server_connectionString": {
+			"value": ""
+		},
+		"Production_connectionString": {
+			"value": ""
+		},
+		"FTP Oracle_password": {
+			"value": ""
+		},
+		"FTP Oracle_properties_typeProperties_host": {
+			"value": "sftp.argentenergy.nl"
+		},
+		"FTP Oracle_properties_typeProperties_userName": {
+			"value": "Oracle"
+		}
+	}
+}
