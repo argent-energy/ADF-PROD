@@ -1,0 +1,17 @@
+{
+	"name": "OracleDeltaSource_OO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FTP Oracle",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FtpServerLocation",
+				"fileName": "GL_JE_HEADERS_DELTA.csv"
+			}
+		}
+	}
+}
