@@ -5,8 +5,6 @@
 			{
 				"name": "Copy_Blob_to_SQL_OO",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Copy_Oracle_to_Blob_OO",
@@ -30,8 +28,6 @@
 			{
 				"name": "Copy_Oracle_to_Blob_OO",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"secureInput": false
