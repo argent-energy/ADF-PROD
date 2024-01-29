@@ -1,6 +1,80 @@
 {
 	"name": "Delta_Test",
 	"properties": {
+		"activities": [
+			{
+				"name": "Copy_Blob_to_SQL_OO",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy_Oracle_to_Blob_OO",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_Blob_to_SQL_OO",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Copy_Oracle_to_Blob_OO",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Copy_Oracle_to_Blob_OO",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Copy_Blob_to_SQL_OO",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "WITH cte AS (\n\tSELECT *\n\t,ROW_NUMBER() OVER (PARTITION BY [JE_HEADER_ID] ORDER BY [LAST_UPDATE_DATE]\n\tDESC) as RowNum\n\tFROM [RAW].[O.GL_JE_HEADERS]\n\t)  \nDELETE FROM cte WHERE RowNum > 1;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
 		"folder": {
 			"name": "Oracle Deltas Test"
 		},
