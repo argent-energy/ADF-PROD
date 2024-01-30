@@ -1,0 +1,129 @@
+{
+	"name": "Prod_SQL_Database_RAW",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DESCRIPTION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LEDGER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_CATEGORY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_SOURCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PERIOD_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CURRENCY_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DATE_CREATED",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEFAULT_EFFECTIVE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_BATCH_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "POSTED_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RUNNING_TOTAL_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RUNNING_TOTAL_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RUNNING_TOTAL_ACCOUNTED_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RUNNING_TOTAL_ACCOUNTED_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CURRENCY_CONVERSION_RATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EXTERNAL_REFERENCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCRUAL_REV_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCRUAL_REV_CHANGE_SIGN_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACTUAL_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCRUAL_REV_STATUS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCRUAL_REV_JE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Stamp",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "O.GL_JE_HEADERS"
+		}
+	}
+}
