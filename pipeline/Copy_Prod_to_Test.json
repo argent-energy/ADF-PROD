@@ -1,0 +1,9 @@
+{
+	"name": "Copy_Prod_to_Test",
+	"properties": {
+		"folder": {
+			"name": "Oracle Deltas Test"
+		},
+		"annotations": []
+	}
+}
