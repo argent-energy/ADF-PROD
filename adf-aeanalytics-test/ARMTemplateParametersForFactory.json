@@ -8,6 +8,9 @@
 		"AzureSqlDatabase1_connectionString": {
 			"value": ""
 		},
+		"FTP Oracle_password": {
+			"value": ""
+		},
 		"Oracle Pricing data test_connectionString": {
 			"value": ""
 		},
@@ -18,9 +21,6 @@
 			"value": ""
 		},
 		"Production_connectionString": {
-			"value": ""
-		},
-		"FTP Oracle_password": {
 			"value": ""
 		},
 		"FTP Oracle_properties_typeProperties_host": {

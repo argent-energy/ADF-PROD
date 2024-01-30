@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
 		},
+		"FTP Oracle_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FTP Oracle'"
+		},
 		"Oracle Pricing data test_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Oracle Pricing data test'"
@@ -27,10 +31,6 @@
 		"Production_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Production'"
-		},
-		"FTP Oracle_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'FTP Oracle'"
 		},
 		"FTP Oracle_properties_typeProperties_host": {
 			"type": "string",
@@ -70,6 +70,9 @@
 					"AzureSqlDatabase1_connectionString": {
 						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
 					},
+					"FTP Oracle_password": {
+						"value": "[parameters('FTP Oracle_password')]"
+					},
 					"Oracle Pricing data test_connectionString": {
 						"value": "[parameters('Oracle Pricing data test_connectionString')]"
 					},
@@ -81,9 +84,6 @@
 					},
 					"Production_connectionString": {
 						"value": "[parameters('Production_connectionString')]"
-					},
-					"FTP Oracle_password": {
-						"value": "[parameters('FTP Oracle_password')]"
 					},
 					"FTP Oracle_properties_typeProperties_host": {
 						"value": "[parameters('FTP Oracle_properties_typeProperties_host')]"
