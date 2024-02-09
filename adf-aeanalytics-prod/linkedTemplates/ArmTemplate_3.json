@@ -115,7 +115,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS_2021-22.csv"
+						"fileName": "XLA_AE_HEADERS.csv"
 					}
 				}
 			},
@@ -273,7 +273,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "CST_ATTR_ONHAND_VALUATIONS_2021-22.csv",
+						"fileName": "XLA_AE_HEADERS_2019-23.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

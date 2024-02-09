@@ -1405,6 +1405,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1419,6 +1422,9 @@
 						"name": "SQL_OrdersAndInvoicesTables",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1450,6 +1456,9 @@
 						"name": "CREATEGL_Script_1",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1471,6 +1480,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1492,6 +1504,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1513,6 +1528,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1926,11 +1944,11 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"method": "POST",
 							"headers": {
 								"Content-Type": "application/x-www-form-urlencoded"
 							},
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
 						}
 					},
@@ -2431,11 +2449,11 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"method": "POST",
 							"headers": {
 								"Content-Type": "application/x-www-form-urlencoded"
 							},
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
 						}
 					},
@@ -2861,11 +2879,11 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"method": "POST",
 							"headers": {
 								"Content-Type": "application/x-www-form-urlencoded"
 							},
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
 							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
 						}
 					},
