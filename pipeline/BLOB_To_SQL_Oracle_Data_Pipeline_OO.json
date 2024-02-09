@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.CST_ATTR_ONHAND_VALUATIONS_2021-22"
+							"TableName": "O.XLA_AE_HEADERS_2019-23"
 						}
 					}
 				]
