@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "XLA_AE_HEADERS.csv",
+				"fileName": "XLA_AE_HEADERS_2019-23.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
