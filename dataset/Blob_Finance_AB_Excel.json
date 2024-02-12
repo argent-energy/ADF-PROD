@@ -1,0 +1,36 @@
+{
+	"name": "Blob_Finance_AB_Excel",
+	"properties": {
+		"description": "Account Balances sheets",
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SheetName": {
+				"type": "string",
+				"defaultValue": "Value"
+			}
+		},
+		"folder": {
+			"name": "Finance"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().SheetName",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Finance Manual Account Balances.xlsx",
+				"container": "sharepoint-files"
+			},
+			"range": "A1",
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
