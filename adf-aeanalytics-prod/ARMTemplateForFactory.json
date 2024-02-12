@@ -23339,7 +23339,14 @@
 					{
 						"name": "Finance_Excel_tables_lookup",
 						"type": "Lookup",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Drop table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -23387,14 +23394,7 @@
 								{
 									"name": "Copy from Excel workbook",
 									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Drop",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
+									"dependsOn": [],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -23446,45 +23446,42 @@
 											"referenceName": "SQL_Sharepoint_Data_Tables",
 											"type": "DatasetReference",
 											"parameters": {
-												"TableName": {
-													"value": "@item().TableName",
-													"type": "Expression"
-												}
+												"TableName": "F.AccountBalances"
 											}
 										}
 									]
-								},
-								{
-									"name": "Drop",
-									"description": "Drop existing finance excel tables",
-									"type": "Script",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"linkedServiceName": {
-										"referenceName": "SqlServerArgent",
-										"type": "LinkedServiceReference"
-									},
-									"typeProperties": {
-										"scripts": [
-											{
-												"type": "NonQuery",
-												"text": {
-													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
-													"type": "Expression"
-												}
-											}
-										],
-										"scriptBlockExecutionTimeout": "02:00:00"
-									}
 								}
 							]
+						}
+					},
+					{
+						"name": "Drop table",
+						"description": "Drop existing finance excel tables",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": {
+										"value": "DROP TABLE IF EXISTS [RAW].[F.AccountBalances]",
+										"type": "Expression"
+									}
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
 						}
 					}
 				],
@@ -23499,9 +23496,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Blob_Finance_AB_Excel_Get_Metadata')]",
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]",
 				"[concat(variables('factoryId'), '/datasets/Blob_Finance_AB_Excel')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]",
-				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+				"[concat(variables('factoryId'), '/datasets/SQL_Sharepoint_Data_Tables')]"
 			]
 		},
 		{
@@ -23531,10 +23528,6 @@
 				"schema": [
 					{
 						"name": "SheetName",
-						"type": "String"
-					},
-					{
-						"name": "TableName",
 						"type": "String"
 					}
 				]

@@ -129,10 +129,6 @@
 					{
 						"name": "SheetName",
 						"type": "String"
-					},
-					{
-						"name": "TableName",
-						"type": "String"
 					}
 				]
 			},
