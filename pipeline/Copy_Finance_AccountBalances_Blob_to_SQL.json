@@ -24,7 +24,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Blob_Finance_Excel_Get_Metadata",
+						"referenceName": "Blob_Finance_AB_Excel_Get_Metadata",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
