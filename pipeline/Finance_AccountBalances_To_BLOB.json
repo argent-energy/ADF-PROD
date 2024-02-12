@@ -79,10 +79,7 @@
 				"inputs": [
 					{
 						"referenceName": "Sharepoint_Finance_AccountBalances",
-						"type": "DatasetReference",
-						"parameters": {
-							"ItemName": "BS and P&L FX Rates.xlsx"
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
@@ -102,7 +99,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Finance DWH Excel data.xlsx"
+				"defaultValue": "Finance Manual Account Balancesxlsx"
 			}
 		},
 		"folder": {
