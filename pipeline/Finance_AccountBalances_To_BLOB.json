@@ -78,13 +78,10 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Sharepoint_Finance_DWH_Excel_Data_Raw",
+						"referenceName": "Sharepoint_Finance_AccountBalances",
 						"type": "DatasetReference",
 						"parameters": {
-							"ItemName": {
-								"value": "@pipeline().parameters.ExcelName",
-								"type": "Expression"
-							}
+							"ItemName": "BS and P&L FX Rates.xlsx"
 						}
 					}
 				],
