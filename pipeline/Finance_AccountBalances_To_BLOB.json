@@ -99,7 +99,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Finance Manual Account Balancesxlsx"
+				"defaultValue": "Finance Manual Account Balances.xlsx"
 			}
 		},
 		"folder": {
