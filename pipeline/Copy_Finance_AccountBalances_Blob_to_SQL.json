@@ -111,7 +111,10 @@
 									"referenceName": "SQL_Sharepoint_Data_Tables",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": "@item().TableName"
+										"TableName": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
 									}
 								}
 							]
