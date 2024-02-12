@@ -96,10 +96,13 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Finance_Excel",
+									"referenceName": "Blob_Finance_AB_Excel",
 									"type": "DatasetReference",
 									"parameters": {
-										"SheetName": "@item().SheetName"
+										"SheetName": {
+											"value": "@item().SheetName",
+											"type": "Expression"
+										}
 									}
 								}
 							],
