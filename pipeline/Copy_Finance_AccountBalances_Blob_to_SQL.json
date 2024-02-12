@@ -111,10 +111,7 @@
 									"referenceName": "SQL_Sharepoint_Data_Tables",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": {
-											"value": "@item().TableName",
-											"type": "Expression"
-										}
+										"TableName": "F.AccountBalances"
 									}
 								}
 							]
@@ -150,6 +147,36 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Drop_copy1",
+				"description": "Drop existing finance excel tables",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServerArgent",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": {
+								"value": "DROP TABLE IF EXISTS [RAW].[F.AccountBalances]",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
