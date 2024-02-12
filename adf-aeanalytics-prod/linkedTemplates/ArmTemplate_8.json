@@ -13,6 +13,350 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/AppianTest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Supplier_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Supplier_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU_bill_to",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BPA_exists",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Category_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Postal_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "E_mail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Purchasing",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Pay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Inactive_date_VET_ID_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "VET_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "INS_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "INS_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "Certification_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GMP_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VIHB_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Vendor_category",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Default_payment_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_terms",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Invoice_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BIC_SWIFT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IBAN",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Bank_account_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Address_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_created_by",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "SuppliersReport_Suppliers"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Prod')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_prod",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "AppianBPA"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Prod_Traceablity')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_prod",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CREATION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUSINESS_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ORGANIZATION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHYSICAL_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DOCUMENT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "REASON_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WORK_DEFINITION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_DESCRIPTION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_OF_MEASURE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSFER_SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_SITE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AGREEMENT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXT_REFERENCE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SHIPPING_METHOD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TANK_BALANCE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RUNNING_TOTAL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GRADE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LOT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSTYPE_REASON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DENSITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STD_LTRS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "traceabilityReport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian_test_BPA')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1311,6 +1655,293 @@
 						"timeZone": "GMT Standard Time"
 					}
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Finance_AccountBalances_To_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copies data from the Sharepoint site \"PowerBI data\" to the Azure Blob Storage",
+				"activities": [
+					{
+						"name": "Sharepoint_token",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded"
+							},
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
+							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
+						}
+					},
+					{
+						"name": "Copy_Sharepoint_to_Blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Sharepoint_token",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": true
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Finance%20DWH%20Excel%20data.xlsx')/$value"
+							},
+							{
+								"name": "Destination",
+								"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET",
+									"additionalHeaders": {
+										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+										"type": "Expression"
+									},
+									"requestTimeout": ""
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Sharepoint_Finance_AccountBalances",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Blob_Sharepoint_Files",
+								"type": "DatasetReference",
+								"parameters": {
+									"ItemName": {
+										"value": "@pipeline().parameters.ExcelName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"ExcelName": {
+						"type": "string",
+						"defaultValue": "Finance Manual Account Balances.xlsx"
+					}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-11T15:23:09Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Finance_AccountBalances_Blob_to_SQL')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Finance_Excel_tables_lookup",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"dataset": {
+								"referenceName": "Blob_Finance_AB_Excel_Get_Metadata",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Copy sheets to tables",
+						"description": "Copies each sheet in the lookup sheet to a separate SQL table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Finance_Excel_tables_lookup",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Finance_Excel_tables_lookup').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy from Excel workbook",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "Drop",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ExcelSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Blob_Finance_AB_Excel",
+											"type": "DatasetReference",
+											"parameters": {
+												"SheetName": {
+													"value": "@item().SheetName",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Sharepoint_Data_Tables",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": {
+													"value": "@item().TableName",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Drop",
+									"description": "Drop existing finance excel tables",
+									"type": "Script",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "SqlServerArgent",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "NonQuery",
+												"text": {
+													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-14T16:24:18Z"
 			},
 			"dependsOn": []
 		},
@@ -3714,7 +4345,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_Prod')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Appian Suppliers Pull Prod')]",
@@ -4666,7 +5299,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_Prod_Traceablity')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Oracle_Data_Trade_Pipeline')]",
@@ -4892,1008 +5527,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-12-10T11:15:02Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Pricing_Data_Trade_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute BLOB To SQL For Pricing Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy_Pricing_Sharepoint_To_BLOB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Pricing_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Data Marks Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute BLOB To SQL For Pricing Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Pricing_Data_Marks_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute SQL To BLOB For Trade Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Trade-Tables_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy_Pricing_Sharepoint_To_BLOB",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Pricing_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Send Email Alert",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Get the Ticket Number",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://ae-adf-emailnotification.azurewebsites.net:443/api/Argent-Alerting/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Aso6aks8InhkiT92JgC0HG-J1IvmAhT5B94OpeVK9lo",
-							"body": {
-								"value": "{\n    \"receiver\":\"@{pipeline().parameters.receiver}\",\n    \"title\":\"Pipeline Run Failed\",\n    \"message\":\"Job failed, ticket raised @{variables('TicketNo')}\",\n    \"color\":\"Red\",\n    \"dataFactoryName\":\"@{pipeline().DataFactory}\",\n    \"pipelineName\":\"@{pipeline().Pipeline}\",\n    \"pipelineRunId\":\"@{pipeline().RunId}\",\n    \"time\":\"@{utcnow()}\"\n}",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Raise an Incident",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://eu2api.symphonysummit.com/Argent/REST/Summit_RESTWCF.svc/RESTService/CommonWS_JsonObjCall",
-							"body": {
-								"ServiceName": "IM_LogOrUpdateIncident",
-								"objCommonParameters": {
-									"_ProxyDetails": {
-										"AuthType": "APIKEY",
-										"APIKey": "tryDnK94yXfNHDFbDyiy6HltkdY2uvw0f5UtnFfGZiY=",
-										"ProxyID": 0,
-										"ReturnType": "JSON",
-										"OrgID": 1
-									},
-									"incidentParamsJSON": {
-										"IncidentContainerJsonObj": {
-											"Updater": "Executive",
-											"CI_Key": "hostname",
-											"CI_Value": "",
-											"Ticket": {
-												"IsFromWebService": true,
-												"Priority_Name": "P3 - Medium",
-												"Classification_Name": "Data or Process in system not working",
-												"Sup_Function": "IT",
-												"Caller_EmailID": "lyndon.johnson@argentenergy.com",
-												"Status": "New",
-												"Urgency_Name": "Stops Work",
-												"Assigned_WorkGroup_Name": "Argent Reporting Support Team",
-												"Medium": "Web",
-												"Impact_Name": "Multiple Users",
-												"Category_Name": "Argent Reporting",
-												"CI_ID": "",
-												"SLA_Name": "",
-												"OpenCategory_Name": "Argent Reporting",
-												"Source": "Person",
-												"Description": "@{pipeline().parameters.TicketMessage}",
-												"PageName": "TicketDetail"
-											},
-											"TicketInformation": {
-												"Information": "TEST Ticket",
-												"InternalLog": "#InternalLog#",
-												"UserLog": "",
-												"Solution": "#Solution#"
-											},
-											"CustomFields": []
-										}
-									},
-									"RequestType": "RemoteCall"
-								}
-							}
-						}
-					},
-					{
-						"name": "Get the Ticket Number",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Raise an Incident",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "TicketNo",
-							"value": {
-								"value": "@string(activity('Raise an Incident').output.TicketNo)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"receiver": {
-						"type": "string",
-						"defaultValue": "data.mi@argentenergy.com"
-					},
-					"TicketID": {
-						"type": "string"
-					},
-					"JobMessage": {
-						"type": "string",
-						"defaultValue": "Azure Data Factory Error"
-					},
-					"TicketMessage": {
-						"type": "string",
-						"defaultValue": "Automated message: Data job has failedJob Failed"
-					}
-				},
-				"variables": {
-					"TicketNo": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Trade/Pricing"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-14T10:20:07Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Finance_MainPipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Blob to SQL DB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_2",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATE_TB_Rec",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATEGL_Script_3",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATE_TB_Rec",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "CREATEGL_Script_3",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "CREATEGL_Script_3",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Sharepoint to Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Blob to SQL DB",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Sharepoint to Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Finance_Sharepoint_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Exceptions",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_CurrencyExposure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Exceptions",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "CREATE_TB_Rec",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_BlendMarginAnalysis",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_BlendMarginAnalysis",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_CurrencyExposure",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_BlendMarginAnalysis",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_CurrencyExposure",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_SubledgerSuppliersCustomers",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Subledger_TransactionsList_Blend_CoreTables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_SubledgerSuppliersCustomers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_TransactionsList",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_SubledgerSuppliersCustomers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_TransactionsList",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-01-05T10:34:53Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_SupplyChain_Main_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SQL_PurchaseContracts_SalesContracts",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SupplyChain_Blob_to_SQL",
-								"dependencyConditions": [
-									"Succeeded",
-									"Failed"
-								]
-							},
-							{
-								"activity": "SupplyChain_Sharepoint_To_Blob",
-								"dependencyConditions": [
-									"Failed",
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_PurchaseContracts_SalesContracts",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Inventory_OnHandBalance",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_PurchaseContracts_SalesContracts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Inventory_OnHandBalance",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_SalesContracts_Invoices",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Inventory_OnHandBalance",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_SalesContracts_Invoices",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SupplyChain_Blob_to_SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SupplyChain_Sharepoint_To_Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SupplyChain_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_Inventory_QuantityTracker",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_SalesContracts_Invoices",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Inventory_QuantityTracker",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_ShippingData",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_TSA_Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_ShippingData",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_GIT_Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_ShippingData",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_GIT_Tables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "VesselFinder_GetData",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_GIT_Tables",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "VesselFinder_GetData",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_TSA_Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_Inventory_QuantityTracker",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_TSA_Tables",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "VesselFinder_PortData",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "VesselFinder_GetData",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "VesselFinder_PortData",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SupplyChain_Sharepoint_To_Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SupplyChain_Sharepoint_To_Blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_UltimoPlanning')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_UltimoPlan_Blob_to_SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_UltimoPlan_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_UltimoPlanningTables",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Copy_UltimoPlan_Blob_to_SQL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[Operations].[SQL_UltimoPlanningTables]"
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Operations"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/StdCostsAndSpread_ExcelPipelines')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy all Excel files in the \"Finance - Standard Costs\" and Spread folder on SharePoint to the \"standard-costs-files\" container. Then copy the production files to [RAW].[F.Production_StanlowBDR] and [RAW].[F.Production_StanlowPTP]. Then copies the previous month stock file (if it exists) to the [RAW].[F.ActTankItem]  table.\n",
-				"activities": [
-					{
-						"name": "Copy SharePoint files to Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_StdCostsSpread_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Production Blob to DWH",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy SharePoint files to Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_ProductionData_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Stock Blob to DWH",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Production Blob to DWH",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_ActTankItemData_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance/Std Costs + Spread"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		}
