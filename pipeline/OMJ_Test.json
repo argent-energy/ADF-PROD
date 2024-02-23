@@ -52,7 +52,8 @@
 							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "JsonWriteSettings"
+							"type": "JsonWriteSettings",
+							"filePattern": "arrayOfObjects"
 						}
 					},
 					"enableStaging": false
@@ -72,7 +73,13 @@
 				"outputs": [
 					{
 						"referenceName": "OMJ_API_Sink_DS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"fileName": {
+								"value": "@{variables('YesterdaysDate')}",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
