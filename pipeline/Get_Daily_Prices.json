@@ -122,7 +122,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"relativeURL": {
-											"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=X21-WMR",
+											"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
 											"type": "Expression"
 										}
 									}
@@ -134,7 +134,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"fileName": {
-											"value": "@concat(variables('OmjSymbol'), '_', variables('YesterdaysDate'))",
+											"value": "@concat(item().Symbol, '_', variables('YesterdaysDate'))",
 											"type": "Expression"
 										}
 									}
