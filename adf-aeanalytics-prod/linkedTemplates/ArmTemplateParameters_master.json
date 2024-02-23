@@ -62,6 +62,9 @@
 		"VesselFinder_properties_typeProperties_url": {
 			"value": "https://api.vesselfinder.com"
 		},
+		"OMJ_API_properties_typeProperties_url": {
+			"value": "https://api-external.the-omj.com/api/"
+		},
 		"containerUri": {
 			"value": ""
 		},

@@ -83,6 +83,10 @@
 			"type": "string",
 			"defaultValue": "https://api.vesselfinder.com"
 		},
+		"OMJ_API_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api-external.the-omj.com/api/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -157,6 +161,9 @@
 					},
 					"VesselFinder_properties_typeProperties_url": {
 						"value": "[parameters('VesselFinder_properties_typeProperties_url')]"
+					},
+					"OMJ_API_properties_typeProperties_url": {
+						"value": "[parameters('OMJ_API_properties_typeProperties_url')]"
 					}
 				}
 			},
