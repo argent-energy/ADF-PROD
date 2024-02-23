@@ -10,6 +10,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+					"type": "Expression"
+				},
 				"container": "omj-daily-prices"
 			}
 		},
