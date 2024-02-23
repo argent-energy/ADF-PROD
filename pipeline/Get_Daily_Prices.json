@@ -121,6 +121,10 @@
 										"fileName": {
 											"value": "@concat(item().Symbol, '_', variables('YesterdaysDate'))",
 											"type": "Expression"
+										},
+										"folderName": {
+											"value": "@variables('YesterdaysDate')",
+											"type": "Expression"
 										}
 									}
 								}
