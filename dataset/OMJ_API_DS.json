@@ -1,0 +1,23 @@
+{
+	"name": "OMJ_API_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OMJ_API",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"relativeURL": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"typeProperties": {
+			"relativeUrl": {
+				"value": "@dataset().relativeURL",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	}
+}
