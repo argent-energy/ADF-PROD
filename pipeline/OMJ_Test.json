@@ -25,7 +25,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Get yesterdays date",
+						"activity": "Symbol",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -76,17 +76,43 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"fileName": {
-								"value": "@{variables('YesterdaysDate')}",
+								"value": "concat(@{variables('OmjSymbol')}, '_', @{variables('YesterdaysDate')})",
 								"type": "Expression"
 							}
 						}
 					}
 				]
+			},
+			{
+				"name": "Symbol",
+				"description": "",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Get yesterdays date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "OmjSymbol",
+					"value": "X21-WMR"
+				}
 			}
 		],
 		"variables": {
 			"YesterdaysDate": {
 				"type": "String"
+			},
+			"OmjSymbol": {
+				"type": "String",
+				"defaultValue": "X21-WMR"
 			}
 		},
 		"folder": {
