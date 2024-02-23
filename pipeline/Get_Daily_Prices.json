@@ -23,14 +23,7 @@
 			{
 				"name": "Copy OMJ daily price to BLOB",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Symbol",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -87,14 +80,7 @@
 				"name": "Symbol",
 				"description": "",
 				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Get yesterdays date",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"secureOutput": false,
 					"secureInput": false
@@ -106,9 +92,16 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "Lookup products",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get yesterdays date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
