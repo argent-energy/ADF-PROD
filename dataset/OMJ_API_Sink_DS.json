@@ -8,6 +8,9 @@
 		"parameters": {
 			"fileName": {
 				"type": "string"
+			},
+			"folderName": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -17,6 +20,10 @@
 				"type": "AzureBlobStorageLocation",
 				"fileName": {
 					"value": "@concat(dataset().fileName, '.json')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().folderName",
 					"type": "Expression"
 				},
 				"container": "omj-daily-prices"
