@@ -19,7 +19,7 @@
 					"value": "@concat(dataset().fileName, '.json')",
 					"type": "Expression"
 				},
-				"container": "omg-daily-prices"
+				"container": "omj-daily-prices"
 			}
 		},
 		"schema": {}
