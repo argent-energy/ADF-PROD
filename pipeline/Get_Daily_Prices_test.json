@@ -66,8 +66,6 @@
 			{
 				"name": "ForEach1",
 				"type": "ForEach",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Lookup products",
@@ -86,6 +84,8 @@
 						{
 							"name": "Copy OMJ daily price to BLOB",
 							"type": "Copy",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
@@ -138,6 +138,35 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Script1",
+							"type": "Script",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "\tIF OBJECT_ID('[RAW].[S.OmjPrices]','U') IS NOT NULL\n\t\tDROP TABLE [RAW].[S.OmjPrices]\n\n\tSELECT @{item().id} [Symbol]\n\t\t, @{item().date} [Date]\n\t\t, @{item().settlement} [Price]\n\n\tINTO [RAW].[S.OmjPrices]",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
 						}
 					]
 				}
