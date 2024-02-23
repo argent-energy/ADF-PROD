@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": {
+				"folderPath": {
 					"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
 					"type": "Expression"
 				},
