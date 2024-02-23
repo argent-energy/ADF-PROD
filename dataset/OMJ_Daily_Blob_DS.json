@@ -17,6 +17,49 @@
 				"container": "omj-daily-prices"
 			}
 		},
-		"schema": {}
+		"schema": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"code": {
+					"type": "string"
+				},
+				"date": {
+					"type": "string"
+				},
+				"contractPeriod": {
+					"type": "string"
+				},
+				"contractNumber": {
+					"type": "integer"
+				},
+				"contractName": {
+					"type": "string"
+				},
+				"settlement": {
+					"type": "number"
+				},
+				"open": {
+					"type": "number"
+				},
+				"high": {
+					"type": "number"
+				},
+				"low": {
+					"type": "number"
+				},
+				"volume": {
+					"type": "integer"
+				},
+				"previousSettlement": {
+					"type": "number"
+				},
+				"hasForwardMonths": {
+					"type": "boolean"
+				}
+			}
+		}
 	}
 }
