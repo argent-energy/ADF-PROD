@@ -21,21 +21,6 @@
 				}
 			},
 			{
-				"name": "Symbol",
-				"description": "",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "OmjSymbol",
-					"value": "X21-WMR"
-				}
-			},
-			{
 				"name": "Lookup products",
 				"type": "Lookup",
 				"dependsOn": [
