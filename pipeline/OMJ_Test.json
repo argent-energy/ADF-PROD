@@ -76,7 +76,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"fileName": {
-								"value": "concat(@{variables('OmjSymbol')}, '_', @{variables('YesterdaysDate')})",
+								"value": "@concat(variables('OmjSymbol'), '_', variables('YesterdaysDate'))",
 								"type": "Expression"
 							}
 						}
