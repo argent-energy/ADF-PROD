@@ -87,12 +87,20 @@
 									"type": "RestSource",
 									"httpRequestTimeout": "00:01:40",
 									"requestInterval": "00.00:00:00.010",
-									"requestMethod": "GET"
+									"requestMethod": "GET",
+									"additionalHeaders": {
+										"Content-Type": "application/json"
+									}
 								},
 								"sink": {
 									"type": "JsonSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobStorageWriteSettings",
+										"metadata": [
+											{
+												"value": ""
+											}
+										]
 									},
 									"formatSettings": {
 										"type": "JsonWriteSettings",
