@@ -1,0 +1,27 @@
+{
+	"name": "OMJ_API_Sink_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().fileName, '.json')",
+					"type": "Expression"
+				},
+				"container": "omg-prices"
+			}
+		},
+		"schema": {}
+	}
+}
