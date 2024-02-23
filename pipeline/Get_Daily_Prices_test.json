@@ -1,0 +1,147 @@
+{
+	"name": "Get_Daily_Prices_test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get yesterdays date",
+				"description": "Date of pricing",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "YesterdaysDate",
+					"value": {
+						"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lookup products",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get yesterdays date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "OMJ_Product_List_DS",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup products').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy OMJ daily price to BLOB",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobStorageWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings",
+										"filePattern": "arrayOfObjects"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "OMJ_API_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"relativeURL": {
+											"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "OMJ_API_Sink_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": {
+											"value": "@concat(item().Symbol, '_', variables('YesterdaysDate'))",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"YesterdaysDate": {
+				"type": "String"
+			},
+			"OmjSymbol": {
+				"type": "String",
+				"defaultValue": "X21-WMR"
+			}
+		},
+		"folder": {
+			"name": "OMJ"
+		},
+		"annotations": []
+	}
+}
