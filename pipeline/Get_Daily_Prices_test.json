@@ -21,7 +21,7 @@
 				}
 			},
 			{
-				"name": "Lookup products",
+				"name": "Lookup prices",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -64,111 +64,34 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Lookup products",
+						"activity": "Lookup prices",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup products').output.value",
-						"type": "Expression"
+					"dataflow": {
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference"
 					},
-					"activities": [
-						{
-							"name": "Copy OMJ daily price to BLOB",
-							"type": "Copy",
-							"state": "Inactive",
-							"onInactiveMarkAs": "Succeeded",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "RestSource",
-									"httpRequestTimeout": "00:01:40",
-									"requestInterval": "00.00:00:00.010",
-									"requestMethod": "GET"
-								},
-								"sink": {
-									"type": "JsonSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									},
-									"formatSettings": {
-										"type": "JsonWriteSettings",
-										"filePattern": "arrayOfObjects"
-									}
-								},
-								"enableStaging": false
-							},
-							"inputs": [
-								{
-									"referenceName": "OMJ_API_DS",
-									"type": "DatasetReference",
-									"parameters": {
-										"relativeURL": {
-											"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
-											"type": "Expression"
-										}
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "OMJ_API_Sink_DS",
-									"type": "DatasetReference",
-									"parameters": {
-										"fileName": {
-											"value": "@concat(item().Symbol, '_', variables('YesterdaysDate'))",
-											"type": "Expression"
-										}
-									}
-								}
-							]
-						},
-						{
-							"name": "Script1",
-							"type": "Script",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "0.12:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"linkedServiceName": {
-								"referenceName": "AzureSqlDatabase1",
-								"type": "LinkedServiceReference"
-							},
-							"typeProperties": {
-								"scripts": [
-									{
-										"type": "Query",
-										"text": {
-											"value": "\tIF OBJECT_ID('[RAW].[S.OmjPrices]','U') IS NOT NULL\n\t\tDROP TABLE [RAW].[S.OmjPrices]\n\n\tSELECT @{item().id} [Symbol]\n\t\t, @{item().date} [Date]\n\t\t, @{item().settlement} [Price]\n\n\tINTO [RAW].[S.OmjPrices]",
-											"type": "Expression"
-										}
-									}
-								],
-								"scriptBlockExecutionTimeout": "02:00:00"
-							}
-						}
-					]
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
 				}
 			}
 		],
