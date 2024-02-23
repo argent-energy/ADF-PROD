@@ -10,10 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": {
-					"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
-					"type": "Expression"
-				},
+				"fileName": "B5000-1_2024-02-22.json",
+				"folderPath": "2024-02-22",
 				"container": "omj-daily-prices"
 			}
 		},
