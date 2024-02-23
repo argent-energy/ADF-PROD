@@ -1,0 +1,16 @@
+{
+	"name": "OMJ_Product_List_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "S.OmjProducts"
+		}
+	}
+}
