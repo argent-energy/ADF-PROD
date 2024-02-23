@@ -62,7 +62,10 @@
 						"referenceName": "OMJ_API_DS",
 						"type": "DatasetReference",
 						"parameters": {
-							"relativeURL": "settlement?date=@{variables('YesterdaysDate')}&instruments=X21-WMR"
+							"relativeURL": {
+								"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=X21-WMR",
+								"type": "Expression"
+							}
 						}
 					}
 				],
