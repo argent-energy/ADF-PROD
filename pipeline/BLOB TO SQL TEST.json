@@ -1,0 +1,9 @@
+{
+	"name": "BLOB TO SQL TEST",
+	"properties": {
+		"folder": {
+			"name": "OMJ"
+		},
+		"annotations": []
+	}
+}
