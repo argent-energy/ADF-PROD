@@ -24,7 +24,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "Blob_Trade_DataWallet_Excel",
+						"referenceName": "Blob_Sales_DataWallet_Excel",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -45,7 +45,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Trade_Excel_tables_lookup').output.value",
+						"value": "@activity('Sales_Excel_tables_lookup').output.value",
 						"type": "Expression"
 					},
 					"activities": [
