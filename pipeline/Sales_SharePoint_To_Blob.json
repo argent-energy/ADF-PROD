@@ -1,0 +1,109 @@
+{
+	"name": "Sales_SharePoint_To_Blob",
+	"properties": {
+		"description": "Copies the Sales Excel file to Azure blob storage container",
+		"activities": [
+			{
+				"name": "Sharepoint_token",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": true,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
+					"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
+				}
+			},
+			{
+				"name": "Copy_SharePoint_to_Blob",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Sharepoint_token",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": true
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "Trade%20Excel%20Data%20for%20DWH.xlsx')/$value"
+					},
+					{
+						"name": "Destination",
+						"value": "sharepoint-files//@{pipeline().parameters.ExcelName}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "BinarySource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET",
+							"additionalHeaders": {
+								"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+								"type": "Expression"
+							},
+							"requestTimeout": ""
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
+						}
+					},
+					"sink": {
+						"type": "BinarySink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SharePoint_Trade_DataWallet",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Blob_Sharepoint_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"ItemName": "@pipeline().parameters.ExcelName"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"ExcelName": {
+				"type": "string",
+				"defaultValue": "Trade Excel Data for DWH.xlsx"
+			}
+		},
+		"folder": {
+			"name": "Sales"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-11-11T15:23:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
