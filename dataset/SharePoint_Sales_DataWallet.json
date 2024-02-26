@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Trade"
+			"name": "Sales"
 		},
 		"annotations": [],
 		"type": "Binary",
