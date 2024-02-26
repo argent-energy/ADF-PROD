@@ -95,12 +95,7 @@
 								"sink": {
 									"type": "JsonSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings",
-										"metadata": [
-											{
-												"value": ""
-											}
-										]
+										"type": "AzureBlobStorageWriteSettings"
 									},
 									"formatSettings": {
 										"type": "JsonWriteSettings",
