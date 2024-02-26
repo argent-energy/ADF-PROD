@@ -96,10 +96,13 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Trade_DataWallet_Sheets",
+									"referenceName": "Blob_Sales_DataWallet_Sheets",
 									"type": "DatasetReference",
 									"parameters": {
-										"SheetName": "@item().SheetName"
+										"SheetName": {
+											"value": "@item().SheetName",
+											"type": "Expression"
+										}
 									}
 								}
 							],
@@ -108,14 +111,17 @@
 									"referenceName": "SQL_Sharepoint_Data_Tables",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": "@item().TableName"
+										"TableName": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										}
 									}
 								}
 							]
 						},
 						{
 							"name": "Drop",
-							"description": "Drop existing Trade Excel tables",
+							"description": "Drop existing Sales Excel tables",
 							"type": "Script",
 							"dependsOn": [],
 							"policy": {
