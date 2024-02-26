@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "OmjPricesTable",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
