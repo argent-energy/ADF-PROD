@@ -2,7 +2,7 @@
 	"name": "BLOB TO SQL TEST",
 	"properties": {
 		"folder": {
-			"name": "OMJ"
+			"name": "Sales/OMJ"
 		},
 		"annotations": []
 	}
