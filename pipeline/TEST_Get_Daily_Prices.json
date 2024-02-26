@@ -126,6 +126,15 @@
 										},
 										{
 											"source": {
+												"path": "$['contractName']"
+											},
+											"sink": {
+												"name": "contractName",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
 												"path": "$['settlement']"
 											},
 											"sink": {
