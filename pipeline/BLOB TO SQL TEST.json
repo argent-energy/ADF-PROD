@@ -1,9 +1,0 @@
-{
-	"name": "BLOB TO SQL TEST",
-	"properties": {
-		"folder": {
-			"name": "Sales/OMJ"
-		},
-		"annotations": []
-	}
-}
