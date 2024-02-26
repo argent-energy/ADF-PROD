@@ -14,7 +14,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "YesterdaysDate",
-					"value": "2024-02-22"
+					"value": {
+						"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
 				}
 			},
 			{
@@ -84,15 +87,18 @@
 									"type": "RestSource",
 									"httpRequestTimeout": "00:01:40",
 									"requestInterval": "00.00:00:00.010",
-									"requestMethod": "GET",
-									"additionalHeaders": {
-										"Content-Type": "application/json"
-									}
+									"requestMethod": "GET"
 								},
 								"sink": {
 									"type": "JsonSink",
 									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+										"type": "AzureBlobStorageWriteSettings",
+										"metadata": [
+											{
+												"name": "ContentType",
+												"value": "application/json"
+											}
+										]
 									},
 									"formatSettings": {
 										"type": "JsonWriteSettings",
