@@ -44,7 +44,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "OmjPricesTable",
+						"referenceName": "SQL_Prod_DB",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
