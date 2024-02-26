@@ -1,5 +1,5 @@
 {
-	"name": "TEST_Get_Daily_Prices",
+	"name": "Get_Daily_FxRates",
 	"properties": {
 		"activities": [
 			{
