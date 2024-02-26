@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "B5000-1_2024-02-22.json",
 				"folderPath": "2024-02-22",
 				"container": "omj-daily-prices"
 			}
