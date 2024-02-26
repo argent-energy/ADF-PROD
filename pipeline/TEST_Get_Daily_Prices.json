@@ -14,7 +14,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "YesterdaysDate",
-					"value": "2024-02-22"
+					"value": "2024-02-23"
 				}
 			},
 			{
@@ -39,6 +39,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Vendor] = 'FT'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
