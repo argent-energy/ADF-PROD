@@ -40,7 +40,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Vendor] = 'FT'",
+						"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -48,7 +48,8 @@
 						"referenceName": "SQL_Prod_DB",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "S.OmjProducts"
+							"TableName": "S.OmjProducts",
+							"SchemaName": "RAW"
 						}
 					},
 					"firstRowOnly": false
