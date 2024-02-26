@@ -14,10 +14,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "YesterdaysDate",
-					"value": {
-						"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
-						"type": "Expression"
-					}
+					"value": "2024-02-23"
 				}
 			},
 			{
