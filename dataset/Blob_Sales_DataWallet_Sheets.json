@@ -1,0 +1,35 @@
+{
+	"name": "Blob_Sales_DataWallet_Sheets",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SheetName": {
+				"type": "string",
+				"defaultValue": "Value"
+			}
+		},
+		"folder": {
+			"name": "Trade"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": {
+				"value": "@dataset().SheetName",
+				"type": "Expression"
+			},
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Sales Excel Data for DWH.xlsx",
+				"container": "sharepoint-files"
+			},
+			"range": "A1",
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
