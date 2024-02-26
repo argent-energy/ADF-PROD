@@ -13616,7 +13616,8 @@
 						}
 					},
 					{
-						"name": "Lookup products",
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -13637,14 +13638,17 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Vendor] = 'FT'",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "OmjPricesTable",
+								"referenceName": "SQL_Prod_DB",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -13654,7 +13658,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup products",
+								"activity": "Lookup FX products",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -13663,12 +13667,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup products').output.value",
+								"value": "@activity('Lookup FX products').output.value",
 								"type": "Expression"
 							},
 							"activities": [
 								{
-									"name": "Copy OMJ daily price to BLOB",
+									"name": "Copy OMJ daily FX rates to SQL",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -13759,9 +13763,12 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "OmjPricesTable",
+											"referenceName": "SQL_Prod_DB",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"TableName": "S.OmjFxRates",
+												"SchemaName": "RAW"
+											}
 										}
 									]
 								}
@@ -13787,7 +13794,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/OmjPricesTable')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
 				"[concat(variables('factoryId'), '/datasets/OMJ_API_DS')]"
 			]
 		},
@@ -24575,6 +24582,41 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Prod_DB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "string"
+					},
+					"SchemaName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SchemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
 		}
 	]
 }

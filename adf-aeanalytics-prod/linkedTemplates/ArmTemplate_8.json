@@ -13,6 +13,64 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Run_AdHoc_Finance_Stored_Procedures')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_FinancePricingTables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_OrdersAndInvoicesTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_FinancePricingTables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SQL_OrdersAndInvoicesTables",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_OrdersAndInvoicesTables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance/Ad-hoc Fianance Reporting"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Create_GL_TB_AfternoonRun')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1568,7 +1626,8 @@
 						}
 					},
 					{
-						"name": "Lookup products",
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -1589,14 +1648,17 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Vendor] = 'FT'",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "OmjPricesTable",
+								"referenceName": "SQL_Prod_DB",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
 							},
 							"firstRowOnly": false
 						}
@@ -1606,7 +1668,7 @@
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup products",
+								"activity": "Lookup FX products",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1615,12 +1677,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup products').output.value",
+								"value": "@activity('Lookup FX products').output.value",
 								"type": "Expression"
 							},
 							"activities": [
 								{
-									"name": "Copy OMJ daily price to BLOB",
+									"name": "Copy OMJ daily FX rates to SQL",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -1711,9 +1773,12 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "OmjPricesTable",
+											"referenceName": "SQL_Prod_DB",
 											"type": "DatasetReference",
-											"parameters": {}
+											"parameters": {
+												"TableName": "S.OmjFxRates",
+												"SchemaName": "RAW"
+											}
 										}
 									]
 								}
@@ -3711,142 +3776,6 @@
 				"typeProperties": {
 					"schema": "Staging",
 					"table": "AppianBPA"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Appian_test_traceability')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_Test",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "CREATION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BUSINESS_UNIT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ORGANIZATION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PHYSICAL_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DOCUMENT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "REASON_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "WORK_DEFINITION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ITEM_DESCRIPTION",
-						"type": "nvarchar"
-					},
-					{
-						"name": "UNIT_OF_MEASURE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSFER_SUBINVENTORY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SUPPLIER_SITE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "AGREEMENT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EXT_REFERENCE_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SHIPPING_METHOD",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUANTITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TANK_BALANCE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "RUNNING_TOTAL",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GRADE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSACTION_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LOT_NUMBER",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TRANSTYPE_REASON",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DENSITY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "STD_LTRS",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Stamp",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "traceabilityReport"
 				}
 			},
 			"dependsOn": []
