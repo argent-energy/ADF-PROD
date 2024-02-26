@@ -23,7 +23,7 @@
 				"          contractNumber as integer,",
 				"          contractName as string,",
 				"          settlement as double,",
-				"          open as double,",
+				"          open as integer,",
 				"          high as double,",
 				"          low as double,",
 				"          volume as integer,",

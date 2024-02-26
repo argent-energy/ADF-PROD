@@ -40,7 +40,7 @@
 					"type": "number"
 				},
 				"open": {
-					"type": "number"
+					"type": "integer"
 				},
 				"high": {
 					"type": "number"
