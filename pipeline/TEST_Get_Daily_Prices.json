@@ -18,7 +18,8 @@
 				}
 			},
 			{
-				"name": "Lookup products",
+				"name": "Lookup FX products",
+				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -45,7 +46,10 @@
 					},
 					"dataset": {
 						"referenceName": "SQL_Prod_DB",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "S.OmjProducts"
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -55,7 +59,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup products",
+						"activity": "Lookup FX products",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -64,12 +68,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup products').output.value",
+						"value": "@activity('Lookup FX products').output.value",
 						"type": "Expression"
 					},
 					"activities": [
 						{
-							"name": "Copy OMJ daily price to BLOB",
+							"name": "Copy OMJ daily FX rates to SQL",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -160,8 +164,12 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "OmjPricesTable",
-									"type": "DatasetReference"
+									"referenceName": "SQL_Prod_DB",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "S.OmjFxRates",
+										"SchemaName": "RAW"
+									}
 								}
 							]
 						}
