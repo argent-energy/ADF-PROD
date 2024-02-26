@@ -33,8 +33,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'singleDocument',",
-				"     partitionBy('hash', 1)) ~> source1"
+				"     documentForm: 'arrayOfDocuments') ~> source1"
 			]
 		}
 	}
