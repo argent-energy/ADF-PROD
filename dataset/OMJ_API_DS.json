@@ -10,6 +10,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Sales"
+		},
 		"annotations": [],
 		"type": "RestResource",
 		"typeProperties": {
