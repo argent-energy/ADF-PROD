@@ -47,6 +47,9 @@
 		"FTP Oracle_properties_typeProperties_userName": {
 			"value": "Oracle"
 		},
+		"OMJ_API_properties_typeProperties_url": {
+			"value": "https://api-external.the-omj.com/api/"
+		},
 		"Operations_SharePoint_properties_typeProperties_url": {
 			"value": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Operations/"
 		},
@@ -61,9 +64,6 @@
 		},
 		"VesselFinder_properties_typeProperties_url": {
 			"value": "https://api.vesselfinder.com"
-		},
-		"OMJ_API_properties_typeProperties_url": {
-			"value": "https://api-external.the-omj.com/api/"
 		},
 		"containerUri": {
 			"value": ""

@@ -51,6 +51,10 @@
 			"type": "string",
 			"defaultValue": "Oracle"
 		},
+		"OMJ_API_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api-external.the-omj.com/api/"
+		},
 		"Operations_SharePoint_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFileByServerRelativeUrl('/sites/PowerBIdata/Shared%20Documents/General/Operations/"
@@ -70,10 +74,6 @@
 		"VesselFinder_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://api.vesselfinder.com"
-		},
-		"OMJ_API_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://api-external.the-omj.com/api/"
 		}
 	},
 	"variables": {
@@ -317,6 +317,27 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/OMJ_API')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('OMJ_API_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous",
+					"authHeaders": {
+						"APIKey": {
+							"type": "SecureString",
+							"value": "**********"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Operations_SharePoint')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -475,27 +496,6 @@
 				"type": "SelfHosted",
 				"description": "Integration Runtime setup for Appian",
 				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OMJ_API')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "RestService",
-				"typeProperties": {
-					"url": "[parameters('OMJ_API_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous",
-					"authHeaders": {
-						"APIKey": {
-							"type": "SecureString",
-							"value": "**********"
-						}
-					}
-				}
 			},
 			"dependsOn": []
 		},
