@@ -78,7 +78,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SharePoint_Trade_DataWallet",
+						"referenceName": "SharePoint_Sales_DataWallet",
 						"type": "DatasetReference"
 					}
 				],
@@ -96,7 +96,7 @@
 		"parameters": {
 			"ExcelName": {
 				"type": "string",
-				"defaultValue": "Trade Excel Data for DWH.xlsx"
+				"defaultValue": "Sales Excel Data for DWH.xlsx"
 			}
 		},
 		"folder": {
