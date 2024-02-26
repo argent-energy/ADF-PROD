@@ -3897,7 +3897,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices')]",
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices_old')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4051,6 +4051,12 @@
 					"OmjSymbol": {
 						"type": "String",
 						"defaultValue": "X21-WMR"
+					},
+					"True": {
+						"type": "String"
+					},
+					"False": {
+						"type": "String"
 					}
 				},
 				"folder": {
