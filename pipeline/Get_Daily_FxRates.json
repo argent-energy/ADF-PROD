@@ -194,7 +194,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@or(contains(string(activity('Lookup Bank Holidays').output.firstRow),'2024-01-01'), or(equals(dayOfWeek(variables('YesterdaysDate')), 6), equals(dayOfWeek(variables('YesterdaysDate')), 0)))",
+						"value": "@or(contains(string(activity('Lookup Bank Holidays').output.firstRow), variables('YesterdaysDate')), or(equals(dayOfWeek(variables('YesterdaysDate')), 6), equals(dayOfWeek(variables('YesterdaysDate')), 0)))",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
