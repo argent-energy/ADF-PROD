@@ -14,7 +14,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "YesterdaysDate",
-					"value": "2024-02-23"
+					"value": "2024-02-26"
 				}
 			},
 			{
@@ -185,7 +185,7 @@
 						]
 					},
 					{
-						"activity": "Lookup Bank Holidays",
+						"activity": "Get latest bank holiday",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -194,7 +194,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@contains(activity('Lookup Bank Holidays').output.value, variables('YesterdaysDate'))\n",
+						"value": "@equals(variables('YesterdaysDate'), variables('LastBankHoliday'))",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -247,7 +247,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT [Date]\nFROM [Core].[BankHolidays]\nWHERE [Country] = 'England'",
+						"sqlReaderQuery": "SELECT MAX([Date]) 'Date'\nFROM [Core].[BankHolidays]\nWHERE [Country] = 'England'\n\tAND [Date] < GETDATE()",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -260,6 +260,31 @@
 						}
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Get latest bank holiday",
+				"description": "",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Lookup Bank Holidays",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "LastBankHoliday",
+					"value": {
+						"value": "@activity('Lookup Bank Holidays').output.value",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -275,6 +300,9 @@
 				"type": "String"
 			},
 			"False": {
+				"type": "String"
+			},
+			"LastBankHoliday": {
 				"type": "String"
 			}
 		},
