@@ -209,10 +209,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "False",
-								"value": {
-									"value": "@string(activity('Lookup Bank Holidays').output.firstRow)",
-									"type": "Expression"
-								}
+								"value": "Run pipeline."
 							}
 						}
 					],
@@ -228,10 +225,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "True",
-								"value": {
-									"value": "@string(activity('Lookup Bank Holidays').output.firstRow)",
-									"type": "Expression"
-								}
+								"value": "Do not run pipeline."
 							}
 						}
 					]
