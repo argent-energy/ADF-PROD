@@ -1,6 +1,30 @@
 {
 	"name": "WeekendTest",
 	"properties": {
+		"activities": [
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Weekend",
+					"value": {
+						"value": "@equals(dayOfWeek('2024-02-27'), 'Tuesday')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Weekend": {
+				"type": "Boolean"
+			}
+		},
 		"folder": {
 			"name": "Sales/OMJ"
 		},
