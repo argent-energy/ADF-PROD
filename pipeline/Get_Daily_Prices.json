@@ -1,0 +1,212 @@
+{
+	"name": "Get_Daily_Prices",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup price products",
+				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get yesterdays date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'Price'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SQL_Prod_DB",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "S.OmjProducts",
+							"SchemaName": "RAW"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "For each product",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup price products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup price products').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy OMJ daily prices to SQL",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+								},
+								{
+									"name": "Destination",
+									"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"additionalColumns": [
+										{
+											"name": "DateStamp",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
+											}
+										}
+									],
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['id']"
+											},
+											"sink": {
+												"name": "id",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['date']"
+											},
+											"sink": {
+												"name": "date",
+												"type": "DateTimeOffset"
+											}
+										},
+										{
+											"source": {
+												"path": "$['contractName']"
+											},
+											"sink": {
+												"name": "contractName",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"path": "$['settlement']"
+											},
+											"sink": {
+												"name": "settlement",
+												"type": "Decimal"
+											}
+										},
+										{
+											"source": {
+												"path": "$['DateStamp']"
+											},
+											"sink": {
+												"name": "DateStamp",
+												"type": "DateTimeOffset"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "OMJ_API_DS",
+									"type": "DatasetReference",
+									"parameters": {
+										"relativeURL": {
+											"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQL_Prod_DB",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "S.OmjPrices",
+										"SchemaName": "RAW"
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Get yesterdays date",
+				"description": "Date of pricing",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "YesterdaysDate",
+					"value": {
+						"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"YesterdaysDate": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Sales/OMJ"
+		},
+		"annotations": []
+	}
+}
