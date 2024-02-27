@@ -59,7 +59,8 @@
 					},
 					"activities": [
 						{
-							"name": "Copy OMJ daily FX rates to SQL",
+							"name": "Copy FX rates to SQL",
+							"description": "Copy daily OMJ FX rates to [RAW].[S.OmjFxRates]",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
