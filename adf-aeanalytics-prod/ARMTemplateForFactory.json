@@ -8843,6 +8843,432 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_FxRates')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Get yesterdays date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For each product",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup FX products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup FX products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy FX rates to SQL",
+									"description": "Copy daily OMJ FX rates to [RAW].[S.OmjFxRates]",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+										},
+										{
+											"name": "Destination",
+											"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjFxRates",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Get yesterdays date",
+						"description": "Date of pricing",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "YesterdaysDate",
+							"value": {
+								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"YesterdaysDate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
+				"[concat(variables('factoryId'), '/datasets/OMJ_API_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices_old2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get yesterdays date",
+						"description": "Date of pricing",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "YesterdaysDate",
+							"value": "2024-02-23"
+						}
+					},
+					{
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Get yesterdays date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup FX products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup FX products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy OMJ daily FX rates to SQL",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+										},
+										{
+											"name": "Destination",
+											"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjFxRates",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"YesterdaysDate": {
+						"type": "String"
+					},
+					"OmjSymbol": {
+						"type": "String",
+						"defaultValue": "X21-WMR"
+					}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
+				"[concat(variables('factoryId'), '/datasets/OMJ_API_DS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices_old')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8997,12 +9423,6 @@
 					"OmjSymbol": {
 						"type": "String",
 						"defaultValue": "X21-WMR"
-					},
-					"True": {
-						"type": "String"
-					},
-					"False": {
-						"type": "String"
 					}
 				},
 				"folder": {
@@ -12264,6 +12684,15 @@
 									"typeProperties": {
 										"source": {
 											"type": "ExcelSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
 												"recursive": true,
@@ -12348,14 +12777,6 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"True": {
-						"type": "String"
-					},
-					"False": {
-						"type": "String"
-					}
 				},
 				"folder": {
 					"name": "Sales"
@@ -12475,14 +12896,6 @@
 					"ExcelName": {
 						"type": "string",
 						"defaultValue": "Sales Excel Data for DWH.xlsx"
-					}
-				},
-				"variables": {
-					"True": {
-						"type": "String"
-					},
-					"False": {
-						"type": "String"
 					}
 				},
 				"folder": {
@@ -13614,301 +14027,6 @@
 				"[concat(variables('factoryId'), '/datasets/Blob_Sharepoint_Files')]",
 				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_NL')]",
 				"[concat(variables('factoryId'), '/datasets/SharePoint_SC_Tables')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Get_Daily_FxRates')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get yesterdays date",
-						"description": "Date of pricing",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "YesterdaysDate",
-							"value": "2024-02-23"
-						}
-					},
-					{
-						"name": "Lookup FX products",
-						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
-						"type": "Lookup",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQL_Prod_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "S.OmjProducts",
-									"SchemaName": "RAW"
-								}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Lookup FX products",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup FX products').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy OMJ daily FX rates to SQL",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [
-										{
-											"name": "Source",
-											"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
-										},
-										{
-											"name": "Destination",
-											"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
-										}
-									],
-									"typeProperties": {
-										"source": {
-											"type": "RestSource",
-											"httpRequestTimeout": "00:01:40",
-											"requestInterval": "00.00:00:00.010",
-											"requestMethod": "GET"
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"path": "$['id']"
-													},
-													"sink": {
-														"name": "id",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['date']"
-													},
-													"sink": {
-														"name": "date",
-														"type": "DateTimeOffset"
-													}
-												},
-												{
-													"source": {
-														"path": "$['contractName']"
-													},
-													"sink": {
-														"name": "contractName",
-														"type": "String"
-													}
-												},
-												{
-													"source": {
-														"path": "$['settlement']"
-													},
-													"sink": {
-														"name": "settlement",
-														"type": "Decimal"
-													}
-												}
-											]
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "OMJ_API_DS",
-											"type": "DatasetReference",
-											"parameters": {
-												"relativeURL": {
-													"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Prod_DB",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "S.OmjFxRates",
-												"SchemaName": "RAW"
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Get yesterdays date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Lookup Bank Holidays",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@contains(activity('Lookup Bank Holidays').output.value, variables('YesterdaysDate'))\n",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "Set variable2",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "False",
-										"value": "Run pipeline"
-									}
-								}
-							],
-							"ifTrueActivities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"policy": {
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "True",
-										"value": "Do not run pipeline"
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Lookup Bank Holidays",
-						"description": "Return list of England's bank holidays.",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Date]\nFROM [Core].[BankHolidays]\nWHERE [Country] = 'England'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SQL_Prod_DB",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "BankHolidays",
-									"SchemaName": "Core"
-								}
-							},
-							"firstRowOnly": false
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"variables": {
-					"YesterdaysDate": {
-						"type": "String"
-					},
-					"OmjSymbol": {
-						"type": "String",
-						"defaultValue": "X21-WMR"
-					},
-					"True": {
-						"type": "String"
-					},
-					"False": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Sales/OMJ"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
-				"[concat(variables('factoryId'), '/datasets/OMJ_API_DS')]"
 			]
 		},
 		{
@@ -22414,6 +22532,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Prod_DB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"TableName": {
+						"type": "string"
+					},
+					"SchemaName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SchemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Sharepoint_Data_Tables')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -24697,42 +24850,52 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_Prod_DB')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/WeekendTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "True or False",
+							"value": {
+								"value": "@or(contains('\"Date\": \"2024-01-01\"', pipeline().parameters.Date), or(equals(dayOfWeek(pipeline().parameters.Date), 6), equals(dayOfWeek(pipeline().parameters.Date), 0)))\n\n",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
-					"TableName": {
-						"type": "string"
-					},
-					"SchemaName": {
-						"type": "string"
+					"Date": {
+						"type": "string",
+						"defaultValue": "2024-01-01"
 					}
 				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SchemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
+				"variables": {
+					"True or False": {
+						"type": "Boolean"
 					}
-				}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
+			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices')]",
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_Settlements')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -24749,12 +24912,140 @@
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "YesterdaysDate",
-							"value": "2024-02-23"
+							"value": {
+								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
 						}
 					},
 					{
-						"name": "Lookup FX products",
-						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"name": "Non weekday check",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Get yesterdays date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Lookup Bank Holidays",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@or(contains(string(activity('Lookup Bank Holidays').output.firstRow), variables('YesterdaysDate')), or(equals(dayOfWeek(variables('YesterdaysDate')), 6), equals(dayOfWeek(variables('YesterdaysDate')), 0)))",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Execute FX Rates",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Get_Daily_FxRates",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								},
+								{
+									"name": "Execute Prices",
+									"type": "ExecutePipeline",
+									"dependsOn": [
+										{
+											"activity": "Execute FX Rates",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "Get_Daily_Prices",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup Bank Holidays",
+						"description": "Return the most recent England bank holiday.",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT MAX([Date]) 'Date'\nFROM [Core].[BankHolidays]\nWHERE [Country] = 'England'\n\tAND [Date] < GETDATE()",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "BankHolidays",
+									"SchemaName": "Core"
+								}
+							},
+							"firstRowOnly": true
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"YesterdaysDate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
+				"[concat(variables('factoryId'), '/pipelines/Get_Daily_FxRates')]",
+				"[concat(variables('factoryId'), '/pipelines/Get_Daily_Prices')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup price products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -24775,7 +25066,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'Price'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -24791,11 +25082,11 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "For each product",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup FX products",
+								"activity": "Lookup price products",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -24804,12 +25095,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup FX products').output.value",
+								"value": "@activity('Lookup price products').output.value",
 								"type": "Expression"
 							},
 							"activities": [
 								{
-									"name": "Copy OMJ daily FX rates to SQL",
+									"name": "Copy prices to SQL",
+									"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -24832,6 +25124,15 @@
 									"typeProperties": {
 										"source": {
 											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
 											"httpRequestTimeout": "00:01:40",
 											"requestInterval": "00.00:00:00.010",
 											"requestMethod": "GET"
@@ -24882,6 +25183,15 @@
 														"name": "settlement",
 														"type": "Decimal"
 													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
 												}
 											]
 										}
@@ -24903,13 +25213,31 @@
 											"referenceName": "SQL_Prod_DB",
 											"type": "DatasetReference",
 											"parameters": {
-												"TableName": "S.OmjFxRates",
+												"TableName": "S.OmjPrices",
 												"SchemaName": "RAW"
 											}
 										}
 									]
 								}
 							]
+						}
+					},
+					{
+						"name": "Get yesterdays date",
+						"description": "Date of pricing",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "YesterdaysDate",
+							"value": {
+								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -24919,10 +25247,6 @@
 				"variables": {
 					"YesterdaysDate": {
 						"type": "String"
-					},
-					"OmjSymbol": {
-						"type": "String",
-						"defaultValue": "X21-WMR"
 					}
 				},
 				"folder": {

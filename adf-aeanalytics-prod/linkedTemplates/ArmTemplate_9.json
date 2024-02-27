@@ -13,6 +13,390 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Prod_Traceablity')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_prod",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "CREATION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BUSINESS_UNIT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ORGANIZATION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PHYSICAL_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DOCUMENT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "REASON_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WORK_DEFINITION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ITEM_DESCRIPTION",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UNIT_OF_MEASURE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSFER_SUBINVENTORY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SUPPLIER_SITE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AGREEMENT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EXT_REFERENCE_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SHIPPING_METHOD",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUANTITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TANK_BALANCE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "RUNNING_TOTAL",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GRADE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSACTION_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LOT_NUMBER",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TRANSTYPE_REASON",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DENSITY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "STD_LTRS",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "traceabilityReport"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_test_BPA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Business Unit Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Blanket Purchase Agreement Number",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Status",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Site Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Description",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Item Description",
+						"type": "varchar"
+					},
+					{
+						"name": "Category Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Total Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Purchase Document Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Blanket Agreement Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "UOM Code",
+						"type": "varchar"
+					},
+					{
+						"name": "Delivered Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Order Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Remaining Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Trucks",
+						"type": "varchar"
+					},
+					{
+						"name": "Position Now",
+						"type": "varchar"
+					},
+					{
+						"name": "Expected Position",
+						"type": "varchar"
+					},
+					{
+						"name": "Weeknumbers Contract",
+						"type": "varchar"
+					},
+					{
+						"name": "Weeks Remaining",
+						"type": "varchar"
+					},
+					{
+						"name": "Next Monday",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Start Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement End Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Shipping Method",
+						"type": "varchar"
+					},
+					{
+						"name": "Incoterm",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Transporter Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Supplier",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 1 Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Supplier",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Unit Price",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Additional Charges 2 Currency",
+						"type": "varchar"
+					},
+					{
+						"name": "Buyer",
+						"type": "varchar"
+					},
+					{
+						"name": "Sustainability Position",
+						"type": "varchar"
+					},
+					{
+						"name": "Supplier Item",
+						"type": "varchar"
+					},
+					{
+						"name": "Deal Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Amount",
+						"type": "varchar"
+					},
+					{
+						"name": "Amount Released Against Agreement",
+						"type": "varchar"
+					},
+					{
+						"name": "Note To Vendor",
+						"type": "varchar"
+					},
+					{
+						"name": "FFA Spec",
+						"type": "varchar"
+					},
+					{
+						"name": "Line Status",
+						"type": "varchar"
+					},
+					{
+						"name": "EUR USD",
+						"type": "varchar"
+					},
+					{
+						"name": "EUR GBP",
+						"type": "varchar"
+					},
+					{
+						"name": "Updated Contract Status",
+						"type": "varchar"
+					},
+					{
+						"name": "DateStamp",
+						"type": "varchar"
+					},
+					{
+						"name": "Yield Adjusted Volume",
+						"type": "varchar"
+					},
+					{
+						"name": "Agreement Mid Date",
+						"type": "varchar"
+					},
+					{
+						"name": "Non-Delivered Quantity",
+						"type": "varchar"
+					},
+					{
+						"name": "Yield Adjusted Volume Non-Delivered",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "AppianBPA"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian_test_traceability')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1073,23 +1457,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get yesterdays date",
-						"description": "Date of pricing",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "YesterdaysDate",
-							"value": "2024-02-23"
-						}
-					},
-					{
-						"name": "Lookup FX products",
-						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"name": "Lookup price products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
 						"type": "Lookup",
 						"dependsOn": [
 							{
@@ -1110,7 +1479,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'Price'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1126,11 +1495,11 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "For each product",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup FX products",
+								"activity": "Lookup price products",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1139,12 +1508,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup FX products').output.value",
+								"value": "@activity('Lookup price products').output.value",
 								"type": "Expression"
 							},
 							"activities": [
 								{
-									"name": "Copy OMJ daily FX rates to SQL",
+									"name": "Copy prices to SQL",
+									"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -1167,6 +1537,15 @@
 									"typeProperties": {
 										"source": {
 											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
 											"httpRequestTimeout": "00:01:40",
 											"requestInterval": "00.00:00:00.010",
 											"requestMethod": "GET"
@@ -1217,6 +1596,15 @@
 														"name": "settlement",
 														"type": "Decimal"
 													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
 												}
 											]
 										}
@@ -1238,13 +1626,31 @@
 											"referenceName": "SQL_Prod_DB",
 											"type": "DatasetReference",
 											"parameters": {
-												"TableName": "S.OmjFxRates",
+												"TableName": "S.OmjPrices",
 												"SchemaName": "RAW"
 											}
 										}
 									]
 								}
 							]
+						}
+					},
+					{
+						"name": "Get yesterdays date",
+						"description": "Date of pricing",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "YesterdaysDate",
+							"value": {
+								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
 						}
 					}
 				],
@@ -1254,10 +1660,6 @@
 				"variables": {
 					"YesterdaysDate": {
 						"type": "String"
-					},
-					"OmjSymbol": {
-						"type": "String",
-						"defaultValue": "X21-WMR"
 					}
 				},
 				"folder": {
@@ -4619,7 +5021,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_Prod_Traceablity')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Oracle_Data_Trade_Pipeline')]",
@@ -5677,174 +6081,6 @@
 				},
 				"folder": {
 					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_UltimoPlanning')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_UltimoPlan_Blob_to_SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_UltimoPlan_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_UltimoPlan_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "SQL_UltimoPlanningTables",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "Copy_UltimoPlan_Blob_to_SQL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[Operations].[SQL_UltimoPlanningTables]"
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Operations"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/StdCostsAndSpread_ExcelPipelines')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copy all Excel files in the \"Finance - Standard Costs\" and Spread folder on SharePoint to the \"standard-costs-files\" container. Then copy the production files to [RAW].[F.Production_StanlowBDR] and [RAW].[F.Production_StanlowPTP]. Then copies the previous month stock file (if it exists) to the [RAW].[F.ActTankItem]  table.\n",
-				"activities": [
-					{
-						"name": "Copy SharePoint files to Blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_StdCostsSpread_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Production Blob to DWH",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy SharePoint files to Blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_ProductionData_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy Stock Blob to DWH",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy Production Blob to DWH",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_ActTankItemData_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance/Std Costs + Spread"
 				},
 				"annotations": []
 			},
