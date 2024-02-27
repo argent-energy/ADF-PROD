@@ -21,7 +21,7 @@
 				}
 			},
 			{
-				"name": "Lookup FX products",
+				"name": "Lookup FX products copy",
 				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
 				"type": "Lookup",
 				"state": "Inactive",
@@ -60,7 +60,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Lookup FX products",
+						"activity": "Lookup FX products copy",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -74,7 +74,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy OMJ daily FX rates to SQL",
+							"name": "Copy OMJ daily FX rates to SQL copy",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -178,7 +178,7 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "Non weekday check",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
@@ -204,6 +204,8 @@
 						{
 							"name": "Set variable2",
 							"type": "SetVariable",
+							"state": "Inactive",
+							"onInactiveMarkAs": "Succeeded",
 							"dependsOn": [],
 							"policy": {
 								"secureOutput": false,
@@ -213,6 +215,168 @@
 							"typeProperties": {
 								"variableName": "False",
 								"value": "Run pipeline."
+							}
+						},
+						{
+							"name": "Lookup FX products",
+							"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "SQL_Prod_DB",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": "S.OmjProducts",
+										"SchemaName": "RAW"
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "For each product",
+							"type": "ForEach",
+							"dependsOn": [
+								{
+									"activity": "Lookup FX products",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Lookup FX products').output.value",
+									"type": "Expression"
+								},
+								"activities": [
+									{
+										"name": "Copy OMJ daily FX rates to SQL",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [
+											{
+												"name": "Source",
+												"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+											},
+											{
+												"name": "Destination",
+												"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+											}
+										],
+										"typeProperties": {
+											"source": {
+												"type": "RestSource",
+												"additionalColumns": [
+													{
+														"name": "DateStamp",
+														"value": {
+															"value": "@utcnow()",
+															"type": "Expression"
+														}
+													}
+												],
+												"httpRequestTimeout": "00:01:40",
+												"requestInterval": "00.00:00:00.010",
+												"requestMethod": "GET"
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false,
+												"tableOption": "autoCreate",
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"path": "$['id']"
+														},
+														"sink": {
+															"name": "id",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"path": "$['date']"
+														},
+														"sink": {
+															"name": "date",
+															"type": "DateTimeOffset"
+														}
+													},
+													{
+														"source": {
+															"path": "$['contractName']"
+														},
+														"sink": {
+															"name": "contractName",
+															"type": "String"
+														}
+													},
+													{
+														"source": {
+															"path": "$['settlement']"
+														},
+														"sink": {
+															"name": "settlement",
+															"type": "Decimal"
+														}
+													}
+												]
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "OMJ_API_DS",
+												"type": "DatasetReference",
+												"parameters": {
+													"relativeURL": {
+														"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "SQL_Prod_DB",
+												"type": "DatasetReference",
+												"parameters": {
+													"TableName": "S.OmjFxRates",
+													"SchemaName": "RAW"
+												}
+											}
+										]
+									}
+								]
 							}
 						}
 					],
@@ -236,7 +400,7 @@
 			},
 			{
 				"name": "Lookup Bank Holidays",
-				"description": "Return list of England's bank holidays.",
+				"description": "Return the most recent England bank holiday.",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {

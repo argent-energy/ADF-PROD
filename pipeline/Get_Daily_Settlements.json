@@ -43,6 +43,24 @@
 						"value": "@or(contains(string(activity('Lookup Bank Holidays').output.firstRow), variables('YesterdaysDate')), or(equals(dayOfWeek(variables('YesterdaysDate')), 6), equals(dayOfWeek(variables('YesterdaysDate')), 0)))",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Execute FX Rates",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Get_Daily_FxRates",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Set variable1",
