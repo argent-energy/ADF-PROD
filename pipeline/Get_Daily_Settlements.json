@@ -98,9 +98,6 @@
 		"variables": {
 			"YesterdaysDate": {
 				"type": "String"
-			},
-			"True": {
-				"type": "String"
 			}
 		},
 		"folder": {
