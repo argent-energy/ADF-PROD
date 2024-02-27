@@ -141,6 +141,15 @@
 												"name": "settlement",
 												"type": "Decimal"
 											}
+										},
+										{
+											"source": {
+												"path": "$['DateStamp']"
+											},
+											"sink": {
+												"name": "DateStamp",
+												"type": "DateTimeOffset"
+											}
 										}
 									]
 								}
