@@ -59,6 +59,29 @@
 								},
 								"waitOnCompletion": true
 							}
+						},
+						{
+							"name": "Execute Prices",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Execute FX Rates",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "Get_Daily_Prices",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
 						}
 					]
 				}
