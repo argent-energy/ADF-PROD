@@ -59,7 +59,8 @@
 					},
 					"activities": [
 						{
-							"name": "Copy OMJ daily prices to SQL",
+							"name": "Copy prices to SQL",
+							"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
