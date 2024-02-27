@@ -14,7 +14,7 @@
 				"typeProperties": {
 					"variableName": "Weekend",
 					"value": {
-						"value": "@equals(dayOfWeek('2024-02-27'), 'Tuesday')",
+						"value": "@or(contains('\"Date\": \"2024-01-01\"', '2024-01-01'), equals(dayOfWeek('2024-02-27'), 2))\n",
 						"type": "Expression"
 					}
 				}
