@@ -12,7 +12,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "Weekend",
+					"variableName": "True or False",
 					"value": {
 						"value": "@or(contains('\"Date\": \"2024-01-01\"', pipeline().parameters.Date), or(equals(dayOfWeek(pipeline().parameters.Date), 1), equals(dayOfWeek(pipeline().parameters.Date), 2)))\n\n",
 						"type": "Expression"
@@ -27,7 +27,7 @@
 			}
 		},
 		"variables": {
-			"Weekend": {
+			"True or False": {
 				"type": "Boolean"
 			}
 		},
