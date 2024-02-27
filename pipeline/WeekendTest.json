@@ -20,6 +20,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"Date": {
+				"type": "string",
+				"defaultValue": "2024-01-01"
+			}
+		},
 		"variables": {
 			"Weekend": {
 				"type": "Boolean"
