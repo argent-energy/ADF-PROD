@@ -14,7 +14,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "YesterdaysDate",
-					"value": "2024-02-26"
+					"value": "2024-01-01"
 				}
 			},
 			{
@@ -185,7 +185,7 @@
 						]
 					},
 					{
-						"activity": "Get latest bank holiday",
+						"activity": "Lookup Bank Holidays",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -194,7 +194,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(variables('YesterdaysDate'), variables('LastBankHoliday'))",
+						"value": "@contains(string(activity('Lookup Bank Holidays').output.firstRow),'2024-01-01')",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -209,7 +209,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "False",
-								"value": "Run pipeline"
+								"value": {
+									"value": "@string(activity('Lookup Bank Holidays').output.firstRow)",
+									"type": "Expression"
+								}
 							}
 						}
 					],
@@ -225,7 +228,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "True",
-								"value": "Do not run pipeline"
+								"value": {
+									"value": "@string(activity('Lookup Bank Holidays').output.firstRow)",
+									"type": "Expression"
+								}
 							}
 						}
 					]
@@ -259,32 +265,7 @@
 							"SchemaName": "Core"
 						}
 					},
-					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "Get latest bank holiday",
-				"description": "",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Lookup Bank Holidays",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "LastBankHoliday",
-					"value": {
-						"value": "@activity('Lookup Bank Holidays').output.value",
-						"type": "Expression"
-					}
+					"firstRowOnly": true
 				}
 			}
 		],
