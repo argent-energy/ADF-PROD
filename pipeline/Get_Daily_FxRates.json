@@ -193,10 +193,6 @@
 		"variables": {
 			"YesterdaysDate": {
 				"type": "String"
-			},
-			"OmjSymbol": {
-				"type": "String",
-				"defaultValue": "X21-WMR"
 			}
 		},
 		"folder": {
