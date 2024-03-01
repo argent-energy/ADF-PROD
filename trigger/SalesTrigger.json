@@ -1,0 +1,24 @@
+{
+	"name": "SalesTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Get_Daily_Settlements",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2024-03-02T13:00:00",
+				"timeZone": "GMT Standard Time"
+			}
+		}
+	}
+}
