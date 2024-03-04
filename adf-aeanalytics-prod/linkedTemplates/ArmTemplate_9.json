@@ -1479,14 +1479,7 @@
 						"name": "Lookup price products",
 						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
 						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Get yesterdays date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -1546,11 +1539,11 @@
 									"userProperties": [
 										{
 											"name": "Source",
-											"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+											"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
 										},
 										{
 											"name": "Destination",
-											"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+											"value": "@{'RAW'}.@{'S.OmjPricesHistoric'}"
 										}
 									],
 									"typeProperties": {
@@ -1653,33 +1646,199 @@
 								}
 							]
 						}
-					},
-					{
-						"name": "Get yesterdays date",
-						"description": "Date of pricing",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "YesterdaysDate",
-							"value": {
-								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
-								"type": "Expression"
-							}
-						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"variables": {
-					"YesterdaysDate": {
-						"type": "String"
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get_Historic_FxRates')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For each product",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup FX products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup FX products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy prices to SQL",
+									"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
+										},
+										{
+											"name": "Destination",
+											"value": "@{'RAW'}.@{'S.OmjFxRatesHistoric'}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=@{item().Symbol}&contractNumber=0",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjFxRatesHistoric",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
 					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Sales/OMJ"
@@ -5409,259 +5568,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-12-10T11:15:02Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Pricing_Data_Trade_Pipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute BLOB To SQL For Pricing Data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Copy_Pricing_Sharepoint_To_BLOB",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Pricing_Blob_to_SQL",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Data Marks Script",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute BLOB To SQL For Pricing Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Pricing_Data_Marks_Script",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute SQL To BLOB For Trade Tables",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL_Trade-Tables_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Copy_Pricing_Sharepoint_To_BLOB",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Copy_Pricing_Sharepoint_To_BLOB",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Send Email Alert",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Get the Ticket Number",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://ae-adf-emailnotification.azurewebsites.net:443/api/Argent-Alerting/triggers/When_a_HTTP_request_is_received/invoke?api-version=2022-05-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=Aso6aks8InhkiT92JgC0HG-J1IvmAhT5B94OpeVK9lo",
-							"body": {
-								"value": "{\n    \"receiver\":\"@{pipeline().parameters.receiver}\",\n    \"title\":\"Pipeline Run Failed\",\n    \"message\":\"Job failed, ticket raised @{variables('TicketNo')}\",\n    \"color\":\"Red\",\n    \"dataFactoryName\":\"@{pipeline().DataFactory}\",\n    \"pipelineName\":\"@{pipeline().Pipeline}\",\n    \"pipelineRunId\":\"@{pipeline().RunId}\",\n    \"time\":\"@{utcnow()}\"\n}",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Raise an Incident",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Execute Data Marks Script",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {},
-							"url": "https://eu2api.symphonysummit.com/Argent/REST/Summit_RESTWCF.svc/RESTService/CommonWS_JsonObjCall",
-							"body": {
-								"ServiceName": "IM_LogOrUpdateIncident",
-								"objCommonParameters": {
-									"_ProxyDetails": {
-										"AuthType": "APIKEY",
-										"APIKey": "tryDnK94yXfNHDFbDyiy6HltkdY2uvw0f5UtnFfGZiY=",
-										"ProxyID": 0,
-										"ReturnType": "JSON",
-										"OrgID": 1
-									},
-									"incidentParamsJSON": {
-										"IncidentContainerJsonObj": {
-											"Updater": "Executive",
-											"CI_Key": "hostname",
-											"CI_Value": "",
-											"Ticket": {
-												"IsFromWebService": true,
-												"Priority_Name": "P3 - Medium",
-												"Classification_Name": "Data or Process in system not working",
-												"Sup_Function": "IT",
-												"Caller_EmailID": "lyndon.johnson@argentenergy.com",
-												"Status": "New",
-												"Urgency_Name": "Stops Work",
-												"Assigned_WorkGroup_Name": "Argent Reporting Support Team",
-												"Medium": "Web",
-												"Impact_Name": "Multiple Users",
-												"Category_Name": "Argent Reporting",
-												"CI_ID": "",
-												"SLA_Name": "",
-												"OpenCategory_Name": "Argent Reporting",
-												"Source": "Person",
-												"Description": "@{pipeline().parameters.TicketMessage}",
-												"PageName": "TicketDetail"
-											},
-											"TicketInformation": {
-												"Information": "TEST Ticket",
-												"InternalLog": "#InternalLog#",
-												"UserLog": "",
-												"Solution": "#Solution#"
-											},
-											"CustomFields": []
-										}
-									},
-									"RequestType": "RemoteCall"
-								}
-							}
-						}
-					},
-					{
-						"name": "Get the Ticket Number",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "Raise an Incident",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "TicketNo",
-							"value": {
-								"value": "@string(activity('Raise an Incident').output.TicketNo)",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"receiver": {
-						"type": "string",
-						"defaultValue": "data.mi@argentenergy.com"
-					},
-					"TicketID": {
-						"type": "string"
-					},
-					"JobMessage": {
-						"type": "string",
-						"defaultValue": "Azure Data Factory Error"
-					},
-					"TicketMessage": {
-						"type": "string",
-						"defaultValue": "Automated message: Data job has failedJob Failed"
-					}
-				},
-				"variables": {
-					"TicketNo": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Trade/Pricing"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-09-14T10:20:07Z"
 			},
 			"dependsOn": []
 		}
