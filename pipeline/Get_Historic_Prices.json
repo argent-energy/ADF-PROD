@@ -66,11 +66,11 @@
 							"userProperties": [
 								{
 									"name": "Source",
-									"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+									"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
 								},
 								{
 									"name": "Destination",
-									"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+									"value": "@{'RAW'}.@{'S.OmjPricesHistoric'}"
 								}
 							],
 							"typeProperties": {
