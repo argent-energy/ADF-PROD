@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup price products",
-				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
+				"name": "Lookup FX products",
+				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -38,7 +38,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup price products",
+						"activity": "Lookup FX products",
 						"dependencyConditions": [
 							"Succeeded"
 						]
