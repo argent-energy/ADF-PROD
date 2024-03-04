@@ -6,14 +6,7 @@
 				"name": "Lookup price products",
 				"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
 				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Get yesterdays date",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -180,31 +173,8 @@
 						}
 					]
 				}
-			},
-			{
-				"name": "Get yesterdays date",
-				"description": "Date of pricing",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "YesterdaysDate",
-					"value": {
-						"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
-						"type": "Expression"
-					}
-				}
 			}
 		],
-		"variables": {
-			"YesterdaysDate": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "Sales/OMJ"
 		},
