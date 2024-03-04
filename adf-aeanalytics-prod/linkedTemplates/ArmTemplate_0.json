@@ -238,6 +238,51 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/WeekendTest')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "True or False",
+							"value": {
+								"value": "@or(contains('\"Date\": \"2024-01-01\"', pipeline().parameters.Date), or(equals(dayOfWeek(pipeline().parameters.Date), 6), equals(dayOfWeek(pipeline().parameters.Date), 0)))\n\n",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Date": {
+						"type": "string",
+						"defaultValue": "2024-01-01"
+					}
+				},
+				"variables": {
+					"True or False": {
+						"type": "Boolean"
+					}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AppianDev')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -496,51 +541,6 @@
 				"type": "SelfHosted",
 				"description": "Integration Runtime setup for Appian",
 				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/WeekendTest')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"policy": {
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "True or False",
-							"value": {
-								"value": "@or(contains('\"Date\": \"2024-01-01\"', pipeline().parameters.Date), or(equals(dayOfWeek(pipeline().parameters.Date), 6), equals(dayOfWeek(pipeline().parameters.Date), 0)))\n\n",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"Date": {
-						"type": "string",
-						"defaultValue": "2024-01-01"
-					}
-				},
-				"variables": {
-					"True or False": {
-						"type": "Boolean"
-					}
-				},
-				"folder": {
-					"name": "Sales/OMJ"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
