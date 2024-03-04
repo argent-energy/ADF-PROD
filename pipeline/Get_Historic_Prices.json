@@ -161,7 +161,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"relativeURL": {
-											"value": "history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instruments=@{item().Symbol}&contractNumber=0",
+											"value": "history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=@{item().Symbol}&contractNumber=0",
 											"type": "Expression"
 										}
 									}
@@ -172,7 +172,7 @@
 									"referenceName": "SQL_Prod_DB",
 									"type": "DatasetReference",
 									"parameters": {
-										"TableName": "S.OmjPrices",
+										"TableName": "S.OmjPricesHistoric",
 										"SchemaName": "RAW"
 									}
 								}
