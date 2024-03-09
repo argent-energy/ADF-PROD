@@ -597,6 +597,384 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Get_Historic_FxRates')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For each product",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup FX products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup FX products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy prices to SQL",
+									"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
+										},
+										{
+											"name": "Destination",
+											"value": "@{'RAW'}.@{'S.OmjFxRatesHistoric'}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=@{item().Symbol}&contractNumber=0",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjFxRatesHistoric",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get_Historic_Prices')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup price products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"Price\"",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'Price'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For each product",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup price products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup price products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy prices to SQL",
+									"description": "Copy daily OMJ prices to [RAW].[S.OmjPrices]",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
+										},
+										{
+											"name": "Destination",
+											"value": "@{'RAW'}.@{'S.OmjPricesHistoric'}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=@{item().Symbol}&contractNumber=0",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjPricesHistoric",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OneFilepush')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3463,384 +3841,6 @@
 					"name": "Supply Chain"
 				},
 				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AppianProdSuppliers')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_prod",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Supplier_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_number",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "Supplier_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BU_bill_to",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BPA_exists",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Category_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "City",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Postal_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Country",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": "E_mail",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Site_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Purchasing",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Pay",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Inactive_date_VET_ID_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "VET_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "INS_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "INS_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "Certification_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GMP_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VIHB_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Vendor_category",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Default_payment_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_terms",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Invoice_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BIC_SWIFT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_supplier",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_site",
-						"type": "nvarchar"
-					},
-					{
-						"name": "IBAN",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Bank_account_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Address_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_created_by",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "SuppliersReport_Suppliers"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AppianTest')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Appian_Test",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Supplier_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_number",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "Supplier_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BU_bill_to",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BPA_exists",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Category_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_1",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Address_line_4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "City",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Postal_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Country",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": "E_mail",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Site_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Purchasing",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Pay",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Inactive_date_VET_ID_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "VET_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ISCC_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "INS_certificate_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "INS_certificate_expiry_date",
-						"type": "date"
-					},
-					{
-						"name": "Certification_type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "GMP_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VIHB_code",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Vendor_category",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Default_payment_method",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_terms",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Invoice_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Payment_currency",
-						"type": "nvarchar"
-					},
-					{
-						"name": "BIC_SWIFT",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_supplier",
-						"type": "nvarchar"
-					},
-					{
-						"name": "VAT_number_site",
-						"type": "nvarchar"
-					},
-					{
-						"name": "IBAN",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Bank_account_number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Address_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_creation_date",
-						"type": "date"
-					},
-					{
-						"name": "Site_created_by",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "Staging",
-					"table": "SuppliersReport_Suppliers"
-				}
 			},
 			"dependsOn": []
 		}
