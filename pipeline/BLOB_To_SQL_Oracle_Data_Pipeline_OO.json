@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.XLA_AE_HEADERS_2019-23"
+							"TableName": "O.AP_PAYMENT_SCHEDULES_ALL"
 						}
 					}
 				]
