@@ -4782,7 +4782,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.XLA_AE_HEADERS_2019-23"
+									"TableName": "O.AP_PAYMENT_SCHEDULES_ALL"
 								}
 							}
 						]
@@ -4855,7 +4855,7 @@
 						"type": "Script",
 						"dependsOn": [],
 						"policy": {
-							"timeout": "7.0:00:00",
+							"timeout": "0.12:00:00",
 							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
@@ -21690,7 +21690,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "XLA_AE_HEADERS.csv"
+						"fileName": "AP_PAYMENT_SCHEDULES_ALL.csv"
 					}
 				}
 			},
@@ -21933,7 +21933,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "XLA_AE_HEADERS_2019-23.csv",
+						"fileName": "AP_PAYMENT_SCHEDULES_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
