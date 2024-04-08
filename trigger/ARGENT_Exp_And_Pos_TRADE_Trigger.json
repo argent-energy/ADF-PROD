@@ -14,10 +14,18 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Hour",
-				"interval": 24,
+				"frequency": "Day",
+				"interval": 1,
 				"startTime": "2024-04-09T00:30:00",
-				"timeZone": "GMT Standard Time"
+				"timeZone": "GMT Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						0
+					]
+				}
 			}
 		}
 	}
