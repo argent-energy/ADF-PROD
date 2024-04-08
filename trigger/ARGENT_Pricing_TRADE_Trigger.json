@@ -16,14 +16,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2022-07-21T09:14:00",
-				"timeZone": "W. Europe Standard Time",
+				"startTime": "2023-04-01T00:00:00",
+				"timeZone": "GMT Standard Time",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						10
+						9
 					]
 				}
 			}
