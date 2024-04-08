@@ -1775,7 +1775,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2022-09-05T14:01:00Z",
+						"startTime": "2024-04-01T00:00:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -1812,8 +1812,16 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2024-01-15T05:00:00",
-						"timeZone": "GMT Standard Time"
+						"startTime": "2024-04-01T00:00:00",
+						"timeZone": "GMT Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								4
+							]
+						}
 					}
 				}
 			},
@@ -1840,8 +1848,16 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2024-01-16T22:30:00",
-						"timeZone": "GMT Standard Time"
+						"startTime": "2024-04-01T00:00:00",
+						"timeZone": "GMT Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								20
+							]
+						}
 					}
 				}
 			},
