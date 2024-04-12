@@ -1760,7 +1760,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowBDR"
+									"TableName": "F.Production_StanlowBDR_2024"
 								}
 							}
 						]
@@ -1785,7 +1785,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP]"
+									"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024]"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -1818,7 +1818,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowBDR]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "UPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -2068,7 +2068,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowPTP"
+									"TableName": "F.Production_StanlowPTP_2024"
 								}
 							}
 						]
@@ -2100,7 +2100,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowPTP]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "UPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"

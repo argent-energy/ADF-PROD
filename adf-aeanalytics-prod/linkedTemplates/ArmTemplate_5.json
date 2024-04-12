@@ -266,10 +266,10 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Monthly STD Cost Model Upload",
+					"sheetName": "Monthly",
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Stanlow BDR Production Reporting 2023.xlsx",
+						"fileName": "Stanlow BDR Production Reporting 2024.xlsx",
 						"container": "standard-costs-files"
 					},
 					"range": "A7:Q100",
@@ -294,10 +294,10 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Monthly STD Cost Model Upload",
+					"sheetName": "Monthly",
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Stanlow PTP Production Reporting 2023.xlsx",
+						"fileName": "Stanlow PTP Production Reporting 2024.xlsx",
 						"container": "standard-costs-files"
 					},
 					"range": "A7:Q100",

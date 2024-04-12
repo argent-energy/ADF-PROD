@@ -6617,7 +6617,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowBDR"
+									"TableName": "F.Production_StanlowBDR_2024"
 								}
 							}
 						]
@@ -6642,7 +6642,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP]"
+									"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024]"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -6675,7 +6675,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowBDR]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "UPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -6925,7 +6925,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "F.Production_StanlowPTP"
+									"TableName": "F.Production_StanlowPTP_2024"
 								}
 							}
 						]
@@ -6957,7 +6957,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowPTP]\r\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "UPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -23371,10 +23371,10 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Monthly STD Cost Model Upload",
+					"sheetName": "Monthly",
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Stanlow BDR Production Reporting 2023.xlsx",
+						"fileName": "Stanlow BDR Production Reporting 2024.xlsx",
 						"container": "standard-costs-files"
 					},
 					"range": "A7:Q100",
@@ -23401,10 +23401,10 @@
 				"annotations": [],
 				"type": "Excel",
 				"typeProperties": {
-					"sheetName": "Monthly STD Cost Model Upload",
+					"sheetName": "Monthly",
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Stanlow PTP Production Reporting 2023.xlsx",
+						"fileName": "Stanlow PTP Production Reporting 2024.xlsx",
 						"container": "standard-costs-files"
 					},
 					"range": "A7:Q100",
