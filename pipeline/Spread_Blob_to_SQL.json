@@ -71,6 +71,15 @@
 							"typeProperties": {
 								"source": {
 									"type": "ExcelSource",
+									"additionalColumns": [
+										{
+											"name": "Stamp",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
+											}
+										}
+									],
 									"storeSettings": {
 										"type": "AzureBlobStorageReadSettings",
 										"recursive": true,
