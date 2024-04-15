@@ -6649,7 +6649,7 @@
 						}
 					},
 					{
-						"name": "Add datestamp to SBDR",
+						"name": "Add row id and datestamp to SBDR",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -6675,7 +6675,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -6931,7 +6931,7 @@
 						]
 					},
 					{
-						"name": "Add datestamp to SPTP",
+						"name": "Add row id and datestamp to SPTP",
 						"type": "Script",
 						"dependsOn": [
 							{
@@ -6957,7 +6957,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "UPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE)"
+									"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
