@@ -16,7 +16,7 @@
 				"type": "AzureBlobStorageLocation",
 				"container": "standard-costs-files"
 			},
-			"range": "A2:O300",
+			"range": "A2:N300",
 			"firstRowAsHeader": true
 		},
 		"schema": []
