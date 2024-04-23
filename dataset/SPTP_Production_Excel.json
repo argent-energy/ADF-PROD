@@ -11,6 +11,7 @@
 		"annotations": [],
 		"type": "Excel",
 		"typeProperties": {
+			"sheetName": "Monthly",
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "Stanlow PTP Production Reporting 2023.xlsx",
