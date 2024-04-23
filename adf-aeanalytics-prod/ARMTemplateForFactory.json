@@ -10892,6 +10892,30 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
+					},
+					{
+						"name": "SQL_SupplierBalanceTables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_FinancePricingTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_SupplierBalancesTables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -10904,7 +10928,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SQL_FinancePricingTables')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_OrdersAndInvoicesTables')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_OrdersAndInvoicesTables')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL_SupplierBalancesTables')]"
 			]
 		},
 		{
@@ -25948,6 +25973,46 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_SupplierBalancesTables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_FinancePricingTables",
+						"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_SupplierBalances]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance/Ad-hoc Fianance Reporting"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
 		}
 	]
 }

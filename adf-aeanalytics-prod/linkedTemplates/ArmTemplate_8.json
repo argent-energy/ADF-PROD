@@ -13,6 +13,225 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Get_Daily_FxRates')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup FX products",
+						"description": "Return list of Symbols from [RAW].[S.OmjProducts] with Type \"FX\"",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Get yesterdays date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT [Symbol]\nFROM [RAW].[S.OmjProducts]\nWHERE [Type] = 'FX'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQL_Prod_DB",
+								"type": "DatasetReference",
+								"parameters": {
+									"TableName": "S.OmjProducts",
+									"SchemaName": "RAW"
+								}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For each product",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup FX products",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup FX products').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy FX rates to SQL",
+									"description": "Copy daily OMJ FX rates to [RAW].[S.OmjFxRates]",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{concat('settlement?date=', variables('YesterdaysDate'), '&instruments=', item().Symbol)}"
+										},
+										{
+											"name": "Destination",
+											"value": "omj-daily-prices/@{variables('YesterdaysDate')}/@{concat(concat(item().Symbol, '_', variables('YesterdaysDate')), '.json')}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "RestSource",
+											"additionalColumns": [
+												{
+													"name": "DateStamp",
+													"value": {
+														"value": "@utcNow()",
+														"type": "Expression"
+													}
+												}
+											],
+											"httpRequestTimeout": "00:01:40",
+											"requestInterval": "00.00:00:00.010",
+											"requestMethod": "GET"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"path": "$['id']"
+													},
+													"sink": {
+														"name": "id",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['date']"
+													},
+													"sink": {
+														"name": "date",
+														"type": "DateTimeOffset"
+													}
+												},
+												{
+													"source": {
+														"path": "$['contractName']"
+													},
+													"sink": {
+														"name": "contractName",
+														"type": "String"
+													}
+												},
+												{
+													"source": {
+														"path": "$['settlement']"
+													},
+													"sink": {
+														"name": "settlement",
+														"type": "Decimal"
+													}
+												},
+												{
+													"source": {
+														"path": "$['DateStamp']"
+													},
+													"sink": {
+														"name": "DateStamp",
+														"type": "DateTimeOffset"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "OMJ_API_DS",
+											"type": "DatasetReference",
+											"parameters": {
+												"relativeURL": {
+													"value": "settlement?date=@{variables('YesterdaysDate')}&instruments=@{item().Symbol}",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQL_Prod_DB",
+											"type": "DatasetReference",
+											"parameters": {
+												"TableName": "S.OmjFxRates",
+												"SchemaName": "RAW"
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "Get yesterdays date",
+						"description": "Date of pricing",
+						"type": "SetVariable",
+						"dependsOn": [],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "YesterdaysDate",
+							"value": {
+								"value": "@formatDateTime(adddays(utcnow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"variables": {
+					"YesterdaysDate": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Sales/OMJ"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Get_Daily_Prices')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1090,6 +1309,30 @@
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "SQL_OrdersAndInvoicesTables",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "SQL_SupplierBalanceTables",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SQL_FinancePricingTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL_SupplierBalancesTables",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -3467,377 +3710,6 @@
 									"type": "Expression"
 								},
 								"wildcardFileName": "*json",
-								"enablePartitionDiscovery": false
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VesselFinder_PortData')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Lookup IMO",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "VesselFinder_IMOs",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Each IMO",
-						"description": "Copies each IMO number in the lookup table to a separate API request.",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "DeleteOldPortCalls",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Lookup IMO').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy_VesselFinder_To_Blob",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "RestSource",
-											"httpRequestTimeout": "00:01:40",
-											"requestInterval": "00.00:00:00.010",
-											"requestMethod": "GET",
-											"paginationRules": {
-												"supportRFC5988": "true"
-											}
-										},
-										"sink": {
-											"type": "JsonSink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											},
-											"formatSettings": {
-												"type": "JsonWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "VesselFinder_Ports",
-											"type": "DatasetReference",
-											"parameters": {
-												"IMO": {
-													"value": "@string(item().imo)",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "VesselFinder_Ports_JSON_Outputs",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Vessel Portcalls JSON Blob Get Metadata",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "Each IMO",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "VesselFinder_Ports_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Copy Portcalls",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Vessel Portcalls JSON Blob Get Metadata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"additionalColumns": [
-									{
-										"name": "Stamp",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.json",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['PORTCALL']['MMSI']"
-										},
-										"sink": {
-											"name": "MMSI",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['IMO']"
-										},
-										"sink": {
-											"name": "IMO",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['LOCODE']"
-										},
-										"sink": {
-											"name": "LOCODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['EVENT']"
-										},
-										"sink": {
-											"name": "EVENT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['TIMESTAMP']"
-										},
-										"sink": {
-											"name": "TIMESTAMP",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['PORT']"
-										},
-										"sink": {
-											"name": "PORT",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['PORTCALL']['COUNTRY']"
-										},
-										"sink": {
-											"name": "COUNTRY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['Stamp']"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VesselFinder_Ports_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Argent_Database",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "VesselFinderPortCalls"
-								}
-							}
-						]
-					},
-					{
-						"name": "Create Port Calls Table",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Copy Portcalls",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabase1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "Query",
-									"text": "\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls_Historical','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls_Historical\r\n\r\n\tSELECT\t\t*\r\n\tINTO\t\t[SupplyChain].[VesselFinderPortCalls_Historical]\r\n\tFROM\t\t[RAW].[VesselFinderPortCalls] v\r\n\tLEFT JOIN\t(\r\n\t\t\t\t\tSELECT\t\tDISTINCT [Index]\r\n\t\t\t\t\t,\t\t\t[Vessel IMO]\r\n\t\t\t\t\t,\t\t\t[Mothervessel IMO]\r\n\t\t\t\t\t,\t\t\t[Vessel Transfer Indicator]\r\n\t\t\t\t\t,\t\t\t[Live Shipment Indicator]\r\n\t\t\t\t\tFROM\t\tSupplyChain.ShippingContracts\r\n\t\t\t\t\tWHERE\t\tISNULL([Mothervessel IMO],[Vessel IMO]) IS NOT NULL\r\n\t\t\t\t\tAND\t\t\tISNULL([Mothervessel IMO],[Vessel IMO]) <> ''\r\n\r\n\t\t\t\t) s\r\n\tON\t\t\tCASE\r\n\t\t\t\t\tWHEN [Vessel Transfer Indicator] = 'X'\r\n\t\t\t\t\t\tTHEN [Vessel IMO]\r\n\t\t\t\t\tELSE ISNULL([Mothervessel IMO],[Vessel IMO])\r\n\t\t\t\tEND = v.[IMO]\r\n\r\n\r\n\tIF OBJECT_ID('SupplyChain.VesselFinderPortCalls','U') IS NOT NULL\r\n        DROP TABLE SupplyChain.VesselFinderPortCalls\r\n\r\n\tSELECT\t\t*\r\n\tINTO\t\tSupplyChain.VesselFinderPortCalls\r\n\tFROM\t\t[SupplyChain].[VesselFinderPortCalls_Historical]\r\n\tWHERE\t\t[Live Shipment Indicator] = 1\r\n\r\n\tDROP TABLE [RAW].[VesselFinderPortCalls]"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "DeleteOldPortCalls",
-						"type": "Delete",
-						"dependsOn": [
-							{
-								"activity": "Lookup IMO",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "VesselFinder_Ports_JSON_Outputs",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"enableLogging": false,
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"modifiedDatetimeStart": "2023-04-06T00:00:00.000Z",
-								"modifiedDatetimeEnd": {
-									"value": "@subtractFromTime(utcnow(),3,'Month')",
-									"type": "Expression"
-								},
-								"wildcardFileName": "*.json",
 								"enablePartitionDiscovery": false
 							}
 						}
