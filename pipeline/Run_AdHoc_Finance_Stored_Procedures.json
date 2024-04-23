@@ -13,6 +13,9 @@
 						]
 					}
 				],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -26,10 +29,36 @@
 				"name": "SQL_OrdersAndInvoicesTables",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "SQL_OrdersAndInvoicesTables",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SQL_SupplierBalanceTables",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SQL_FinancePricingTables",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL_SupplierBalancesTables",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
