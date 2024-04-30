@@ -384,7 +384,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.AP_PAYMENT_SCHEDULES_ALL"
+									"TableName": "O.AR_PAYMENT_SCHEDULES_ALL"
 								}
 							}
 						]

@@ -1277,14 +1277,7 @@
 					{
 						"name": "SQL_FinancePricingTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_OrdersAndInvoicesTables",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"secureInput": false
 						},
@@ -1301,7 +1294,14 @@
 					{
 						"name": "SQL_OrdersAndInvoicesTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "SQL_SupplierBalanceTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"policy": {
 							"secureInput": false
 						},

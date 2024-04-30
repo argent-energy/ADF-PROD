@@ -4782,7 +4782,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.AP_PAYMENT_SCHEDULES_ALL"
+									"TableName": "O.AR_PAYMENT_SCHEDULES_ALL"
 								}
 							}
 						]
@@ -10855,14 +10855,7 @@
 					{
 						"name": "SQL_FinancePricingTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "SQL_OrdersAndInvoicesTables",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"secureInput": false
 						},
@@ -10879,7 +10872,14 @@
 					{
 						"name": "SQL_OrdersAndInvoicesTables",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "SQL_SupplierBalanceTables",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"policy": {
 							"secureInput": false
 						},
@@ -12819,6 +12819,46 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-12-11T20:19:19Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_SupplierBalancesTables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SQL_FinancePricingTables",
+						"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Finance].[SQL_SupplierBalances]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance/Ad-hoc Fianance Reporting"
+				},
+				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
@@ -21812,7 +21852,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "AP_PAYMENT_SCHEDULES_ALL.csv"
+						"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv"
 					}
 				}
 			},
@@ -22055,7 +22095,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "AP_PAYMENT_SCHEDULES_ALL.csv",
+						"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
@@ -25663,7 +25703,7 @@
 						"timeZone": "GMT Standard Time",
 						"schedule": {
 							"minutes": [
-								0
+								30
 							],
 							"hours": [
 								5
@@ -25973,46 +26013,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SQL_SupplierBalancesTables')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "SQL_FinancePricingTables",
-						"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[Finance].[SQL_SupplierBalances]"
-						},
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance/Ad-hoc Fianance Reporting"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]"
-			]
 		}
 	]
 }
