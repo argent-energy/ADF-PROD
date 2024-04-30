@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "AP_PAYMENT_SCHEDULES_ALL.csv"
+				"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv"
 			}
 		}
 	},
