@@ -4782,7 +4782,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.AR_PAYMENT_SCHEDULES_ALL"
+									"TableName": "O.DOO_FULFILL_LINES_ALL"
 								}
 							}
 						]
@@ -21852,7 +21852,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv"
+						"fileName": "DOO_FULFILL_LINES_ALL.csv"
 					}
 				}
 			},
@@ -22095,7 +22095,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv",
+						"fileName": "DOO_FULFILL_LINES_ALL.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
