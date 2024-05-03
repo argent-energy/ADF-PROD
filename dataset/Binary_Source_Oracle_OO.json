@@ -11,7 +11,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "FtpServerLocation",
-				"fileName": "AR_PAYMENT_SCHEDULES_ALL.csv"
+				"fileName": "DOO_FULFILL_LINES_ALL.csv"
 			}
 		}
 	},
