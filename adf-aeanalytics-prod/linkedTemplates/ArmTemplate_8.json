@@ -13,6 +13,165 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy_StdCostsSpread_Sharepoint_To_BLOB')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copies Standard Costs and Spread Excel files from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
+				"activities": [
+					{
+						"name": "Sharepoint_token",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": true,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/x-www-form-urlencoded"
+							},
+							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
+							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
+						}
+					},
+					{
+						"name": "Get_file_list",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Sharepoint_token",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {
+								"Authorization": {
+									"value": "@{concat('Bearer ', activity('Sharepoint_token').output.access_token)}",
+									"type": "Expression"
+								},
+								"Accept": "application/json"
+							},
+							"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFolderByServerRelativeUrl('Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread')/Files"
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get_file_list",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get_file_list').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy_Sharepoint_to_Blob",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": true
+									},
+									"userProperties": [
+										{
+											"name": "Destination",
+											"value": "standard-costs-files//"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET",
+												"additionalHeaders": {
+													"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
+													"type": "Expression"
+												},
+												"requestTimeout": ""
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobStorageWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "Sharepoint_StdCostsSpread_ExcelFiles",
+											"type": "DatasetReference",
+											"parameters": {
+												"RelativeURL": {
+													"value": "@{item().ServerRelativeUrl}",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Blob_StdCostsSpread_SharepointFiles",
+											"type": "DatasetReference",
+											"parameters": {
+												"ItemName": {
+													"value": "@{item().Name}",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Finance/Std Costs + Spread"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-11-11T15:23:09Z"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy_UltimoPlan_Blob_to_SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3645,80 +3804,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-11-11T15:23:09Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ShipmentLines_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Shipment Lines",
-						"description": "Copy Shipment Lines Excel sheet to DWH",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Blob_ShipmentLines_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Sharepoint_Data_Tables",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "TEMP.ShipmentLines"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Supply Chain"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
 			},
 			"dependsOn": []
 		}

@@ -26652,6 +26652,8 @@
 					{
 						"name": "Get Codecombinations data",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Put DimFinanceRef in staging",
@@ -26714,6 +26716,8 @@
 					{
 						"name": "Put codecombinations into staging",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Get Codecombinations data",
@@ -26771,6 +26775,129 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Get dim Finance Function",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Put codecombinations into staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFunction]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvFinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "GtFinanceFunction",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get dim Finance Function",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csvFinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQL_FinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -26790,7 +26917,9 @@
 				"[concat(variables('factoryId'), '/datasets/AESQLFinanceRef')]",
 				"[concat(variables('factoryId'), '/datasets/csvDimCodeCombinations')]",
 				"[concat(variables('factoryId'), '/datasets/csvCodeCombinations')]",
-				"[concat(variables('factoryId'), '/datasets/AESQL_CodeCombination')]"
+				"[concat(variables('factoryId'), '/datasets/AESQL_CodeCombination')]",
+				"[concat(variables('factoryId'), '/datasets/csvFinanceFunction')]",
+				"[concat(variables('factoryId'), '/datasets/AESQL_FinanceFunction')]"
 			]
 		},
 		{
@@ -27538,6 +27667,168 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "Staging.DimCodeCombinations"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "financefunction.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQL_FinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.DimFunctions"
 				}
 			},
 			"dependsOn": [

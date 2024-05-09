@@ -482,6 +482,145 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "financefunction.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian_Copy_OTBI_Reports')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3673,165 +3812,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_StdCostsSpread_Sharepoint_To_BLOB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copies Standard Costs and Spread Excel files from the SharePoint site, \"PowerBI data\", to the Azure Blob Storage.",
-				"activities": [
-					{
-						"name": "Sharepoint_token",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
-							},
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
-							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
-						}
-					},
-					{
-						"name": "Get_file_list",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "Sharepoint_token",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "GET",
-							"headers": {
-								"Authorization": {
-									"value": "@{concat('Bearer ', activity('Sharepoint_token').output.access_token)}",
-									"type": "Expression"
-								},
-								"Accept": "application/json"
-							},
-							"url": "https://argentenergyltd.sharepoint.com/sites/PowerBIdata/_api/web/GetFolderByServerRelativeUrl('Shared%20Documents/General/Excel%20files/Finance%20-%20Standard%20Costs%20and%20Spread')/Files"
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get_file_list",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get_file_list').output.value",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "Copy_Sharepoint_to_Blob",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": true
-									},
-									"userProperties": [
-										{
-											"name": "Destination",
-											"value": "standard-costs-files//"
-										}
-									],
-									"typeProperties": {
-										"source": {
-											"type": "BinarySource",
-											"storeSettings": {
-												"type": "HttpReadSettings",
-												"requestMethod": "GET",
-												"additionalHeaders": {
-													"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-													"type": "Expression"
-												},
-												"requestTimeout": ""
-											},
-											"formatSettings": {
-												"type": "BinaryReadSettings"
-											}
-										},
-										"sink": {
-											"type": "BinarySink",
-											"storeSettings": {
-												"type": "AzureBlobStorageWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "Sharepoint_StdCostsSpread_ExcelFiles",
-											"type": "DatasetReference",
-											"parameters": {
-												"RelativeURL": {
-													"value": "@{item().ServerRelativeUrl}",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "Blob_StdCostsSpread_SharepointFiles",
-											"type": "DatasetReference",
-											"parameters": {
-												"ItemName": {
-													"value": "@{item().Name}",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance/Std Costs + Spread"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-11T15:23:09Z"
 			},
 			"dependsOn": []
 		}
