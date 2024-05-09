@@ -1,0 +1,16 @@
+{
+	"name": "AE_SQLDB",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=AE-WE-AE-SQLDB.ae.local;initial catalog=FinanceCube;user id=FinanceCube",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxYjZkMjg3ZS1lZWY1LTQ2MmUtOTljOS05YWIyNjg3ODBiMGYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "AppianRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
