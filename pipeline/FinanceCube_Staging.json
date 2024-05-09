@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Get FactBalances Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -415,11 +415,11 @@
 				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "Put Factbalances in staging",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "Get FactBalances Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
