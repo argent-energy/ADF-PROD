@@ -1,0 +1,12 @@
+{
+	"name": "AESQL_CodeCombinations",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AE_SQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}

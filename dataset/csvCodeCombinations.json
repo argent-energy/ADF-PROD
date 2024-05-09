@@ -1,0 +1,136 @@
+{
+	"name": "csvCodeCombinations",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "codecombinations.csv",
+				"fileSystem": "financecube"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "GLLedgeID",
+				"type": "String"
+			},
+			{
+				"name": "Ledger_ID",
+				"type": "String"
+			},
+			{
+				"name": "Code_Combination_id",
+				"type": "String"
+			},
+			{
+				"name": "CURRENCY_CODE",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NAME",
+				"type": "String"
+			},
+			{
+				"name": "ACTUAL_FLAG",
+				"type": "String"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "String"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_TYPE",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_YEAR",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NUM",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NET_DR",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NET_CR",
+				"type": "String"
+			},
+			{
+				"name": "QUARTER_TO_DATE_DR",
+				"type": "String"
+			},
+			{
+				"name": "QUARTER_TO_DATE_CR",
+				"type": "String"
+			},
+			{
+				"name": "PROJECT_TO_DATE_DR",
+				"type": "String"
+			},
+			{
+				"name": "PROJECT_TO_DATE_CR",
+				"type": "String"
+			},
+			{
+				"name": "BEGIN_BALANCE_DR",
+				"type": "String"
+			},
+			{
+				"name": "BEGIN_BALANCE_CR",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NET_DR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "PERIOD_NET_CR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "BEGIN_BALANCE_DR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "BEGIN_BALANCE_CR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "QUARTER_TO_DATE_DR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "QUARTER_TO_DATE_CR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "PROJECT_TO_DATE_DR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "PROJECT_TO_DATE_CR_BEQ",
+				"type": "String"
+			},
+			{
+				"name": "Stamp",
+				"type": "String"
+			}
+		]
+	}
+}
