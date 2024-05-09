@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "FactBalances.csv",
 				"fileSystem": "financecube"
 			},
 			"columnDelimiter": ",",
