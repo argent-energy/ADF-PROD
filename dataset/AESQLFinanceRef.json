@@ -1,0 +1,53 @@
+{
+	"name": "AESQLFinanceRef",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AE_SQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Account Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 8",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 7",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 6",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description 1",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Staging.DimFinanceRef"
+		}
+	}
+}
