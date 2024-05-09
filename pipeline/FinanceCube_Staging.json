@@ -726,6 +726,8 @@
 			{
 				"name": "Get dim Finance Function",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Put codecombinations into staging",
@@ -786,6 +788,8 @@
 			{
 				"name": "GtFinanceFunction",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get dim Finance Function",
