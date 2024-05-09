@@ -51,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
 		},
+		"AE_SQLDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://staeanalyticsprod.dfs.core.windows.net"
@@ -291,6 +295,9 @@
 					},
 					"appDev_connectionString": {
 						"value": "[parameters('appDev_connectionString')]"
+					},
+					"AE_SQLDB_connectionString": {
+						"value": "[parameters('AE_SQLDB_connectionString')]"
 					}
 				}
 			},

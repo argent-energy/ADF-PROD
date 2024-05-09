@@ -38,6 +38,9 @@
 		"appDev_connectionString": {
 			"value": ""
 		},
+		"AE_SQLDB_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://staeanalyticsprod.dfs.core.windows.net"
 		},
