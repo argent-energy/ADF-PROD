@@ -5,6 +5,8 @@
 			{
 				"name": "Get FactBalances Data",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -417,6 +419,8 @@
 			{
 				"name": "Put Factbalances in staging",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get FactBalances Data",
