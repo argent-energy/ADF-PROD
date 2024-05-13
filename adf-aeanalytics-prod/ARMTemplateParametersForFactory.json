@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adf-aeanalytics-prod"
 		},
+		"AE_SQLDB_connectionString": {
+			"value": ""
+		},
 		"AppianDev_connectionString": {
 			"value": ""
 		},
@@ -36,9 +39,6 @@
 			"value": ""
 		},
 		"appDev_connectionString": {
-			"value": ""
-		},
-		"AE_SQLDB_connectionString": {
 			"value": ""
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {

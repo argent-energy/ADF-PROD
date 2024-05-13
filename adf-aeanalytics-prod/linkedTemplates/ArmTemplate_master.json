@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
 		},
+		"AE_SQLDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
+		},
 		"AppianDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AppianDev'"
@@ -50,10 +54,6 @@
 		"appDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
-		},
-		"AE_SQLDB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -286,18 +286,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Appian_Test_connectionString": {
-						"value": "[parameters('Appian_Test_connectionString')]"
-					},
-					"Appian_prod_connectionString": {
-						"value": "[parameters('Appian_prod_connectionString')]"
-					},
-					"appDev_connectionString": {
-						"value": "[parameters('appDev_connectionString')]"
-					},
-					"AE_SQLDB_connectionString": {
-						"value": "[parameters('AE_SQLDB_connectionString')]"
 					}
 				}
 			},
@@ -318,6 +306,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AE_SQLDB_connectionString": {
+						"value": "[parameters('AE_SQLDB_connectionString')]"
+					},
+					"Appian_Test_connectionString": {
+						"value": "[parameters('Appian_Test_connectionString')]"
+					},
+					"Appian_prod_connectionString": {
+						"value": "[parameters('Appian_prod_connectionString')]"
+					},
+					"appDev_connectionString": {
+						"value": "[parameters('appDev_connectionString')]"
 					}
 				}
 			},

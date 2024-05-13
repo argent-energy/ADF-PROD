@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
 		},
+		"AE_SQLDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
+		},
 		"AppianDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AppianDev'"
@@ -50,10 +54,6 @@
 		"appDev_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
-		},
-		"AE_SQLDB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -8814,6 +8814,1145 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FinanceCube_Staging')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get FactBalances Data",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_Get_GL_Balances]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "PreserveHierarchy"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "GLLedgeID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "GLLedgeID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Ledger_ID",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Ledger_ID",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Code_Combination_id",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Code_Combination_id",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CURRENCY_CODE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "CURRENCY_CODE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NAME",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_NAME",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ACTUAL_FLAG",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "ACTUAL_FLAG",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_UPDATE_DATE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "LAST_UPDATE_DATE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAST_UPDATED_BY",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "LAST_UPDATED_BY",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_TYPE",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_TYPE",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_YEAR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_YEAR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NUM",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_NUM",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NET_DR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_NET_DR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NET_CR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "PERIOD_NET_CR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_TO_DATE_DR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QUARTER_TO_DATE_DR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_TO_DATE_CR",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QUARTER_TO_DATE_CR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PROJECT_TO_DATE_DR",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PROJECT_TO_DATE_DR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PROJECT_TO_DATE_CR",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PROJECT_TO_DATE_CR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BEGIN_BALANCE_DR",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "BEGIN_BALANCE_DR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BEGIN_BALANCE_CR",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "BEGIN_BALANCE_CR",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NET_DR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PERIOD_NET_DR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERIOD_NET_CR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PERIOD_NET_CR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BEGIN_BALANCE_DR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "BEGIN_BALANCE_DR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "BEGIN_BALANCE_CR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "BEGIN_BALANCE_CR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_TO_DATE_DR_BEQ",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QUARTER_TO_DATE_DR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "QUARTER_TO_DATE_CR_BEQ",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "QUARTER_TO_DATE_CR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PROJECT_TO_DATE_DR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PROJECT_TO_DATE_DR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PROJECT_TO_DATE_CR_BEQ",
+											"type": "Decimal",
+											"physicalType": "money",
+											"scale": 4,
+											"precision": 19
+										},
+										"sink": {
+											"name": "PROJECT_TO_DATE_CR_BEQ",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Stamp",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Stamp",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "financecube",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Put Factbalances in staging",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Get FactBalances Data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "FinanceCubeImport",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServerTable3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Get FinanceRef data",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Put Factbalances in staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFinance]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "getdimfinanceref",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Put DimFinanceRef in staging",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Get FinanceRef data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "getdimfinanceref",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQLFinanceRef",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Get Codecombinations data",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Put DimFinanceRef in staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[Prc_GetCodeCombinations]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvDimCodeCombinations",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Put codecombinations into staging",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Get Codecombinations data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csvCodeCombinations",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQL_CodeCombination",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Get dim Finance Function",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Put codecombinations into staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFunction]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvFinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "GtFinanceFunction",
+						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Get dim Finance Function",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csvFinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQL_FinanceFunction",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Get FXRates",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "GtFinanceFunction",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFXRates]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvFXRates",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Push FXRates to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get FXRates",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csvFXRates",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQLDB_FXRates",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Get Cash Flow",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Push FXRates to Staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetCashFlowLogic]",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AE_SQLDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "csvCashFlowLogic",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Push dimCashFlowLogic",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Get Cash Flow",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "csvCashFlowLogic",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AESQLDB_CashFlow",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "FinanceCube"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AE_SQLDB')]",
+				"[concat(variables('factoryId'), '/datasets/financecube')]",
+				"[concat(variables('factoryId'), '/datasets/FinanceCubeImport')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable3')]",
+				"[concat(variables('factoryId'), '/datasets/getdimfinanceref')]",
+				"[concat(variables('factoryId'), '/datasets/AESQLFinanceRef')]",
+				"[concat(variables('factoryId'), '/datasets/csvDimCodeCombinations')]",
+				"[concat(variables('factoryId'), '/datasets/csvCodeCombinations')]",
+				"[concat(variables('factoryId'), '/datasets/AESQL_CodeCombination')]",
+				"[concat(variables('factoryId'), '/datasets/csvFinanceFunction')]",
+				"[concat(variables('factoryId'), '/datasets/AESQL_FinanceFunction')]",
+				"[concat(variables('factoryId'), '/datasets/csvFXRates')]",
+				"[concat(variables('factoryId'), '/datasets/AESQLDB_FXRates')]",
+				"[concat(variables('factoryId'), '/datasets/csvCashFlowLogic')]",
+				"[concat(variables('factoryId'), '/datasets/AESQLDB_CashFlow')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Finance_AccountBalances_To_BLOB')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -10878,7 +12017,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "SQL_SupplierBalanceTables",
+								"activity": "SQL_SupplierCreditorDebtorTables",
 								"dependencyConditions": [
 									"Completed"
 								]
@@ -10898,7 +12037,7 @@
 						}
 					},
 					{
-						"name": "SQL_SupplierBalanceTables",
+						"name": "SQL_SupplierCreditorDebtorTables",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
@@ -10914,7 +12053,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "SQL_SupplierBalancesTables",
+								"referenceName": "SQL_SupplierCreditorDebtorTables",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
@@ -10933,7 +12072,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SQL_FinancePricingTables')]",
 				"[concat(variables('factoryId'), '/pipelines/SQL_OrdersAndInvoicesTables')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL_SupplierBalancesTables')]"
+				"[concat(variables('factoryId'), '/pipelines/SQL_SupplierCreditorDebtorTables')]"
 			]
 		},
 		{
@@ -12829,14 +13968,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_SupplierBalancesTables')]",
+			"name": "[concat(parameters('factoryName'), '/SQL_SupplierCreditorDebtorTables')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "SQL_FinancePricingTables",
-						"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
+						"name": "SQL_FinanceCreditorDebtorTables",
+						"description": "Drops then creates [Finance].[CreditorBalances] and [Finance].[DebtorBalances].",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
@@ -12848,7 +13987,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[Finance].[SQL_SupplierBalances]"
+							"storedProcedureName": "[[Finance].[SQL_CreditorDebtorBalances]"
 						},
 						"linkedServiceName": {
 							"referenceName": "SqlServerArgent",
@@ -20680,6 +21819,189 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AESQLDB_FXRates')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Rate ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Rate Type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Year",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Month",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "EUR:GBP",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.FXRates"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQLFinanceRef')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Account Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 8",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 7",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 6",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 5",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Account Description 1",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.DimFinanceRef"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQL_CodeCombination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.DimCodeCombinations"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQL_CodeCombinations')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQL_FinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.DimFunctions"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "O.GL_BALANCES"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ActTankItems_Excel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -23213,6 +24535,34 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FinanceCubeImport')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FactBalances.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OMJ_API_DS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -24856,6 +26206,160 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "nvarchar"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Stamp",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.factGLBalances"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Trade_Tables')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -25023,6 +26527,788 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/csvCashFlowLogic')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "csvCashFlowLogic.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Rate ID",
+						"type": "String"
+					},
+					{
+						"name": "Rate Type",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Month",
+						"type": "String"
+					},
+					{
+						"name": "EUR:GBP",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvCodeCombinations')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "codecombinations.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvDimCodeCombinations')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "codecombinations.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvFXRates')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FXRates.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "financefunction.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/financecube')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FactBalances.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/getdimfinanceref')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dimfinance.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/testAppian')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -25110,6 +27396,25 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/TestBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('AE_SQLDB_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/AppianRuntime')]"
 			]
 		},
 		{
@@ -26019,1412 +28324,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('AE_SQLDB_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "AppianRuntime",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/AppianRuntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FinanceCube_Staging')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get FactBalances Data",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[CubeData].[prc_Get_GL_Balances]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "PreserveHierarchy"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "GLLedgeID",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "GLLedgeID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Ledger_ID",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Ledger_ID",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Code_Combination_id",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Code_Combination_id",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CURRENCY_CODE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "CURRENCY_CODE",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NAME",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_NAME",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ACTUAL_FLAG",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "ACTUAL_FLAG",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LAST_UPDATE_DATE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "LAST_UPDATE_DATE",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LAST_UPDATED_BY",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "LAST_UPDATED_BY",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_TYPE",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_TYPE",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_YEAR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_YEAR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NUM",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_NUM",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NET_DR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_NET_DR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NET_CR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "PERIOD_NET_CR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QUARTER_TO_DATE_DR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "QUARTER_TO_DATE_DR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QUARTER_TO_DATE_CR",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "QUARTER_TO_DATE_CR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PROJECT_TO_DATE_DR",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PROJECT_TO_DATE_DR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PROJECT_TO_DATE_CR",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PROJECT_TO_DATE_CR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BEGIN_BALANCE_DR",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "BEGIN_BALANCE_DR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BEGIN_BALANCE_CR",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "BEGIN_BALANCE_CR",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NET_DR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PERIOD_NET_DR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERIOD_NET_CR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PERIOD_NET_CR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BEGIN_BALANCE_DR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "BEGIN_BALANCE_DR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "BEGIN_BALANCE_CR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "BEGIN_BALANCE_CR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QUARTER_TO_DATE_DR_BEQ",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "QUARTER_TO_DATE_DR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "QUARTER_TO_DATE_CR_BEQ",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "QUARTER_TO_DATE_CR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PROJECT_TO_DATE_DR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PROJECT_TO_DATE_DR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PROJECT_TO_DATE_CR_BEQ",
-											"type": "Decimal",
-											"physicalType": "money",
-											"scale": 4,
-											"precision": 19
-										},
-										"sink": {
-											"name": "PROJECT_TO_DATE_CR_BEQ",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Stamp",
-											"type": "String",
-											"physicalType": "nvarchar"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AE_SQLDB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "financecube",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Put Factbalances in staging",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Get FactBalances Data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "FinanceCubeImport",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SqlServerTable3",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get FinanceRef data",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Put Factbalances in staging",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFinance]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AE_SQLDB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "getdimfinanceref",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Put DimFinanceRef in staging",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Get FinanceRef data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "getdimfinanceref",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AESQLFinanceRef",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get Codecombinations data",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Put DimFinanceRef in staging",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[CubeData].[Prc_GetCodeCombinations]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AE_SQLDB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "csvDimCodeCombinations",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Put codecombinations into staging",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Get Codecombinations data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "csvCodeCombinations",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AESQL_CodeCombination",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get dim Finance Function",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Put codecombinations into staging",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFunction]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AE_SQLDB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "csvFinanceFunction",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "GtFinanceFunction",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Get dim Finance Function",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "csvFinanceFunction",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AESQL_FinanceFunction",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Get FXRates",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "GtFinanceFunction",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderStoredProcedureName": "[[CubeData].[prc_GetFXRates]",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "AE_SQLDB",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "csvFXRates",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Push FXRates to Staging",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Get FXRates",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "csvFXRates",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "AESQLDB_FXRates",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "FinanceCube"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/AE_SQLDB')]",
-				"[concat(variables('factoryId'), '/datasets/financecube')]",
-				"[concat(variables('factoryId'), '/datasets/FinanceCubeImport')]",
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable3')]",
-				"[concat(variables('factoryId'), '/datasets/getdimfinanceref')]",
-				"[concat(variables('factoryId'), '/datasets/AESQLFinanceRef')]",
-				"[concat(variables('factoryId'), '/datasets/csvDimCodeCombinations')]",
-				"[concat(variables('factoryId'), '/datasets/csvCodeCombinations')]",
-				"[concat(variables('factoryId'), '/datasets/AESQL_CodeCombination')]",
-				"[concat(variables('factoryId'), '/datasets/csvFinanceFunction')]",
-				"[concat(variables('factoryId'), '/datasets/AESQL_FinanceFunction')]",
-				"[concat(variables('factoryId'), '/datasets/csvFXRates')]",
-				"[concat(variables('factoryId'), '/datasets/AESQLDB_FXRates')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "RAW",
-					"table": "O.GL_BALANCES"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/financecube')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FactBalances.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FinanceCubeImport')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FactBalances.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SqlServerTable3')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "nvarchar"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "money",
-						"precision": 19,
-						"scale": 4
-					},
-					{
-						"name": "Stamp",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.factGLBalances"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/getdimfinanceref')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "dimfinance.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQLFinanceRef')]",
+			"name": "[concat(parameters('factoryName'), '/AESQLDB_CashFlow')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -27440,709 +28340,29 @@
 						"type": "nvarchar"
 					},
 					{
-						"name": "Account Description 8",
+						"name": "Cash Flow Account Description 5",
 						"type": "nvarchar"
 					},
 					{
-						"name": "Account Description 7",
+						"name": "Cash Flow Account Description 4",
 						"type": "nvarchar"
 					},
 					{
-						"name": "Account Description 6",
+						"name": "Cash Flow Account Description 3",
 						"type": "nvarchar"
 					},
 					{
-						"name": "Account Description 5",
+						"name": "Cash Flow Account Description 2",
 						"type": "nvarchar"
 					},
 					{
-						"name": "Account Description 4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Account Description 3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Account Description 2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Account Description 1",
+						"name": "Cash Flow Account Description 1",
 						"type": "nvarchar"
 					}
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "Staging.DimFinanceRef"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQL_CodeCombinations')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvDimCodeCombinations')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "codecombinations.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvCodeCombinations')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "codecombinations.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQL_CodeCombination')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.DimCodeCombinations"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "financefunction.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQL_FinanceFunction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.DimFunctions"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvFXRates')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FXRates.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQLDB_FXRates')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Rate ID",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Rate Type",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Year",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Month",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "EUR:GBP",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.FXRates"
+					"table": "Staging.DimCashflow"
 				}
 			},
 			"dependsOn": [

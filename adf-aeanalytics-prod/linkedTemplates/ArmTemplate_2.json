@@ -553,14 +553,14 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SQL_SupplierBalancesTables')]",
+			"name": "[concat(parameters('factoryName'), '/SQL_SupplierCreditorDebtorTables')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "SQL_FinancePricingTables",
-						"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
+						"name": "SQL_FinanceCreditorDebtorTables",
+						"description": "Drops then creates [Finance].[CreditorBalances] and [Finance].[DebtorBalances].",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [],
 						"policy": {
@@ -572,7 +572,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[Finance].[SQL_SupplierBalances]"
+							"storedProcedureName": "[[Finance].[SQL_CreditorDebtorBalances]"
 						},
 						"linkedServiceName": {
 							"referenceName": "SqlServerArgent",
@@ -748,6 +748,25 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "O.GL_BALANCES"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ActTankItems_Excel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -785,22 +804,6 @@
 				},
 				"folder": {
 					"name": "Appian"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AppianDataSuppliers_copy1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AppianDev",
-					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",

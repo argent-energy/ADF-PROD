@@ -6,64 +6,28 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-aeanalytics-prod"
+		},
+		"AE_SQLDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AE_SQLDB'"
+		},
+		"Appian_Test_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_Test'"
+		},
+		"Appian_prod_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Appian_prod'"
+		},
+		"appDev_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'appDev'"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/financecube')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FactBalances.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FinanceCubeImport')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FactBalances.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/getdimfinanceref')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -204,558 +168,154 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/csvDimCodeCombinations')]",
+			"name": "[concat(parameters('factoryName'), '/testAppian')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
+					"referenceName": "TestBlob",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Appian"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "codecombinations.csv",
-						"fileSystem": "financecube"
+						"type": "AzureBlobStorageLocation",
+						"container": "appian"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/csvCodeCombinations')]",
+			"name": "[concat(parameters('factoryName'), '/testAppian_suppliers')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
+					"referenceName": "TestBlob",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Appian"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "codecombinations.csv",
-						"fileSystem": "financecube"
+						"type": "AzureBlobStorageLocation",
+						"container": "appiansuppliers"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
+			"name": "[concat(parameters('factoryName'), '/testAppian_traceability')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
+					"referenceName": "TestBlob",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Appian"
 				},
 				"annotations": [],
 				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "financefunction.csv",
-						"fileSystem": "financecube"
+						"type": "AzureBlobStorageLocation",
+						"container": "appiantraceability"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
+				"schema": []
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/csvFXRates')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/AE_SQLDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
 				"annotations": [],
-				"type": "DelimitedText",
+				"type": "SqlServer",
 				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "FXRates.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
+					"connectionString": "[parameters('AE_SQLDB_connectionString')]"
 				},
-				"schema": [
-					{
-						"name": "GLLedgeID",
-						"type": "String"
-					},
-					{
-						"name": "Ledger_ID",
-						"type": "String"
-					},
-					{
-						"name": "Code_Combination_id",
-						"type": "String"
-					},
-					{
-						"name": "CURRENCY_CODE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NAME",
-						"type": "String"
-					},
-					{
-						"name": "ACTUAL_FLAG",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATE_DATE",
-						"type": "String"
-					},
-					{
-						"name": "LAST_UPDATED_BY",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_TYPE",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_YEAR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NUM",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PERIOD_NET_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "BEGIN_BALANCE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "QUARTER_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_DR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "PROJECT_TO_DATE_CR_BEQ",
-						"type": "String"
-					},
-					{
-						"name": "Stamp",
-						"type": "String"
-					}
-				]
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Test')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Appian_Test_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_prod')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Appian_prod_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/appDev')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('appDev_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AppianRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
 			"dependsOn": []
 		},
@@ -1688,7 +1248,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/testAppian_suppliers')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BLOB_To_SQL_Non-Oracle_Data_Pipeline')]",
@@ -3236,113 +2798,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-11-11T15:46:00Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_Pricing_Sharepoint_To_BLOB')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Copies data from the Sharepoint site \"PowerBI data\" to the Azure Blob Storage",
-				"activities": [
-					{
-						"name": "Sharepoint_token",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": true,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"method": "POST",
-							"headers": {
-								"Content-Type": "application/x-www-form-urlencoded"
-							},
-							"url": "https://accounts.accesscontrol.windows.net/723124e0-74e9-482b-a731-4f534e16e043/tokens/OAuth/2",
-							"body": "grant_type=client_credentials&client_id=2de0db9a-9127-408d-a1b4-f79f8da14b07@723124e0-74e9-482b-a731-4f534e16e043&client_secret=nN48Q~nbL5MuWJfZooYV2bW1EuY~Kh_hRMcjJc_J&resource=00000003-0000-0ff1-ce00-000000000000/argentenergyltd.sharepoint.com@723124e0-74e9-482b-a731-4f534e16e043"
-						}
-					},
-					{
-						"name": "Copy_Sharepoint_to_Blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Sharepoint_token",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": true
-						},
-						"userProperties": [
-							{
-								"name": "Destination",
-								"value": "sharepoint-files//Pricing.xlsx"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "HttpReadSettings",
-									"requestMethod": "GET",
-									"additionalHeaders": {
-										"value": "@{concat('Authorization: Bearer ', activity('Sharepoint_token').output.access_token)}",
-										"type": "Expression"
-									},
-									"requestTimeout": ""
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "Sharepoint_Pricing_Raw",
-								"type": "DatasetReference",
-								"parameters": {
-									"ItemName": "Pricing dataset.xlsx"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Blob_Sharepoint_Files",
-								"type": "DatasetReference",
-								"parameters": {
-									"ItemName": "Pricing dataset.xlsx"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Trade/Pricing"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-10-25T19:12:48Z"
 			},
 			"dependsOn": []
 		}
