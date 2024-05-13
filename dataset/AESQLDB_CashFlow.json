@@ -1,0 +1,41 @@
+{
+	"name": "AESQLDB_CashFlow",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AE_SQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Account Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cash Flow Account Description 5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cash Flow Account Description 4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cash Flow Account Description 3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cash Flow Account Description 2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cash Flow Account Description 1",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Staging.DimCashflow"
+		}
+	}
+}
