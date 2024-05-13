@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "SQL_FinancePricingTables",
-				"description": "Clears then repopulates the both test pricing tables used in Finance's Sales and Purchases Pricing Report",
+				"name": "SQL_FinanceCreditorDebtorTables",
+				"description": "Drops then creates [Finance].[CreditorBalances] and [Finance].[DebtorBalances].",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
