@@ -16,7 +16,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[Finance].[SQL_SupplierBalances]"
+					"storedProcedureName": "[Finance].[SQL_CreditorDebtorBalances]"
 				},
 				"linkedServiceName": {
 					"referenceName": "SqlServerArgent",
