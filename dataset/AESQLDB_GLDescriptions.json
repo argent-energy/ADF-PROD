@@ -1,0 +1,16 @@
+{
+	"name": "AESQLDB_GLDescriptions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AE_SQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "staging",
+			"table": "DimGLDescriptions"
+		}
+	}
+}
