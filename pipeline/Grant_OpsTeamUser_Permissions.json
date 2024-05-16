@@ -1,5 +1,5 @@
 {
-	"name": "Grant_Permissions",
+	"name": "Grant_OpsTeamUser_Permissions",
 	"properties": {
 		"description": "Grant OpsTeamUser prod specific prod database tables read access",
 		"activities": [
