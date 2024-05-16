@@ -23,7 +23,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "GRANT SELECT ON [RAW].[O.Traceability report] TO OpsTeamUser"
+							"text": "GRANT SELECT ON [RAW].[O.TraceabilityReport_20-22] TO OpsTeamUser"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
