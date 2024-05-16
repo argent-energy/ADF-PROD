@@ -13537,7 +13537,14 @@
 					{
 						"name": "GroupCAPEXCommittedExpenditure",
 						"type": "Script",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Grant permissions",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -13629,6 +13636,24 @@
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
 						}
+					},
+					{
+						"name": "Grant permissions",
+						"description": "Grant read permissions to operations team SQL login",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Grant_OpsTeamUser_Permissions",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"policy": {
@@ -13640,7 +13665,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]",
+				"[concat(variables('factoryId'), '/pipelines/Grant_OpsTeamUser_Permissions')]"
 			]
 		},
 		{
@@ -21944,6 +21970,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AESQLDB_CashFlow')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Account Number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Cash Flow Account Description 5",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Cash Flow Account Description 4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Cash Flow Account Description 3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Cash Flow Account Description 2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Cash Flow Account Description 1",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Staging.DimCashflow"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AESQLDB_FXRates')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -21981,6 +22053,27 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "Staging.FXRates"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AESQLDB_GLDescriptions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AE_SQLDB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "staging",
+					"table": "DimGLDescriptions"
 				}
 			},
 			"dependsOn": [
@@ -27265,6 +27358,55 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/csvGLDescriptions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "dimGLDescriptions.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Rate ID",
+						"type": "String"
+					},
+					{
+						"name": "Rate Type",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Month",
+						"type": "String"
+					},
+					{
+						"name": "EUR:GBP",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/financecube')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -28449,119 +28591,49 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AESQLDB_CashFlow')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
+			"name": "[concat(parameters('factoryName'), '/Grant_OpsTeamUser_Permissions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
+				"description": "Grant OpsTeamUser prod specific prod database tables read access",
+				"activities": [
 					{
-						"name": "Account Number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 5",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 1",
-						"type": "nvarchar"
+						"name": "Grant read permissions",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "GRANT SELECT ON [RAW].[O.TraceabilityReport_20-22] TO OpsTeamUser"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
 					}
 				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.DimCashflow"
-				}
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Operations"
+				},
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/csvGLDescriptions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "dimGLDescriptions.csv",
-						"fileSystem": "financecube"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Rate ID",
-						"type": "String"
-					},
-					{
-						"name": "Rate Type",
-						"type": "String"
-					},
-					{
-						"name": "Year",
-						"type": "String"
-					},
-					{
-						"name": "Month",
-						"type": "String"
-					},
-					{
-						"name": "EUR:GBP",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQLDB_GLDescriptions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "staging",
-					"table": "DimGLDescriptions"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AE_SQLDB')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		}
 	]

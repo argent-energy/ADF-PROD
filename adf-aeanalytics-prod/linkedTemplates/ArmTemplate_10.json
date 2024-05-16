@@ -13,6 +13,403 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/AppianProdSuppliers')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_prod",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Supplier_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Supplier_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU_bill_to",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BPA_exists",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Category_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Postal_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "E_mail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Purchasing",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Pay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Inactive_date_VET_ID_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "VET_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "INS_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "INS_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "Certification_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GMP_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VIHB_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Vendor_category",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Default_payment_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_terms",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Invoice_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BIC_SWIFT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IBAN",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Bank_account_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Address_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_created_by",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "SuppliersReport_Suppliers"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AppianTest')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_Test",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Supplier_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Supplier_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BU_bill_to",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BPA_exists",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Category_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_3",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Address_line_4",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Postal_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "E_mail",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Purchasing",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Pay",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Inactive_date_VET_ID_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "VET_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ISCC_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "INS_certificate_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "INS_certificate_expiry_date",
+						"type": "date"
+					},
+					{
+						"name": "Certification_type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "GMP_ID",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VIHB_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Vendor_category",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Default_payment_method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_terms",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Invoice_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_currency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "BIC_SWIFT",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "VAT_number_site",
+						"type": "nvarchar"
+					},
+					{
+						"name": "IBAN",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Bank_account_number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Address_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_creation_date",
+						"type": "date"
+					},
+					{
+						"name": "Site_created_by",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "SuppliersReport_Suppliers"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Appian_Prod')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Appian_prod",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Staging",
+					"table": "AppianBPA"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Appian_Prod_Traceablity')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1546,43 +1943,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Operations_Trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Trigger the main operations pipeline\n",
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "SQL_Operations_MainPipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2024-04-01T00:00:00",
-						"timeZone": "GMT Standard Time",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								4
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/TL_CostAccounting_Trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -1614,69 +1974,6 @@
 							]
 						}
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQLDB_CashFlow')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Account Number",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 5",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 4",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 3",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 2",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Cash Flow Account Description 1",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Staging.DimCashflow"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AESQLDB_GLDescriptions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AE_SQLDB",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "staging",
-					"table": "DimGLDescriptions"
 				}
 			},
 			"dependsOn": []
@@ -4081,7 +4378,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Appian_Prod')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Appian Suppliers Pull Prod')]",
@@ -4611,7 +4910,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AppianProdSuppliers')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Appian Traceability Pull Prod')]",
@@ -6282,9 +6583,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable3')]",
-				"[concat(variables('factoryId'), '/datasets/AESQLDB_CashFlow')]",
-				"[concat(variables('factoryId'), '/datasets/AESQLDB_GLDescriptions')]"
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable3')]"
 			]
 		},
 		{
