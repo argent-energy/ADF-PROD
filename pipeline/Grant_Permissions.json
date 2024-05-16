@@ -1,0 +1,10 @@
+{
+	"name": "Grant_Permissions",
+	"properties": {
+		"description": "Grant OpsTeamUser prod specific prod database tables read access",
+		"folder": {
+			"name": "Operations"
+		},
+		"annotations": []
+	}
+}
