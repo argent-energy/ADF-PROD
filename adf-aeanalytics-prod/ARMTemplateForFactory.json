@@ -6464,7 +6464,7 @@
 											"ordinal": 5
 										},
 										"sink": {
-											"name": "2023-01-01",
+											"name": "2024-01-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6475,7 +6475,7 @@
 											"ordinal": 6
 										},
 										"sink": {
-											"name": "2023-02-01",
+											"name": "2024-02-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6486,7 +6486,7 @@
 											"ordinal": 7
 										},
 										"sink": {
-											"name": "2023-03-01",
+											"name": "2024-03-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6497,7 +6497,7 @@
 											"ordinal": 8
 										},
 										"sink": {
-											"name": "2023-04-01",
+											"name": "2024-04-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6508,7 +6508,7 @@
 											"ordinal": 9
 										},
 										"sink": {
-											"name": "2023-05-01",
+											"name": "2024-05-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6519,7 +6519,7 @@
 											"ordinal": 10
 										},
 										"sink": {
-											"name": "2023-06-01",
+											"name": "2024-06-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6530,7 +6530,7 @@
 											"ordinal": 11
 										},
 										"sink": {
-											"name": "2023-07-01",
+											"name": "2024-07-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6541,7 +6541,7 @@
 											"ordinal": 12
 										},
 										"sink": {
-											"name": "2023-08-01",
+											"name": "2024-08-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6552,7 +6552,7 @@
 											"ordinal": 13
 										},
 										"sink": {
-											"name": "2023-09-01",
+											"name": "2024-09-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6563,7 +6563,7 @@
 											"ordinal": 14
 										},
 										"sink": {
-											"name": "2023-10-01",
+											"name": "2024-10-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6574,7 +6574,7 @@
 											"ordinal": 15
 										},
 										"sink": {
-											"name": "2023-11-01",
+											"name": "2024-11-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6585,7 +6585,7 @@
 											"ordinal": 16
 										},
 										"sink": {
-											"name": "2023-12-01",
+											"name": "2024-12-01",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6646,7 +6646,7 @@
 							"scripts": [
 								{
 									"type": "Query",
-									"text": "TRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024]\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024]"
+									"text": "/* Truncate BDR table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024];\r\n\r\n/* Truncate PTP table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024];"
 								}
 							],
 							"scriptBlockExecutionTimeout": "02:00:00"
@@ -6678,7 +6678,7 @@
 						"typeProperties": {
 							"scripts": [
 								{
-									"type": "Query",
+									"type": "NonQuery",
 									"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 								}
 							],
@@ -6772,7 +6772,7 @@
 											"ordinal": 5
 										},
 										"sink": {
-											"name": "2023-01-31",
+											"name": "2024-01-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6783,7 +6783,7 @@
 											"ordinal": 6
 										},
 										"sink": {
-											"name": "2023-02-28",
+											"name": "2024-02-28",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6794,7 +6794,7 @@
 											"ordinal": 7
 										},
 										"sink": {
-											"name": "2023-03-31",
+											"name": "2024-03-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6805,7 +6805,7 @@
 											"ordinal": 8
 										},
 										"sink": {
-											"name": "2023-04-30",
+											"name": "2024-04-30",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6816,7 +6816,7 @@
 											"ordinal": 9
 										},
 										"sink": {
-											"name": "2023-05-31",
+											"name": "2024-05-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6827,7 +6827,7 @@
 											"ordinal": 10
 										},
 										"sink": {
-											"name": "2023-06-30",
+											"name": "2024-06-30",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6838,7 +6838,7 @@
 											"ordinal": 11
 										},
 										"sink": {
-											"name": "2023-07-31",
+											"name": "2024-07-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6849,7 +6849,7 @@
 											"ordinal": 12
 										},
 										"sink": {
-											"name": "2023-08-31",
+											"name": "2024-08-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6860,7 +6860,7 @@
 											"ordinal": 13
 										},
 										"sink": {
-											"name": "2023-09-30",
+											"name": "2024-09-30",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6871,7 +6871,7 @@
 											"ordinal": 14
 										},
 										"sink": {
-											"name": "2023-10-31",
+											"name": "2024-10-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6882,7 +6882,7 @@
 											"ordinal": 15
 										},
 										"sink": {
-											"name": "2023-11-30",
+											"name": "2024-11-30",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6893,7 +6893,7 @@
 											"ordinal": 16
 										},
 										"sink": {
-											"name": "2023-12-31",
+											"name": "2024-12-31",
 											"type": "String",
 											"physicalType": "nvarchar"
 										}
@@ -6960,7 +6960,7 @@
 						"typeProperties": {
 							"scripts": [
 								{
-									"type": "Query",
+									"type": "NonQuery",
 									"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 								}
 							],
@@ -11539,6 +11539,52 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Prod_DB')]",
 				"[concat(variables('factoryId'), '/datasets/OMJ_API_DS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Grant_OpsTeamUser_Permissions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Grant OpsTeamUser prod specific prod database tables read access",
+				"activities": [
+					{
+						"name": "Grant read permissions",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "AzureSqlDatabase1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "GRANT SELECT ON [RAW].[O.TraceabilityReport_20-22] TO OpsTeamUser"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Operations"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -28589,52 +28635,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Grant_OpsTeamUser_Permissions')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Grant OpsTeamUser prod specific prod database tables read access",
-				"activities": [
-					{
-						"name": "Grant read permissions",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "AzureSqlDatabase1",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": "GRANT SELECT ON [RAW].[O.TraceabilityReport_20-22] TO OpsTeamUser"
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Operations"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
 		}
 	]
 }
