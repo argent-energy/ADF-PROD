@@ -302,7 +302,7 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"type": "Query",
+							"type": "NonQuery",
 							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 						}
 					],
@@ -583,7 +583,7 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"type": "Query",
+							"type": "NonQuery",
 							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 						}
 					],
