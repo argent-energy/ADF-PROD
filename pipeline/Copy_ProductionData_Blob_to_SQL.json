@@ -282,7 +282,7 @@
 					"scripts": [
 						{
 							"type": "Query",
-							"text": "/* Truncate BDR table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024];\r\n\r\n/* Drop [ID] from BDR table\r\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\r\nIF EXISTIS DROP COLUMN [ID];*/\r\n\r\n/* Truncate PTP table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024];\r\n\r\n/* Drop [ID] from PTP table\r\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\r\nDROP COLUMN [ID];*/"
+							"text": "/* Truncate BDR table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowBDR_2024];\r\n\r\n/* Truncate PTP table */\r\nTRUNCATE TABLE [RAW].[F.Production_StanlowPTP_2024];"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -315,7 +315,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
+							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowBDR_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowBDR_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
@@ -608,7 +608,7 @@
 					"scripts": [
 						{
 							"type": "NonQuery",
-							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
+							"text": "/* Recreate row IDs by replacing [ID] column and updating [Row] column */\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nDROP COLUMN [ID];\n\nALTER TABLE [RAW].[F.Production_StanlowPTP_2024]\nADD [ID] INT IDENTITY(1,1);\n\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Row] = CAST([ID] AS NVARCHAR);\n\n\n/* Add timestamp to [Stamp] column */\nUPDATE [RAW].[F.Production_StanlowPTP_2024]\nSET [Stamp] = CAST(GETDATE() AS DATE);"
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
