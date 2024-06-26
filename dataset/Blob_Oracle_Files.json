@@ -15,7 +15,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "@item().name",
+				"fileName": "@dataset().FileName",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
