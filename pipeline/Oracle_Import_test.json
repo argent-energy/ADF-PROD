@@ -90,8 +90,14 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "Blob_Oracle_Get_MetaData_Test",
-									"type": "DatasetReference"
+									"referenceName": "Blob_Oracle_Files",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
