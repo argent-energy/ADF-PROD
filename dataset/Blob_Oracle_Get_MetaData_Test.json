@@ -1,0 +1,140 @@
+{
+	"name": "Blob_Oracle_Get_MetaData_Test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OracleBlob_test",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "@dataset().FileName",
+				"container": "oracle-data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "PAYMENT_HIST_DIST_ID",
+				"type": "String"
+			},
+			{
+				"name": "ACCOUNTING_EVENT_ID",
+				"type": "String"
+			},
+			{
+				"name": "PAY_DIST_LOOKUP_CODE",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_DISTRIBUTION_ID",
+				"type": "String"
+			},
+			{
+				"name": "AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "PAYMENT_HISTORY_ID",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_PAYMENT_ID",
+				"type": "String"
+			},
+			{
+				"name": "BANK_CURR_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_DIST_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_DIST_BASE_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "PAID_BASE_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "REVERSAL_FLAG",
+				"type": "String"
+			},
+			{
+				"name": "REVERSED_PAY_HIST_DIST_ID",
+				"type": "String"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "String"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "String"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "String"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "String"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "String"
+			},
+			{
+				"name": "PROGRAM_UPDATE_DATE",
+				"type": "String"
+			},
+			{
+				"name": "REQUEST_ID",
+				"type": "String"
+			},
+			{
+				"name": "PA_ADDITION_FLAG",
+				"type": "String"
+			},
+			{
+				"name": "OBJECT_VERSION_NUMBER",
+				"type": "String"
+			},
+			{
+				"name": "GAIN_LOSS_INDICATOR",
+				"type": "String"
+			},
+			{
+				"name": "ROUNDING_AMT",
+				"type": "String"
+			},
+			{
+				"name": "CLEARED_BASE_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "MATURED_BASE_AMOUNT",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_ADJUSTMENT_EVENT_ID",
+				"type": "String"
+			},
+			{
+				"name": "QUANTITY_VARIANCE",
+				"type": "String"
+			},
+			{
+				"name": "INVOICE_BASE_QTY_VARIANCE",
+				"type": "String"
+			}
+		]
+	}
+}
