@@ -1,0 +1,21 @@
+{
+	"name": "SQLServerAgent",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Testdatabase",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "@dataset().TableName"
+		}
+	}
+}
