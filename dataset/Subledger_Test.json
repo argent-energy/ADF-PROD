@@ -1,0 +1,257 @@
+{
+	"name": "Subledger_Test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Testdatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "AE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLICATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LEDGER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTITY_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EVENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EVENT_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_TRANSFER_STATUS_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_TRANSFER_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_CATEGORY_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_ENTRY_STATUS_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_ENTRY_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AMB_CONTEXT_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_RULE_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_RULE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_BATCH_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BALANCE_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COMPLETED_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PERIOD_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REQUEST_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_DEFINITION_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_DEFINITION_PACKAGE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ZERO_AMOUNT_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCRUAL_REVERSAL_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OBJECT_VERSION_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MULTIPERIOD_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DESCRIPTION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DOC_SEQUENCE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DOC_SEQUENCE_VALUE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DOC_CATEGORY_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LEGAL_ENTITY_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NEED_BAL_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INTERCOMPANY_REVERSED_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COMPLETION_ACCT_SEQ_VERSION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FUNDS_STATUS_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "COMPLETION_ACCT_SEQ_ASSIGN_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PARENT_AE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCT_RULE_DEFINITION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_DESCRIPTION_PRIORITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UPG_BATCH_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Stamp",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_SL_LINK_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_SL_LINK_TABLE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AE_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CODE_COMBINATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTERED_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ENTERED_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTED_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTED_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CURRENCY_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PARTY_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PARTY_SITE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUPP_REF_VALUES",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "core",
+			"table": "Subledger"
+		}
+	}
+}
