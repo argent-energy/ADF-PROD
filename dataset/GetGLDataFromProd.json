@@ -1,0 +1,231 @@
+{
+	"name": "GetGLDataFromProd",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Entity",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Company Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Journal Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Date Entered",
+				"type": "varchar"
+			},
+			{
+				"name": "Time Entered",
+				"type": "varchar"
+			},
+			{
+				"name": "Date Updated",
+				"type": "varchar"
+			},
+			{
+				"name": "Time Updated",
+				"type": "varchar"
+			},
+			{
+				"name": "User Entered",
+				"type": "nvarchar"
+			},
+			{
+				"name": "User Updated",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Date Effective",
+				"type": "varchar"
+			},
+			{
+				"name": "Date of Journal",
+				"type": "varchar"
+			},
+			{
+				"name": "Financial Period",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Journal Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Journal Type Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Journal Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Line Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Line Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Currency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Entity Currency (EC)",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DC Indicator",
+				"type": "varchar"
+			},
+			{
+				"name": "Signed Journal Amount",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Unsigned Debit Amount",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Unsigned Credit Amount",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Signed Amount EC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Unsigned Debit Amount EC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Unsigned Credit Amount EC",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "Account Number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Account Category",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Controlling Area for Cost and Profit Centre",
+				"type": "varchar"
+			},
+			{
+				"name": "Cost Centre",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Cost Centre Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Profit Centre",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Profit Centre Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Year",
+				"type": "varchar"
+			},
+			{
+				"name": "Date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Signed Amount EC GBP",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "Unsigned Debit Amount EC GBP",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "Unsigned Credit Amount EC GBP",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "Signed Amount EC EUR",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "Unsigned Debit Amount EC EUR",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "Unsigned Credit Amount EC EUR",
+				"type": "decimal",
+				"precision": 38,
+				"scale": 6
+			},
+			{
+				"name": "GL_SL Link",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_Transactiion Link",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_Budget Link",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TB_GL Link",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DateStamp",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "Finance",
+			"table": "GL"
+		}
+	}
+}
