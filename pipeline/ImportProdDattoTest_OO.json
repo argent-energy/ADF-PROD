@@ -5,6 +5,8 @@
 			{
 				"name": "GetGLData",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -51,6 +53,8 @@
 			{
 				"name": "Get Subledger Data",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GetGLData",
@@ -104,6 +108,8 @@
 			{
 				"name": "get subledgerdist",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get Subledger Data",
