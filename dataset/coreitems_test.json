@@ -1,0 +1,137 @@
+{
+	"name": "coreitems_test",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Testdatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Inventory Item ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Organization ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "European Waste Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Dutch Item Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FATOL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ABP Category",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Nature of Commodity EN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Nature of Commodity NL",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Treatment Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Basel Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Hazardous Material Description",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Waste Item",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ABP Item",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Sustainable Item",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Creation Date",
+				"type": "date"
+			},
+			{
+				"name": "Item Status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Update Date",
+				"type": "date"
+			},
+			{
+				"name": "Unit Of Measure",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Language",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Long Item Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Item Category Assignment ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category Content Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category Code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category Set ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category Set Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Category Set Description",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "core",
+			"table": "items"
+		}
+	}
+}
