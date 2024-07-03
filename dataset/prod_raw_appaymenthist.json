@@ -1,0 +1,137 @@
+{
+	"name": "prod_raw_appaymenthist",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PAYMENT_HIST_DIST_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_EVENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PAY_DIST_LOOKUP_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_DISTRIBUTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PAYMENT_HISTORY_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_PAYMENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BANK_CURR_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CLEARED_BASE_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_DIST_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_DIST_BASE_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PAID_BASE_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PROGRAM_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REQUEST_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PA_ADDITION_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OBJECT_VERSION_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ROUNDING_AMT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MATURED_BASE_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GAIN_LOSS_INDICATOR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REVERSAL_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REVERSED_PAY_HIST_DIST_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "QUANTITY_VARIANCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_BASE_QTY_VARIANCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVOICE_ADJUSTMENT_EVENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Stamp",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "O.AP_PAYMENT_HIST_DISTS"
+		}
+	}
+}

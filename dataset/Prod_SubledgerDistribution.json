@@ -1,0 +1,221 @@
+{
+	"name": "Prod_SubledgerDistribution",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "APPLICATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EVENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "AE_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_DESCRIPTION_PRIORITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_ACCOUNT_PRIORITIES",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_ID_NUM_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REF_AE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REF_TEMP_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_LINE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ACCOUNTING_LINE_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MERGE_DUPLICATE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TEMP_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REF_EVENT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LINE_DEFINITION_OWNER_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LINE_DEFINITION_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EVENT_CLASS_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EVENT_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CALCULATE_G_L_AMTS_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ROUNDING_CLASS_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNROUNDED_ENTERED_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNROUNDED_ACCOUNTED_DR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_APPLICATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_ENTITY_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_ENTITY_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_SOURCE_ID_NUM_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_DISTRIBUTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "APPLIED_TO_DIST_ID_NUM_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OBJECT_VERSION_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REF_AE_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNROUNDED_ENTERED_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UNROUNDED_ACCOUNTED_CR",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TAX_LINE_REF_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TAX_SUMMARY_LINE_REF_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TAX_REC_NREC_DIST_REF_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOC_TO_APPLICATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOC_TO_ENTITY_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOC_TO_SOURCE_ID_NUM_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOC_TO_DISTRIBUTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOC_TO_DIST_ID_NUM_1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_ID_NUM_2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_ID_CHAR_4",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_ID_NUM_3",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DISTRIBUTION_ID_NUM_5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GAIN_OR_LOSS_REF",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "core",
+			"table": "SubledgerDistributions"
+		}
+	}
+}
