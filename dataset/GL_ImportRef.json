@@ -1,0 +1,101 @@
+{
+	"name": "GL_ImportRef",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "JE_BATCH_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JE_LINE_NUM",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_5",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_6",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_7",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_8",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_9",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_SL_LINK_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GL_SL_LINK_TABLE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "OBJECT_VERSION_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PARTITION_GROUP_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PERIOD_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REFERENCE_10",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUBLEDGER_DOC_SEQUENCE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SUBLEDGER_DOC_SEQUENCE_VALUE",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "core",
+			"table": "GL_ImportReferences"
+		}
+	}
+}
