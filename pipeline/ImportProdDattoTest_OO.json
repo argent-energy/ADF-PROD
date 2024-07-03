@@ -218,6 +218,8 @@
 			{
 				"name": "GL_ImportReferences",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "core items",
@@ -271,6 +273,8 @@
 			{
 				"name": "subledgerdistribution",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GL_ImportReferences",
@@ -324,6 +328,8 @@
 			{
 				"name": "APPAYMENTHISTDISTS",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "subledgerdistribution",
@@ -370,6 +376,59 @@
 				"outputs": [
 					{
 						"referenceName": "Test_RawPAymentHistDists",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "CMR_RCV_TRANSACTIONS",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "APPAYMENTHISTDISTS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Prod_CMR_RCV_Transactions",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Test_RCVTRANSACTIONS",
 						"type": "DatasetReference"
 					}
 				]

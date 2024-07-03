@@ -1,0 +1,293 @@
+{
+	"name": "Prod_CMR_RCV_Transactions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CMR_RCV_TRANSACTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EXTERNAL_SYSTEM_REFERENCE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "EXTERNAL_SYSTEM_REF_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TXN_GROUP_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PARENT_TRANSACTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RCV_PARENT_TRANSACTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIP_TO_ORGANIZATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PO_LINE_LOCATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RECEIPT_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRIMARY_QUANTITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRIMARY_UOM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_QUANTITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_UOM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INVENTORY_ITEM_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DOCUMENT_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DOC_QUANTITY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_DOC_UOM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DESTINATION_TYPE_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PREPROCESSED_STATUS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TAX_PROCESSED_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ALLOCATED_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PJC_INTERFACED_STATUS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATED_BY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LAST_UPDATE_LOGIN",
+				"type": "nvarchar"
+			},
+			{
+				"name": "REQUEST_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CMR_PO_LINE_LOCATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DEFAULT_TAXATION_COUNTRY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRX_BUSINESS_CATEGORY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRODUCT_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ASSESSABLE_VALUE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIP_FROM_LOCATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIPMENT_LINE_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CONSIGNED_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RECEIPT_LINE_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "BILL_TO_BUSINESS_UNIT_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RECEIPT_CREATION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PO_DISTRIBUTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PJC_CONTEXT_CATEGORY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ROOT_RECEIVE_TXN_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CMR_ROOT_RECEIVE_TXN_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CMR_PO_DISTRIBUTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CURRENCY_CONVERSION_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CURRENCY_CONVERSION_RATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ROOT_DELIVER_TXN_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CMR_ROOT_DELIVER_TXN_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INV_SHIPPING_TRANSACTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIPMENT_NUMBER",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SHIP_FROM_INV_ORG_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSFER_ORDER_HEADER_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSFER_ORDER_LINE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRIOR_TRADE_INV_ORG_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSACTION_AMOUNT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FINAL_DISCHARGE_LOCATION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PHYSICAL_RETURN_REQD_FLAG",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ERROR_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PJC_EXPENDITURE_ITEM_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "FIRST_PTY_REG_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ROOT_DELIVER_TXN_DATE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "RCV_PO_DISTRIBUTION_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SECONDARY_TRANSACTION_QTY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SECONDARY_UOM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSFER_PRICE_QTY",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TRANSFER_PRICE_UOM_CODE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Stamp",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "RAW",
+			"table": "O.CMR_RCV_TRANSACTIONS"
+		}
+	}
+}
