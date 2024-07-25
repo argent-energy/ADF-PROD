@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "Traceability Report All Sites.csv",
+				"fileName": "Traceability Report UK.csv",
 				"container": "oracle-data"
 			},
 			"columnDelimiter": ",",
