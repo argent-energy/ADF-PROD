@@ -194,7 +194,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "DOO_FULFILL_LINES_ALL.csv"
+						"fileName": "Traceability Report UK.csv"
 					}
 				}
 			},
@@ -423,7 +423,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "DOO_FULFILL_LINES_ALL.csv",
+						"fileName": "Traceability Report UK.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
