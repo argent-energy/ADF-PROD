@@ -9,6 +9,12 @@
 					"referenceName": "Get_Daily_Settlements",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "Update_Sales_DataWallet",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
