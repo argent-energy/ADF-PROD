@@ -17135,6 +17135,67 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Update_Sales_DataWallet')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SharePoint to Blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sales_SharePoint_To_Blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "Blob to SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "SharePoint to Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Sales_Blob_to_SQL",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Sales"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Sales_SharePoint_To_Blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Sales_Blob_to_SQL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Update_Spread_DataWallet')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -28474,7 +28535,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SalesTrigger')]",
+			"name": "[concat(parameters('factoryName'), '/Sales_OMJ_Trigger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -28484,13 +28545,6 @@
 					{
 						"pipelineReference": {
 							"referenceName": "Get_Daily_Settlements",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "Update_Sales_DataWallet",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -28515,8 +28569,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Get_Daily_Settlements')]",
-				"[concat(variables('factoryId'), '/pipelines/Update_Sales_DataWallet')]"
+				"[concat(variables('factoryId'), '/pipelines/Get_Daily_Settlements')]"
 			]
 		},
 		{
@@ -28645,13 +28698,41 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Update_Sales_DataWallet')]",
+			"name": "[concat(parameters('factoryName'), '/Sales_Main_Pipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "SharePoint to Blob",
+						"name": "Create Blended Volume Tables",
+						"description": "[[Sales].[SQL_BlendedVolumeTables]",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Copy Blob to DWH",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[Sales].[SQL_BlendedVolumeTables]"
+						},
+						"linkedServiceName": {
+							"referenceName": "SqlServerArgent",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Copy Data Wallet to Blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"policy": {
@@ -28668,11 +28749,11 @@
 						}
 					},
 					{
-						"name": "Blob to SQL",
+						"name": "Copy Blob to DWH",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "SharePoint to Blob",
+								"activity": "Copy Data Wallet to Blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -28695,11 +28776,53 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Sales"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SqlServerArgent')]",
 				"[concat(variables('factoryId'), '/pipelines/Sales_SharePoint_To_Blob')]",
 				"[concat(variables('factoryId'), '/pipelines/Sales_Blob_to_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sales_Trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Sales_Main_Pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2024-08-15T08:09:00",
+						"timeZone": "GMT Standard Time",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								7
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Sales_Main_Pipeline')]"
 			]
 		}
 	]
