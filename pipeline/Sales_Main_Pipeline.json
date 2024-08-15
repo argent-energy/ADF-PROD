@@ -3,10 +3,17 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Blended Volume Tables",
+				"name": "Create Blended Volume Tables",
 				"description": "[Sales].[SQL_BlendedVolumeTables]",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy Blob to DWH",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -21,6 +28,45 @@
 				"linkedServiceName": {
 					"referenceName": "SqlServerArgent",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Copy Data Wallet to Blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sales_SharePoint_To_Blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Copy Blob to DWH",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Copy Data Wallet to Blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Sales_Blob_to_SQL",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
