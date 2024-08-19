@@ -4232,6 +4232,18 @@
 									},
 									{
 										"source": {
+											"name": "ORIGINAL_WASTE_SUPPLIER",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "ORIGINAL_WASTE_SUPPLIER",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
 											"name": "Stamp",
 											"type": "String",
 											"physicalType": "String"
