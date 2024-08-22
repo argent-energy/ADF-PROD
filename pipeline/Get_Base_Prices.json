@@ -17,11 +17,11 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "@{concat('history/settlement?dateFrom=2023-01-01&dateTo=2024-02-25&instrument=', item().Symbol, '&contractNumber=0')}"
+						"value": "@{'settlement?date=2024-08-20&watchlist=55'}"
 					},
 					{
 						"name": "Destination",
-						"value": "@{'RAW'}.@{'S.OmjPricesHistoric'}"
+						"value": "@{'RAW'}.@{'S.CuatomerBasePrices'}"
 					}
 				],
 				"typeProperties": {
@@ -56,8 +56,15 @@
 									"path": "$['id']"
 								},
 								"sink": {
-									"name": "id",
-									"type": "String"
+									"name": "id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['code']"
+								},
+								"sink": {
+									"name": "code"
 								}
 							},
 							{
@@ -65,8 +72,23 @@
 									"path": "$['date']"
 								},
 								"sink": {
-									"name": "date",
-									"type": "DateTimeOffset"
+									"name": "date"
+								}
+							},
+							{
+								"source": {
+									"path": "$['contractPeriod']"
+								},
+								"sink": {
+									"name": "contractPeriod"
+								}
+							},
+							{
+								"source": {
+									"path": "$['contractNumber']"
+								},
+								"sink": {
+									"name": "contractNumber"
 								}
 							},
 							{
@@ -74,8 +96,7 @@
 									"path": "$['contractName']"
 								},
 								"sink": {
-									"name": "contractName",
-									"type": "String"
+									"name": "contractName"
 								}
 							},
 							{
@@ -83,8 +104,55 @@
 									"path": "$['settlement']"
 								},
 								"sink": {
-									"name": "settlement",
-									"type": "Decimal"
+									"name": "settlement"
+								}
+							},
+							{
+								"source": {
+									"path": "$['open']"
+								},
+								"sink": {
+									"name": "open"
+								}
+							},
+							{
+								"source": {
+									"path": "$['high']"
+								},
+								"sink": {
+									"name": "high"
+								}
+							},
+							{
+								"source": {
+									"path": "$['low']"
+								},
+								"sink": {
+									"name": "low"
+								}
+							},
+							{
+								"source": {
+									"path": "$['volume']"
+								},
+								"sink": {
+									"name": "volume"
+								}
+							},
+							{
+								"source": {
+									"path": "$['previousSettlement']"
+								},
+								"sink": {
+									"name": "previousSettlement"
+								}
+							},
+							{
+								"source": {
+									"path": "$['hasForwardMonths']"
+								},
+								"sink": {
+									"name": "hasForwardMonths"
 								}
 							},
 							{
@@ -92,11 +160,11 @@
 									"path": "$['DateStamp']"
 								},
 								"sink": {
-									"name": "DateStamp",
-									"type": "DateTimeOffset"
+									"name": "DateStamp"
 								}
 							}
-						]
+						],
+						"collectionReference": ""
 					}
 				},
 				"inputs": [
@@ -116,7 +184,7 @@
 						"referenceName": "SQL_Prod_DB",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "S.OmjPricesHistoric",
+							"TableName": "S.CuatomerBasePrices",
 							"SchemaName": "RAW"
 						}
 					}
