@@ -56,7 +56,8 @@
 									"path": "$['id']"
 								},
 								"sink": {
-									"name": "id"
+									"name": "id",
+									"type": "String"
 								}
 							},
 							{
@@ -64,7 +65,8 @@
 									"path": "$['code']"
 								},
 								"sink": {
-									"name": "code"
+									"name": "code",
+									"type": "String"
 								}
 							},
 							{
@@ -72,31 +74,8 @@
 									"path": "$['date']"
 								},
 								"sink": {
-									"name": "date"
-								}
-							},
-							{
-								"source": {
-									"path": "$['contractPeriod']"
-								},
-								"sink": {
-									"name": "contractPeriod"
-								}
-							},
-							{
-								"source": {
-									"path": "$['contractNumber']"
-								},
-								"sink": {
-									"name": "contractNumber"
-								}
-							},
-							{
-								"source": {
-									"path": "$['contractName']"
-								},
-								"sink": {
-									"name": "contractName"
+									"name": "date",
+									"type": "DateTimeOffset"
 								}
 							},
 							{
@@ -104,55 +83,8 @@
 									"path": "$['settlement']"
 								},
 								"sink": {
-									"name": "settlement"
-								}
-							},
-							{
-								"source": {
-									"path": "$['open']"
-								},
-								"sink": {
-									"name": "open"
-								}
-							},
-							{
-								"source": {
-									"path": "$['high']"
-								},
-								"sink": {
-									"name": "high"
-								}
-							},
-							{
-								"source": {
-									"path": "$['low']"
-								},
-								"sink": {
-									"name": "low"
-								}
-							},
-							{
-								"source": {
-									"path": "$['volume']"
-								},
-								"sink": {
-									"name": "volume"
-								}
-							},
-							{
-								"source": {
-									"path": "$['previousSettlement']"
-								},
-								"sink": {
-									"name": "previousSettlement"
-								}
-							},
-							{
-								"source": {
-									"path": "$['hasForwardMonths']"
-								},
-								"sink": {
-									"name": "hasForwardMonths"
+									"name": "settlement",
+									"type": "Decimal"
 								}
 							},
 							{
@@ -160,7 +92,8 @@
 									"path": "$['DateStamp']"
 								},
 								"sink": {
-									"name": "DateStamp"
+									"name": "DateStamp",
+									"type": "DateTimeOffset"
 								}
 							}
 						],
