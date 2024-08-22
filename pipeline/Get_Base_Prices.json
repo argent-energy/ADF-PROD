@@ -117,7 +117,7 @@
 						"referenceName": "SQL_Prod_DB",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "S.CuatomerBasePrices",
+							"TableName": "S.BasePrices",
 							"SchemaName": "RAW"
 						}
 					}
