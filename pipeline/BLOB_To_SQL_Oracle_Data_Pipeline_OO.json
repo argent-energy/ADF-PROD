@@ -64,7 +64,7 @@
 						"referenceName": "SQL_Argent_Database",
 						"type": "DatasetReference",
 						"parameters": {
-							"TableName": "O.Traceability Report UK"
+							"TableName": "O.MSC_AP_PRICE_LISTS_V"
 						}
 					}
 				]
