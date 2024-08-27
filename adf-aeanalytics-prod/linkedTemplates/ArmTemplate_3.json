@@ -194,7 +194,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "Traceability Report UK.csv"
+						"fileName": "PRICE_LISTS.csv"
 					}
 				}
 			},
@@ -423,7 +423,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Traceability Report UK.csv",
+						"fileName": "PRICE_LISTS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",

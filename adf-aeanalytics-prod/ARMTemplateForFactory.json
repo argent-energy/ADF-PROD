@@ -4798,7 +4798,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.Traceability Report UK"
+									"TableName": "O.PRICE_LISTS"
 								}
 							}
 						]
@@ -23770,7 +23770,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "FtpServerLocation",
-						"fileName": "Traceability Report UK.csv"
+						"fileName": "PRICE_LISTS.csv"
 					}
 				}
 			},
@@ -24013,7 +24013,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Traceability Report UK.csv",
+						"fileName": "PRICE_LISTS.csv",
 						"container": "oracle-data"
 					},
 					"columnDelimiter": ",",
