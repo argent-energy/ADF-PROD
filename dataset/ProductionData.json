@@ -1,0 +1,12 @@
+{
+	"name": "ProductionData",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Production Azure Server",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
