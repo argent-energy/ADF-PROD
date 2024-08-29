@@ -41,6 +41,9 @@
 		"appDev_connectionString": {
 			"value": ""
 		},
+		"CubeBlob_connectionString": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://staeanalyticsprod.dfs.core.windows.net"
 		},

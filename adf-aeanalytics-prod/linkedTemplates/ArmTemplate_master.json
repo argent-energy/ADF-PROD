@@ -55,6 +55,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'appDev'"
 		},
+		"CubeBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CubeBlob'"
+		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://staeanalyticsprod.dfs.core.windows.net"
@@ -141,6 +145,9 @@
 					},
 					"TestBlob_connectionString": {
 						"value": "[parameters('TestBlob_connectionString')]"
+					},
+					"CubeBlob_connectionString": {
+						"value": "[parameters('CubeBlob_connectionString')]"
 					},
 					"AzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage_properties_typeProperties_url')]"
