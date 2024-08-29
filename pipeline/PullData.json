@@ -1,9 +1,9 @@
 {
-	"name": "CubeData",
+	"name": "PullData",
 	"properties": {
 		"activities": [
 			{
-				"name": "GetBalanceData",
+				"name": "GL Balance Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -16,21 +16,20 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": "[CubeData].[prc_Get_GL_Balances]",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings"
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".csv"
+							"type": "DelimitedTextReadSettings"
 						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -44,13 +43,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Production_SQLDB",
+						"referenceName": "cubedatapull",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "CubeData",
+						"referenceName": "AESQLDB",
 						"type": "DatasetReference"
 					}
 				]
