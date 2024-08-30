@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "cashflow",
+				"fileName": "cashflow.csv",
 				"folderPath": "CashFlow",
 				"container": "cubedata"
 			},
