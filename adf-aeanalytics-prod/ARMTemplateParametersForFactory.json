@@ -26,6 +26,9 @@
 		"AzureSqlDatabase2_connectionString": {
 			"value": ""
 		},
+		"CubeBlob_connectionString": {
+			"value": ""
+		},
 		"FTP Oracle_password": {
 			"value": ""
 		},
@@ -39,9 +42,6 @@
 			"value": ""
 		},
 		"appDev_connectionString": {
-			"value": ""
-		},
-		"CubeBlob_connectionString": {
 			"value": ""
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {

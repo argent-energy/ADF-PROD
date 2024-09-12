@@ -29,6 +29,284 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/csvFXRates')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FXRates.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/csvFinanceFunction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "financefunction.csv",
+						"fileSystem": "financecube"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/csvGLDescriptions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -69,6 +347,286 @@
 					},
 					{
 						"name": "EUR:GBP",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cubecashflow')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CubeBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "cashflow.csv",
+						"folderPath": "CashFlow",
+						"container": "cubedata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/cubedatapull')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CubeBlob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "balances.csv",
+						"folderPath": "Balances",
+						"container": "cubedata"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
 						"type": "String"
 					}
 				]
@@ -393,23 +951,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Production_SQLDB')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CubeData')]",
+			"name": "[concat(parameters('factoryName'), '/csvGLBalances')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -422,6 +964,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "balances.csv",
 						"folderPath": "Balances",
 						"container": "cubedata"
 					},
@@ -430,7 +973,120 @@
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "GLLedgeID",
+						"type": "String"
+					},
+					{
+						"name": "Ledger_ID",
+						"type": "String"
+					},
+					{
+						"name": "Code_Combination_id",
+						"type": "String"
+					},
+					{
+						"name": "CURRENCY_CODE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NAME",
+						"type": "String"
+					},
+					{
+						"name": "ACTUAL_FLAG",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATE_DATE",
+						"type": "String"
+					},
+					{
+						"name": "LAST_UPDATED_BY",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_TYPE",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_YEAR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NUM",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PERIOD_NET_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "BEGIN_BALANCE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "QUARTER_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_DR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "PROJECT_TO_DATE_CR_BEQ",
+						"type": "String"
+					},
+					{
+						"name": "Stamp",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": []
 		},
@@ -1750,722 +2406,6 @@
 				},
 				"annotations": [],
 				"lastPublishTime": "2022-09-01T09:34:37Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_ActTankItemData_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy Actual Tank and Item sheet",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Delete previous month data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"additionalColumns": [
-									{
-										"name": "Year",
-										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'yyyy')",
-											"type": "Expression"
-										}
-									},
-									{
-										"name": "Month",
-										"value": {
-											"value": "@formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MM')",
-											"type": "Expression"
-										}
-									},
-									{
-										"name": "Stamp",
-										"value": {
-											"value": "@formatDateTime(utcNow(), 'yyyy-MM-dd')",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": false,
-									"wildcardFileName": {
-										"value": "@{concat('131001 - 133018 - Stanlow Stock Balance Sheet - ',formatDateTime(subtractFromTime(utcNow(), 1, 'Month'), 'MMM-yy'))}*",
-										"type": "Expression"
-									},
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Unique Ref",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Unique_Ref",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Inventory Org",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Oracle_Plant",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Plant",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Plant",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Tank",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Tank",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Item",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Item",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Oracle Qty (from inv valuation)",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Oracle_Qty_from_inv_valuation",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Oracle STG/Ship WO/Virtual/Other",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Oracle_STG_Ship_WO_Virtual_Other",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Known Differences",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Known_Differences",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Actual Qty",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Actual_Qty",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Standard Cost",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Standard_Cost",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Actual Cost",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Actual_Cost",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Valuation",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Valuation",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "GL Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "GL_Code",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Variance Value",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Variance_Value",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Price Variance",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Price_Variance",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Year",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Year",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Month",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Month",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									},
-									{
-										"source": {
-											"name": "Stamp",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Stamp",
-											"type": "String",
-											"physicalType": "nvarchar"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "ActTankItems_Excel",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Argent_Database",
-								"type": "DatasetReference",
-								"parameters": {
-									"TableName": "F.ActTankItem"
-								}
-							}
-						]
-					},
-					{
-						"name": "Delete previous month data",
-						"description": "Delete all rows in [RAW].[F.ActTankItem] for the previous month from today.",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": {
-										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [MONTH] = DATEPART(m, DATEADD(MM, -1, GETDATE()))\n    AND [YEAR] = DATEPART(year, DATEADD(MM, -1, GETDATE()))",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					},
-					{
-						"name": "Delete null rows",
-						"description": "Delete all rows where the Unique Ref is null.",
-						"type": "Script",
-						"dependsOn": [
-							{
-								"activity": "Copy Actual Tank and Item sheet",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": {
-										"value": "DELETE FROM [RAW].[F.ActTankItem]\nWHERE [Unique_Ref] IS NULL",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance/Std Costs + Spread"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_Finance_AccountBalances_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Finance_Excel_tables_lookup",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "Drop table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"dataset": {
-								"referenceName": "Blob_Finance_AB_Excel_Get_Metadata",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Copy sheets to tables",
-						"description": "Copies each sheet in the lookup sheet to a separate SQL table",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Finance_Excel_tables_lookup",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Finance_Excel_tables_lookup').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy from Excel workbook",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_Finance_AB_Excel",
-											"type": "DatasetReference",
-											"parameters": {
-												"SheetName": {
-													"value": "@item().SheetName",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Sharepoint_Data_Tables",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "F.AccountBalances"
-											}
-										}
-									]
-								}
-							]
-						}
-					},
-					{
-						"name": "Drop table",
-						"description": "Drop existing finance excel tables",
-						"type": "Script",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"linkedServiceName": {
-							"referenceName": "SqlServerArgent",
-							"type": "LinkedServiceReference"
-						},
-						"typeProperties": {
-							"scripts": [
-								{
-									"type": "NonQuery",
-									"text": {
-										"value": "DROP TABLE IF EXISTS [RAW].[F.AccountBalances]",
-										"type": "Expression"
-									}
-								}
-							],
-							"scriptBlockExecutionTimeout": "02:00:00"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy_Finance_Sharepoint_Blob_to_SQL')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Finance_Excel_tables_lookup",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ExcelSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
-							},
-							"dataset": {
-								"referenceName": "Blob_Finance_Excel_Get_Metadata",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "Copy sheets to tables",
-						"description": "Copies each sheet in the lookup sheet to a separate SQL table",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Finance_Excel_tables_lookup",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Finance_Excel_tables_lookup').output.value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy from Excel workbook",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "Drop",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": "insert",
-											"sqlWriterUseTableLock": false,
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "Blob_Finance_Excel",
-											"type": "DatasetReference",
-											"parameters": {
-												"SheetName": "@item().SheetName"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "SQL_Sharepoint_Data_Tables",
-											"type": "DatasetReference",
-											"parameters": {
-												"TableName": "@item().TableName"
-											}
-										}
-									]
-								},
-								{
-									"name": "Drop",
-									"description": "Drop existing finance excel tables",
-									"type": "Script",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"linkedServiceName": {
-										"referenceName": "SqlServerArgent",
-										"type": "LinkedServiceReference"
-									},
-									"typeProperties": {
-										"scripts": [
-											{
-												"type": "NonQuery",
-												"text": {
-													"value": "DROP TABLE IF EXISTS [RAW].[@{item().TableName}]",
-													"type": "Expression"
-												}
-											}
-										],
-										"scriptBlockExecutionTimeout": "02:00:00"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Finance"
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-11-14T16:24:18Z"
 			},
 			"dependsOn": []
 		}

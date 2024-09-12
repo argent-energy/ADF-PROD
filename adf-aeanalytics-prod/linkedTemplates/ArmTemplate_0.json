@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase2'"
 		},
+		"CubeBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CubeBlob'"
+		},
 		"FTP Oracle_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FTP Oracle'"
@@ -38,10 +42,6 @@
 		"TestBlob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'TestBlob'"
-		},
-		"CubeBlob_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CubeBlob'"
 		},
 		"AzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
@@ -343,6 +343,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CubeBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('CubeBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FTP Oracle')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -545,19 +558,6 @@
 				"type": "SelfHosted",
 				"description": "Integration Runtime setup for Appian",
 				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CubeBlob')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('CubeBlob_connectionString')]"
-				}
 			},
 			"dependsOn": []
 		},
