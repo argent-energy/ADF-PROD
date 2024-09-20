@@ -9,7 +9,7 @@
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "Get CashFlow2 Data",
+						"activity": "Put CashFlow2 Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -856,6 +856,8 @@
 			{
 				"name": "Get FXRates",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "GtFinanceFunction",
@@ -916,6 +918,8 @@
 			{
 				"name": "Push FXRates to Staging",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get FXRates",
@@ -975,6 +979,8 @@
 			{
 				"name": "Get Cash Flow",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Push FXRates to Staging",
@@ -1035,6 +1041,8 @@
 			{
 				"name": "Push dimCashFlowLogic",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get Cash Flow",
@@ -1094,6 +1102,8 @@
 			{
 				"name": "Get GLDescriptions",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Push dimCashFlowLogic",
@@ -1154,6 +1164,8 @@
 			{
 				"name": "PushGL Descriptions",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Get GLDescriptions",
@@ -1213,6 +1225,8 @@
 			{
 				"name": "Push GL Balance Data",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "PushGL Descriptions",
@@ -1318,6 +1332,65 @@
 				"outputs": [
 					{
 						"referenceName": "cashflow2",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Put CashFlow2 Data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get CashFlow2 Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "GetCashFlow2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AESQLDB_CashFlow",
 						"type": "DatasetReference"
 					}
 				]
