@@ -226,7 +226,7 @@
 								"referenceName": "SQL_Argent_Database",
 								"type": "DatasetReference",
 								"parameters": {
-									"TableName": "O.PRICE_LISTS"
+									"TableName": "O.TraceabilityReport"
 								}
 							}
 						]

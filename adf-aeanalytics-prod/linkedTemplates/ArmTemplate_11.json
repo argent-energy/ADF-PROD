@@ -5055,7 +5055,14 @@
 					{
 						"name": "Get CashFlow2 Data",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "ClearStaging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -5167,6 +5174,29 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "ClearStaging",
+						"description": "Clear the staging tables ready for repopulating",
+						"type": "SqlServerStoredProcedure",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[staging].[Prc_ClearStaging]"
+						},
+						"linkedServiceName": {
+							"referenceName": "AE_SQLDB",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
